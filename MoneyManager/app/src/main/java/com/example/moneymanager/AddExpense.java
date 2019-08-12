@@ -85,6 +85,17 @@ public class AddExpense extends AppCompatActivity {
                     double amountSpent = cantity * price;
                     LocalDate date = LocalDate.of(year,month,day);
 
+                    try{
+                        ExpensesDB db = new ExpensesDB(AddExpense.this);
+                        db.open();
+                        db.createEntryExpense(product, price, cantity,date);
+                        db.close();
+                        Toast.makeText(AddExpense.this, "Succesfully Saved", Toast.LENGTH_SHORT).show();
+                        throw new SQLException();
+                    }catch(SQLException e){
+                        Toast.makeText(AddExpense.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+
                     Intent intent = new Intent();
                     intent.putExtra("cantity", cantity);
                     intent.putExtra("price", price);

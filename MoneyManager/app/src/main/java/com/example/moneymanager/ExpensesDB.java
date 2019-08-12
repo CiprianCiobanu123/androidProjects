@@ -34,7 +34,8 @@ public class ExpensesDB {
         ourContext = context;
     }
 
-    private class DBHelper extends SQLiteOpenHelper {
+
+    public class DBHelper extends SQLiteOpenHelper {
 
         public DBHelper(Context context) {
             super(context, DATABASE_TABLE_EXPENSE, null, DATABASE_VERSION);
@@ -60,7 +61,23 @@ public class ExpensesDB {
             sqLiteDatabase.execSQL(sqlCodeForExpense);
             sqLiteDatabase.execSQL(sqlCodeForIncome);
 
+
+
         }
+
+        public ArrayList getAllValues(){
+            SQLiteDatabase db = this.getReadableDatabase();
+            ArrayList<String> array_list = new ArrayList<String>();
+            Cursor res = db.rawQuery("select * from " + DATABASE_TABLE_INCOME,null);
+            res.moveToFirst();
+            while(!res.isAfterLast()){
+                array_list.add(res.getString(res.getColumnIndex("_sum")));
+                res.moveToNext();
+
+            }
+            return array_list;
+        }
+
 
         @Override
         public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
@@ -71,11 +88,7 @@ public class ExpensesDB {
 
         }
 
-//        public ArrayList getAllValues(){
-//            SQLiteDatabase db = this.getReadableDatabase();
-//            ArrayList<String> array_list = new ArrayList<String>();
-//
-//        }
+
 
     }
 
@@ -89,7 +102,7 @@ public class ExpensesDB {
         ourHelper.close();
     }
 
-    public long createEntryExpense(String product, double price, int cantity, Date dateExpenses) {
+    public long createEntryExpense(String product, double price, int cantity, LocalDate dateExpenses) {
         ContentValues cv = new ContentValues();
         cv.put(KEY_PRODUCT, product);
         cv.put(KEY_PRICE, price);

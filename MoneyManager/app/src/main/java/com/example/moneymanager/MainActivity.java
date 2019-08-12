@@ -10,6 +10,8 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+
 public class MainActivity extends AppCompatActivity {
 
     TextView tvAccount ;
@@ -25,10 +27,10 @@ public class MainActivity extends AppCompatActivity {
         {
             ExpensesDB db = new ExpensesDB(this);
             db.open();
-//            double totalAmount =
+//           ArrayList strings =  db.getAllValues();
 
 //            Income income = new Income();
-            tvAccount.setText(db.getDataFromIncomeTable());
+            tvAccount.setText(db.getDataFromIncomeTable() + db.getDataFromExpenseTable());
             db.close();
 
         }catch(SQLException e){
