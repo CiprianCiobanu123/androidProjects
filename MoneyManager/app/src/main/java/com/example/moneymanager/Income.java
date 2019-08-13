@@ -39,7 +39,7 @@ public class Income{
                 "sum=" + sum +
                 ", type='" + type + '\'' +
                 ", date=" + date +
-                '}';
+                '}'+'+';
     }
 
     public void setDate(LocalDate date) {

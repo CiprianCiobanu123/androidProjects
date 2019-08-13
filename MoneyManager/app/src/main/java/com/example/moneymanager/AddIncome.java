@@ -5,13 +5,18 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.database.SQLException;
 import android.os.Bundle;
+import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Calendar;
 
 
@@ -21,6 +26,7 @@ public class AddIncome extends AppCompatActivity {
     Button btnAdd, btnCancel, btnDate;
     private Calendar myCalendar = Calendar.getInstance();
     private int day, month, year;
+    ArrayList<Income> incomes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,15 +82,37 @@ public class AddIncome extends AppCompatActivity {
                     double sum = Double.parseDouble(etSum.getText().toString().trim());
                     String type = etType.getText().toString().trim();
                     LocalDate date = LocalDate.of(year,month, day);
+
+                    Income income = new Income(sum,type,date);
+                    incomes.add(income);
+
                     try{
-                        ExpensesDB db = new ExpensesDB(AddIncome.this);
-                        db.open();
-                        db.createEntryIncome(type,sum,date);
-                        db.close();
-                        Toast.makeText(AddIncome.this, "Succesfully saved", Toast.LENGTH_SHORT).show();
-                    }catch(SQLException e){
+                        FileOutputStream fos = openFileOutput("Incomes.txt", MODE_PRIVATE);
+                        OutputStreamWriter osw =new OutputStreamWriter(fos);
+                        for(int i =0 ; i < incomes.size();i++){
+                            osw.write(incomes.get(i).getSum()+"," + incomes.get(i).getType()+ "," + incomes.get(i).getDate() +"\n");
+                        }
+                        osw.flush();
+                        osw.close();
+                        Toast.makeText(AddIncome.this, "Sucesfully saved", Toast.LENGTH_SHORT).show();
+                    }
+                    catch(IOException e){
                         Toast.makeText(AddIncome.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
+
+
+
+
+
+//                    try{
+//                        ExpensesDB db = new ExpensesDB(AddIncome.this);
+//                        db.open();
+//                        db.createEntryIncome(type,sum,date);
+//                        db.close();
+//                        Toast.makeText(AddIncome.this, "Succesfully saved", Toast.LENGTH_SHORT).show();
+//                    }catch(SQLException e){
+//                        Toast.makeText(AddIncome.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//                    }
 
 
                     Intent intent = new Intent();

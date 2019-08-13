@@ -66,6 +66,6 @@ public class Expense {
                 ", cantity=" + cantity +
                 ", date=" + date +
                 ", Total spent=" + spent +
-                '}';
+                '}'+'-';
     }
 }
