@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 public class ShowIncome extends AppCompatActivity {
 
@@ -20,13 +21,14 @@ public class ShowIncome extends AppCompatActivity {
         tvShowType  =  findViewById(R.id.tvShowType);
         tvShowDate  =  findViewById(R.id.tvShowDate);
 
+
         String type = getIntent().getStringExtra("type");
         double sum = getIntent().getDoubleExtra("sum",0);
         int day = getIntent().getIntExtra("day",0);
         int month = getIntent().getIntExtra("month",0);
         int year = getIntent().getIntExtra("year",0);
 
-        LocalDate date = LocalDate.of(year,month,day);
+        Date date = new Date(year,month,day);
         tvShowIncome.setText(String.format("+%s", sum));
         tvShowType.setText(String.format("Type: %s", type));
         tvShowDate.setText(String.format("Date: %s", date.toString()));

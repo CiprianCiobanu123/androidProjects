@@ -9,9 +9,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 public class ExpensesDB {
     public static final String KEY_ROWID = "_id";
@@ -84,7 +84,7 @@ public class ExpensesDB {
         ourHelper.close();
     }
 
-    public long createEntryExpense(String product, double price, int cantity, LocalDate dateExpenses) {
+    public long createEntryExpense(String product, double price, int cantity, Date dateExpenses) {
         ContentValues cv = new ContentValues();
         cv.put(KEY_PRODUCT, product);
         cv.put(KEY_PRICE, price);
@@ -100,13 +100,11 @@ public class ExpensesDB {
         cv.put(KEY_TYPE, type);
         cv.put(KEY_SUM, sum);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
         String date = dateFormat.format(dateExpenses);
         cv.put(KEY_DATE_FOR_INCOMES, date);
         return ourDatabase.insert(DATABASE_TABLE_INCOME, null, cv);
-
     }
-
 
     public long deleteEntryExpense(String rowId) {
         return ourDatabase.delete(DATABASE_TABLE_EXPENSE, KEY_ROWID + "=?", new String[]{rowId});
@@ -145,7 +143,7 @@ public class ExpensesDB {
             String type = res.getString(res.getColumnIndex(KEY_TYPE));
 
             String dateFromDatabase = res.getString(res.getColumnIndex(KEY_DATE_FOR_INCOMES));
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy",Locale.getDefault());
             Date date = dateFormat.parse(dateFromDatabase);
 
             Income income = new Income(sum, type, date);

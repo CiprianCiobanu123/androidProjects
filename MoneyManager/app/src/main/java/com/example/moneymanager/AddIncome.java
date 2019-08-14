@@ -5,17 +5,12 @@ import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.database.SQLException;
 import android.os.Bundle;
-import android.view.Display;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -82,14 +77,18 @@ public class AddIncome extends AppCompatActivity {
                 } else {
                     double sum = Double.parseDouble(etSum.getText().toString().trim());
                     String type = etType.getText().toString().trim();
-                    Date date = new Date(year,month, day);
+                    Date date = new Date(year ,month, day);
 
                     Income income = new Income(sum,type,date);
                     incomes.add(income);
 
+
                     try{
                         ExpensesDB db = new ExpensesDB(AddIncome.this);
                         db.open();
+//                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+//                        String dateFormated = dateFormat.format(date);
+
                         db.createEntryIncome(type,sum,date);
                         db.close();
                         Toast.makeText(AddIncome.this, "Succesfully saved", Toast.LENGTH_SHORT).show();

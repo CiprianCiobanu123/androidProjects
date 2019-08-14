@@ -14,6 +14,7 @@ import android.widget.Toast;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.Calendar;
+import java.util.Date;
 
 public class AddExpense extends AppCompatActivity {
 
@@ -83,7 +84,7 @@ public class AddExpense extends AppCompatActivity {
                     int cantity = Integer.parseInt(etCantity.getText().toString().trim());
                     double price = Double.parseDouble(etPrice.getText().toString().trim());
                     double amountSpent = cantity * price;
-                    LocalDate date = LocalDate.of(year,month,day);
+                    Date date = new Date(year,month,day);
 
                     try{
                         ExpensesDB db = new ExpensesDB(AddExpense.this);
