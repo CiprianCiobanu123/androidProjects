@@ -9,7 +9,6 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
@@ -108,48 +107,6 @@ public class ExpensesDB {
 
     }
 
-    public String getDataFromExpenseTable() {
-        String[] columns = new String[]{KEY_ROWID, KEY_PRODUCT, KEY_PRICE, KEY_CANTITY, KEY_DATE_FOR_EXPENSES};
-        Cursor cursor = ourDatabase.query(DATABASE_TABLE_EXPENSE, columns, null, null, null, null, null);
-        String result = "";
-
-        int iRowID = cursor.getColumnIndex(KEY_ROWID);
-        int iProduct = cursor.getColumnIndex(KEY_PRODUCT);
-        int iPrice = cursor.getColumnIndex(KEY_PRICE);
-        int iCantity = cursor.getColumnIndex(KEY_CANTITY);
-        int iDateForExpenses = cursor.getColumnIndex(KEY_DATE_FOR_EXPENSES);
-
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            result = result + cursor.getString(iRowID) + ": " +
-                    cursor.getString(iProduct) + ": " +
-                    cursor.getString(iPrice) + ": " +
-                    cursor.getString(iCantity) + ": " +
-                    cursor.getString(iDateForExpenses) + "\n";
-        }
-        cursor.close();
-        return result;
-    }
-
-    public String getDataFromIncomeTable() {
-        String[] columns = new String[]{KEY_ROWID, KEY_TYPE, KEY_SUM, KEY_DATE_FOR_INCOMES};
-        Cursor cursor = ourDatabase.query(DATABASE_TABLE_INCOME, columns, null, null, null, null, null);
-        String result = "";
-
-        int iRowID = cursor.getColumnIndex(KEY_ROWID);
-        int iType = cursor.getColumnIndex(KEY_TYPE);
-        int iSum = cursor.getColumnIndex(KEY_SUM);
-        int iDateForIncomes = cursor.getColumnIndex(KEY_DATE_FOR_INCOMES);
-
-
-        for (cursor.moveToFirst(); !cursor.isAfterLast(); cursor.moveToNext()) {
-            result = result + cursor.getString(iRowID) + ": " +
-                    cursor.getString(iType) + ": " +
-                    cursor.getString(iSum) + ": " +
-                    cursor.getString(iDateForIncomes) + "\n";
-        }
-        cursor.close();
-        return result;
-    }
 
     public long deleteEntryExpense(String rowId) {
         return ourDatabase.delete(DATABASE_TABLE_EXPENSE, KEY_ROWID + "=?", new String[]{rowId});

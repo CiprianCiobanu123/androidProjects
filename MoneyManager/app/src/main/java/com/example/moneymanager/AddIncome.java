@@ -87,24 +87,6 @@ public class AddIncome extends AppCompatActivity {
                     Income income = new Income(sum,type,date);
                     incomes.add(income);
 
-//                    try{
-//                        FileOutputStream fos = openFileOutput("Incomes.txt", MODE_PRIVATE);
-//                        OutputStreamWriter osw =new OutputStreamWriter(fos);
-//                        for(int i =0 ; i < incomes.size();i++){
-//                            osw.write(incomes.get(i).getSum()+"," + incomes.get(i).getType()+ "," + incomes.get(i).getDate() +"\n");
-//                        }
-//                        osw.flush();
-//                        osw.close();
-//                        Toast.makeText(AddIncome.this, "Sucesfully saved", Toast.LENGTH_SHORT).show();
-//                    }
-//                    catch(IOException e){
-//                        Toast.makeText(AddIncome.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-//                    }
-
-
-
-
-
                     try{
                         ExpensesDB db = new ExpensesDB(AddIncome.this);
                         db.open();
