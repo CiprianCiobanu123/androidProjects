@@ -1,17 +1,49 @@
 package com.example.moneymanager;
-import java.time.LocalDate;
+import android.os.Parcel;
+import android.os.Parcelable;
 
-public class Income{
+import java.time.LocalDate;
+import java.util.Date;
+
+public class Income implements Parcelable {
     private double sum;
     private String type;
-    private LocalDate date;
+    private Date date;
 
-    public Income (double sum, String type, LocalDate date){
+    public Income (double sum, String type, Date date){
         this.sum = sum;
         this.type= type;
         this.date=date;
     }
 
+
+    protected Income(Parcel in) {
+        sum = in.readDouble();
+        type = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeDouble(sum);
+        dest.writeString(type);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Income> CREATOR = new Creator<Income>() {
+        @Override
+        public Income createFromParcel(Parcel in) {
+            return new Income(in);
+        }
+
+        @Override
+        public Income[] newArray(int size) {
+            return new Income[size];
+        }
+    };
 
     public double getSum() {
         return sum;
@@ -29,7 +61,7 @@ public class Income{
         this.type = type;
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
@@ -42,7 +74,7 @@ public class Income{
                 '}'+'+';
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

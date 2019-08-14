@@ -7,9 +7,12 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class ExpensesDB {
     public static final String KEY_ROWID = "_id";
@@ -65,18 +68,7 @@ public class ExpensesDB {
 
         }
 
-        public ArrayList getAllValues(){
-            SQLiteDatabase db = this.getReadableDatabase();
-            ArrayList<String> array_list = new ArrayList<String>();
-            Cursor res = db.rawQuery("select * from " + DATABASE_TABLE_INCOME,null);
-            res.moveToFirst();
-            while(!res.isAfterLast()){
-                array_list.add(res.getString(res.getColumnIndex("_sum")));
-                res.moveToNext();
 
-            }
-            return array_list;
-        }
 
 
         @Override
@@ -85,10 +77,7 @@ public class ExpensesDB {
             sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_INCOME);
             sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_EXPENSE);
             onCreate(sqLiteDatabase);
-
         }
-
-
 
     }
 
@@ -113,12 +102,15 @@ public class ExpensesDB {
 
     }
 
-    public long createEntryIncome(String type, double sum, LocalDate dateExpenses) {
+    public long createEntryIncome(String type, double sum, Date dateExpenses) {
         ContentValues cv = new ContentValues();
         cv.put(KEY_TYPE, type);
         cv.put(KEY_SUM, sum);
-        cv.put(KEY_DATE_FOR_INCOMES, dateExpenses.toString());
 
+        SimpleDateFormat dateFormat = new SimpleDateFormat(
+                "yyyy-MM-dd");
+        String date = dateFormat.format(dateExpenses);
+        cv.put(KEY_DATE_FOR_INCOMES, date);
         return ourDatabase.insert(DATABASE_TABLE_INCOME, null, cv);
 
     }
@@ -208,6 +200,31 @@ public class ExpensesDB {
 
         return ourDatabase.update(DATABASE_TABLE_INCOME, contentValues, KEY_ROWID + "=?", new String[]{rowId});
 
+    }
+
+    public ArrayList<Income> getAllIncomeValues() throws ParseException {
+        SQLiteDatabase db = this.ourHelper.getReadableDatabase();
+        ArrayList<Income> incomeArray = new ArrayList<>();
+        Cursor res = db.rawQuery("select * from " + DATABASE_TABLE_INCOME,null);
+        res.moveToFirst();
+        while(!res.isAfterLast()){
+
+            Double sum = res.getDouble(res.getColumnIndex(KEY_SUM));
+            String type = res.getString(res.getColumnIndex(KEY_TYPE));
+            String dateFromDatabase = res.getString(res.getColumnIndex(KEY_DATE_FOR_INCOMES));
+
+            SimpleDateFormat dateFormat = new SimpleDateFormat(
+                    "yyyy-MM-dd");
+
+            Date date = dateFormat.parse(dateFromDatabase);
+
+
+            Income income = new Income(sum, type, date);
+            incomeArray.add(income);
+
+            res.moveToNext();
+        }
+        return incomeArray;
     }
 
 

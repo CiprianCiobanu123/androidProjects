@@ -1,16 +1,17 @@
 package com.example.moneymanager;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 public class Expense {
 
     private String product;
     private double price;
     private int cantity;
-    private LocalDate date;
+    private Date date;
     private double spent;
 
-    public Expense(String product, double price, int cantity, LocalDate date, double spent){
+    public Expense(String product, double price, int cantity, Date date, double spent){
         this.product = product;
         this.price = price;
         this.cantity = cantity;
@@ -50,11 +51,11 @@ public class Expense {
         this.cantity = cantity;
     }
 
-    public LocalDate getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 

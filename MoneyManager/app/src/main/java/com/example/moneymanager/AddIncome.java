@@ -18,6 +18,7 @@ import java.io.OutputStreamWriter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 
 public class AddIncome extends AppCompatActivity {
@@ -81,38 +82,38 @@ public class AddIncome extends AppCompatActivity {
                 } else {
                     double sum = Double.parseDouble(etSum.getText().toString().trim());
                     String type = etType.getText().toString().trim();
-                    LocalDate date = LocalDate.of(year,month, day);
+                    Date date = new Date(year,month, day);
 
                     Income income = new Income(sum,type,date);
                     incomes.add(income);
 
-                    try{
-                        FileOutputStream fos = openFileOutput("Incomes.txt", MODE_PRIVATE);
-                        OutputStreamWriter osw =new OutputStreamWriter(fos);
-                        for(int i =0 ; i < incomes.size();i++){
-                            osw.write(incomes.get(i).getSum()+"," + incomes.get(i).getType()+ "," + incomes.get(i).getDate() +"\n");
-                        }
-                        osw.flush();
-                        osw.close();
-                        Toast.makeText(AddIncome.this, "Sucesfully saved", Toast.LENGTH_SHORT).show();
-                    }
-                    catch(IOException e){
-                        Toast.makeText(AddIncome.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    }
-
-
-
-
-
 //                    try{
-//                        ExpensesDB db = new ExpensesDB(AddIncome.this);
-//                        db.open();
-//                        db.createEntryIncome(type,sum,date);
-//                        db.close();
-//                        Toast.makeText(AddIncome.this, "Succesfully saved", Toast.LENGTH_SHORT).show();
-//                    }catch(SQLException e){
+//                        FileOutputStream fos = openFileOutput("Incomes.txt", MODE_PRIVATE);
+//                        OutputStreamWriter osw =new OutputStreamWriter(fos);
+//                        for(int i =0 ; i < incomes.size();i++){
+//                            osw.write(incomes.get(i).getSum()+"," + incomes.get(i).getType()+ "," + incomes.get(i).getDate() +"\n");
+//                        }
+//                        osw.flush();
+//                        osw.close();
+//                        Toast.makeText(AddIncome.this, "Sucesfully saved", Toast.LENGTH_SHORT).show();
+//                    }
+//                    catch(IOException e){
 //                        Toast.makeText(AddIncome.this, e.getMessage(), Toast.LENGTH_SHORT).show();
 //                    }
+
+
+
+
+
+                    try{
+                        ExpensesDB db = new ExpensesDB(AddIncome.this);
+                        db.open();
+                        db.createEntryIncome(type,sum,date);
+                        db.close();
+                        Toast.makeText(AddIncome.this, "Succesfully saved", Toast.LENGTH_SHORT).show();
+                    }catch(SQLException e){
+                        Toast.makeText(AddIncome.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
 
 
                     Intent intent = new Intent();
