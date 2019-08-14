@@ -2,7 +2,6 @@ package com.example.moneymanager;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.time.LocalDate;
 import java.util.Date;
 
 public class Income implements Parcelable {

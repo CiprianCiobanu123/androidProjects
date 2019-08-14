@@ -64,12 +64,7 @@ public class ExpensesDB {
             sqLiteDatabase.execSQL(sqlCodeForExpense);
             sqLiteDatabase.execSQL(sqlCodeForIncome);
 
-
-
         }
-
-
-
 
         @Override
         public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
@@ -78,7 +73,6 @@ public class ExpensesDB {
             sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_EXPENSE);
             onCreate(sqLiteDatabase);
         }
-
     }
 
     public ExpensesDB open() throws SQLException {
@@ -107,8 +101,7 @@ public class ExpensesDB {
         cv.put(KEY_TYPE, type);
         cv.put(KEY_SUM, sum);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "yyyy-MM-dd");
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String date = dateFormat.format(dateExpenses);
         cv.put(KEY_DATE_FOR_INCOMES, date);
         return ourDatabase.insert(DATABASE_TABLE_INCOME, null, cv);
@@ -117,9 +110,7 @@ public class ExpensesDB {
 
     public String getDataFromExpenseTable() {
         String[] columns = new String[]{KEY_ROWID, KEY_PRODUCT, KEY_PRICE, KEY_CANTITY, KEY_DATE_FOR_EXPENSES};
-
         Cursor cursor = ourDatabase.query(DATABASE_TABLE_EXPENSE, columns, null, null, null, null, null);
-
         String result = "";
 
         int iRowID = cursor.getColumnIndex(KEY_ROWID);
@@ -134,19 +125,14 @@ public class ExpensesDB {
                     cursor.getString(iPrice) + ": " +
                     cursor.getString(iCantity) + ": " +
                     cursor.getString(iDateForExpenses) + "\n";
-
         }
-
         cursor.close();
-
         return result;
     }
 
     public String getDataFromIncomeTable() {
         String[] columns = new String[]{KEY_ROWID, KEY_TYPE, KEY_SUM, KEY_DATE_FOR_INCOMES};
-
         Cursor cursor = ourDatabase.query(DATABASE_TABLE_INCOME, columns, null, null, null, null, null);
-
         String result = "";
 
         int iRowID = cursor.getColumnIndex(KEY_ROWID);
@@ -160,13 +146,9 @@ public class ExpensesDB {
                     cursor.getString(iType) + ": " +
                     cursor.getString(iSum) + ": " +
                     cursor.getString(iDateForIncomes) + "\n";
-
         }
-
         cursor.close();
-
         return result;
-
     }
 
     public long deleteEntryExpense(String rowId) {
@@ -179,25 +161,19 @@ public class ExpensesDB {
 
     public long updateEntryExpense(String rowId, String product, double price, int cantity, Date dateExpenses) {
         ContentValues contentValues = new ContentValues();
-
         contentValues.put(KEY_PRODUCT, product);
         contentValues.put(KEY_PRICE, price);
         contentValues.put(KEY_CANTITY, cantity);
         contentValues.put(KEY_DATE_FOR_EXPENSES, dateExpenses.toString());
-
-
         return ourDatabase.update(DATABASE_TABLE_EXPENSE, contentValues, KEY_ROWID + "=?", new String[]{rowId});
 
     }
 
     public long updateEntryIncome(String rowId, String type, double sum, Date dateIncomes) {
         ContentValues contentValues = new ContentValues();
-
-
         contentValues.put(KEY_TYPE, type);
         contentValues.put(KEY_SUM, sum);
         contentValues.put(KEY_DATE_FOR_INCOMES, dateIncomes.toString());
-
         return ourDatabase.update(DATABASE_TABLE_INCOME, contentValues, KEY_ROWID + "=?", new String[]{rowId});
 
     }
@@ -208,20 +184,15 @@ public class ExpensesDB {
         Cursor res = db.rawQuery("select * from " + DATABASE_TABLE_INCOME,null);
         res.moveToFirst();
         while(!res.isAfterLast()){
-
             Double sum = res.getDouble(res.getColumnIndex(KEY_SUM));
             String type = res.getString(res.getColumnIndex(KEY_TYPE));
+
             String dateFromDatabase = res.getString(res.getColumnIndex(KEY_DATE_FOR_INCOMES));
-
-            SimpleDateFormat dateFormat = new SimpleDateFormat(
-                    "yyyy-MM-dd");
-
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
             Date date = dateFormat.parse(dateFromDatabase);
-
 
             Income income = new Income(sum, type, date);
             incomeArray.add(income);
-
             res.moveToNext();
         }
         return incomeArray;
