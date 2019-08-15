@@ -12,14 +12,12 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
 import java.util.Calendar;
-import java.util.Date;
 
 public class AddExpense extends AppCompatActivity {
 
-    EditText  etProduct, etPrice, etCantity;
-    Button btnAdd, btnCancel,btnDate;
+    EditText etProduct, etPrice, etCantity;
+    Button btnAdd, btnCancel, btnDate;
     private Calendar myCalendar = Calendar.getInstance();
     private int day, month, year;
 
@@ -29,7 +27,7 @@ public class AddExpense extends AppCompatActivity {
         setContentView(R.layout.activity_add_expense);
 
         btnDate = findViewById(R.id.btnDate);
-        etPrice   = findViewById(R.id.etPrice);
+        etPrice = findViewById(R.id.etPrice);
         etProduct = findViewById(R.id.etProduct);
         etCantity = findViewById(R.id.etCantity);
         btnAdd = findViewById(R.id.btnAdd);
@@ -70,43 +68,42 @@ public class AddExpense extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(etPrice.getText().toString().trim().isEmpty()){
+                if (etPrice.getText().toString().trim().isEmpty()) {
                     Toast.makeText(AddExpense.this, "Please enter all fields", Toast.LENGTH_SHORT).show();
-                }else if(etProduct.getText().toString().trim().isEmpty()){
+                } else if (etProduct.getText().toString().trim().isEmpty()) {
                     Toast.makeText(AddExpense.this, "Please enter all fields", Toast.LENGTH_SHORT).show();
-                }else if(btnDate.getText().toString().trim().isEmpty()){
+                } else if (btnDate.getText().toString().trim().isEmpty()) {
                     Toast.makeText(AddExpense.this, "Please enter all fields", Toast.LENGTH_SHORT).show();
-                }else if(etCantity.getText().toString().trim().isEmpty()){
+                } else if (etCantity.getText().toString().trim().isEmpty()) {
                     Toast.makeText(AddExpense.this, "Please enter all fields", Toast.LENGTH_SHORT).show();
-                }else{
+                } else {
 
                     String product = etProduct.getText().toString().trim();
                     int cantity = Integer.parseInt(etCantity.getText().toString().trim());
                     double price = Double.parseDouble(etPrice.getText().toString().trim());
-                    double amountSpent = cantity * price;
 
-                    try{
+
+                    try {
                         ExpensesDB db = new ExpensesDB(AddExpense.this);
                         db.open();
-                        db.createEntryExpense(product, price, cantity,day,month,year);
+                        db.createEntryExpense(product, price, cantity, day, month, year);
+                        MyApplication app = (MyApplication) AddExpense.this.getApplication();
+                        app.addExpenseToItems(new Expense(product, price, cantity, day, month, year));
                         db.close();
                         Toast.makeText(AddExpense.this, "Succesfully Saved", Toast.LENGTH_SHORT).show();
                         throw new SQLException();
-                    }catch(SQLException e){
+                    } catch (SQLException e) {
                         Toast.makeText(AddExpense.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-
-
 
                     Intent intent = new Intent();
                     intent.putExtra("cantity", cantity);
                     intent.putExtra("price", price);
-                    intent.putExtra("product",product);
+                    intent.putExtra("product", product);
                     intent.putExtra("day", day);
                     intent.putExtra("month", month);
                     intent.putExtra("year", year);
-                    intent.putExtra("amountSpent",amountSpent);
-                    setResult(RESULT_OK,intent);
+                    setResult(RESULT_OK, intent);
                     AddExpense.this.finish();
 
                 }

@@ -51,12 +51,11 @@ public class Expense {
         this.yearExpense = yearExpense;
     }
 
-    public Expense(String product, double price, int cantity, int dayExpense, int monthExpense, int yearExpense, double spent){
+    public Expense(String product, double price, int cantity, int dayExpense, int monthExpense, int yearExpense){
         this.product = product;
         this.price = price;
         this.cantity = cantity;
-        this.date = date;
-        this.spent = spent;
+        this.spent = cantity * price;
         this.dayExpense = dayExpense;
         this.monthExpense = monthExpense;
         this.yearExpense=yearExpense;

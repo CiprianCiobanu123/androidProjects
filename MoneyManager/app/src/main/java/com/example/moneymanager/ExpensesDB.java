@@ -173,7 +173,7 @@ public class ExpensesDB {
                 int yearExpense = res.getInt(res.getColumnIndex(KEY_YEAR_FOR_EXPENSES));
 
 
-                Expense expense = new Expense(product,price,cantity, dayExpense,monthExpense,yearExpense,0);
+                Expense expense = new Expense(product,price,cantity, dayExpense,monthExpense,yearExpense);
                 expenseArray.add(expense);
                 res.moveToNext();
             }

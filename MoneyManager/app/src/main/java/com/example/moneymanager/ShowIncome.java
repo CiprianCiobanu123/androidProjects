@@ -3,14 +3,18 @@ package com.example.moneymanager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.Date;
 
 public class ShowIncome extends AppCompatActivity {
 
     TextView tvShowIncome, tvShowType, tvShowDate;
+    Button btnDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +24,7 @@ public class ShowIncome extends AppCompatActivity {
         tvShowIncome  =  findViewById(R.id.tvShowIncome);
         tvShowType  =  findViewById(R.id.tvShowType);
         tvShowDate  =  findViewById(R.id.tvShowDate);
+        btnDelete  =  findViewById(R.id.btnDelete);
 
 
         String type = getIntent().getStringExtra("type");
@@ -28,10 +33,26 @@ public class ShowIncome extends AppCompatActivity {
         int month = getIntent().getIntExtra("month",0);
         int year = getIntent().getIntExtra("year",0);
 
-        Date date = new Date(year,month,day);
+        LocalDate date = LocalDate.of(year,month,day);
+
         tvShowIncome.setText(String.format("+%s", sum));
         tvShowType.setText(String.format("Type: %s", type));
-        tvShowDate.setText(String.format("Date: %s", date.toString()));
+        tvShowDate.setText(String.format("Date: %s", date));
+
+//        btnDelete.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                try{
+//                    ExpensesDB db = new ExpensesDB(ShowIncome.this);
+//                    db.open();
+//                    db.deleteEntryIncome()
+//                    db.close();
+//                }catch(SQLException e){
+//                    Toast.makeText(ShowIncome.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+//                }
+//
+//            }
+//        });
     }
 
 

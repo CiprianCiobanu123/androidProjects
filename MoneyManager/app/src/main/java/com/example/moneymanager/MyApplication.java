@@ -1,7 +1,27 @@
 package com.example.moneymanager;
 import android.app.Application;
+
+import java.util.ArrayList;
+
 public class MyApplication  extends Application{
     double accountMoney = 0.0;
+    private ArrayList items ;
+
+    public void addIncomeToItems(Income income){
+        items.add(income);
+    }
+
+    public void addExpenseToItems(Expense expense){
+        items.add(expense);
+    }
+
+    public ArrayList getItems() {
+        return items;
+    }
+
+    public void setItems(ArrayList items) {
+        this.items = items;
+    }
 
     public double getAccountMoney() {
         return accountMoney;

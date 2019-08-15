@@ -1,7 +1,5 @@
 package com.example.moneymanager;
 
-import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -13,7 +11,6 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import java.util.ArrayList;
-import java.util.Date;
 
 public class moneyExpanded extends AppCompatActivity {
 
@@ -22,7 +19,6 @@ public class moneyExpanded extends AppCompatActivity {
     public final int requestCodeActivityAddIncome = 1;
     public final int requestCodeActivityAddExpense = 2;
     ArrayList items = new ArrayList();
-//    ArrayList expenses = new ArrayList();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,70 +57,12 @@ public class moneyExpanded extends AppCompatActivity {
             }
         });
 
-        Intent intentFromIncomes = getIntent();
-        ArrayList<Income> incomes = intentFromIncomes.getParcelableArrayListExtra(MainActivity.INCOME_ARRAYLIST);
-
-
+        MyApplication app = (MyApplication) this.getApplication();
+        ArrayList items = app.getItems();
         ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, items);
         lvItems.setAdapter(arrayAdapter);
+
         lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Income income =(Income) adapterView.getItemAtPosition(i);
-                String type = income.getType();
-                double sum = income.getSum();
-                int dayIncome = income.getDayIncome();
-                int monthIncome= income.getMonthIncome();
-                int yearIncome = income.getYearIncome();
-                Intent intent = new Intent(moneyExpanded.this,
-                        com.example.moneymanager.ShowIncome.class);
-                intent.putExtra("type", type);
-                intent.putExtra("sum", sum);
-                intent.putExtra("day",dayIncome);
-                intent.putExtra("month",monthIncome);
-                intent.putExtra("year",yearIncome);
-                startActivity(intent);
-            }
-        });
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        final double amountSpent;
-        if (requestCode == requestCodeActivityAddIncome) {
-            if (resultCode == RESULT_OK) {
-                double sum = data.getDoubleExtra("sum", 0.0);
-                int year = data.getIntExtra("year", 0);
-                int month = data.getIntExtra("month", 0);
-                int day = data.getIntExtra("day", 0);
-                String type = data.getStringExtra("type");
-                Date date = new Date(year, month, day);
-                Income income = new Income(sum, type, day,month,year);
-                items.add(income);
-                ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, items);
-                lvItems.setAdapter(arrayAdapter);
-            }}//END OF IF FOR ACTIVITYINCOME
-
-        if (requestCode == requestCodeActivityAddExpense) {
-            if (resultCode == RESULT_OK) {
-                double price = data.getDoubleExtra("price",0);
-                int cantity = data.getIntExtra("cantity",0);
-                int day = data.getIntExtra("day",0);
-                int year = data.getIntExtra("year",0);
-                int month = data.getIntExtra("month",0);
-                String product = data.getStringExtra("product");
-                amountSpent = cantity * price;
-                Expense expense = new Expense(product, price, cantity, day,month,year, amountSpent);
-                items.add(expense);
-                ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, items);
-                lvItems.setAdapter(arrayAdapter);
-             }}  // END OF IF FOR ACTIVITYEXPENSE
-
-
-
-
-            lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                     if(adapterView.getItemAtPosition(i) instanceof Income){
@@ -159,11 +97,5 @@ public class moneyExpanded extends AppCompatActivity {
                     }
                 }
             });
-
     }
-
-
-
-
-
 }

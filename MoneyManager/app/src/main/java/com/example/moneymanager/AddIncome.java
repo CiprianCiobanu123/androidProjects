@@ -11,12 +11,7 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
-
 
 public class AddIncome extends AppCompatActivity {
 
@@ -24,7 +19,6 @@ public class AddIncome extends AppCompatActivity {
     Button btnAdd, btnCancel, btnDate;
     private Calendar myCalendar = Calendar.getInstance();
     private int day, month, year;
-    ArrayList<Income> incomes = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,7 +55,6 @@ public class AddIncome extends AppCompatActivity {
                         btnDate.setText(dayOfMonth + "/" + monthOfYear + "/" + year);
                     }
                 };
-
                 DatePickerDialog dpDialog = new DatePickerDialog(AddIncome.this, listener, year, month, day);
                 dpDialog.show();
             }
@@ -70,6 +63,7 @@ public class AddIncome extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (etType.getText().toString().isEmpty()) {
                     Toast.makeText(AddIncome.this, "Please enter all fields!", Toast.LENGTH_SHORT).show();
                 } else if (btnDate.getText().toString().isEmpty()) {
@@ -80,19 +74,19 @@ public class AddIncome extends AppCompatActivity {
                     double sum = Double.parseDouble(etSum.getText().toString().trim());
                     String type = etType.getText().toString().trim();
 
-                    Income income = new Income(sum,type,day,month,year);
-                    incomes.add(income);
-
                     try{
                         ExpensesDB db = new ExpensesDB(AddIncome.this);
                         db.open();
                         db.createEntryIncome(type,sum,day,month,year);
+
+                        MyApplication app = (MyApplication) AddIncome.this.getApplication();
+                        app.addIncomeToItems(new Income(sum,type,day,month,year));
+
                         db.close();
                         Toast.makeText(AddIncome.this, "Succesfully saved", Toast.LENGTH_SHORT).show();
                     }catch(SQLException e){
                         Toast.makeText(AddIncome.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-
 
                     Intent intent = new Intent();
                     //Sending sum and type
