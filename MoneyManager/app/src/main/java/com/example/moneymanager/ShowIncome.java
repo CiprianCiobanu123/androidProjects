@@ -14,7 +14,6 @@ import java.time.LocalDate;
 public class ShowIncome extends AppCompatActivity {
 
     TextView tvShowIncome, tvShowType, tvShowDate;
-    Button btnDelete;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -24,7 +23,6 @@ public class ShowIncome extends AppCompatActivity {
         tvShowIncome  =  findViewById(R.id.tvShowIncome);
         tvShowType  =  findViewById(R.id.tvShowType);
         tvShowDate  =  findViewById(R.id.tvShowDate);
-        btnDelete  =  findViewById(R.id.btnDelete);
 
 
         String type = getIntent().getStringExtra("type");
@@ -40,26 +38,6 @@ public class ShowIncome extends AppCompatActivity {
         tvShowType.setText(String.format("Type: %s", type));
         tvShowDate.setText(String.format("Date: %s", date));
 
-        btnDelete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try{
-                    MyApplication app = (MyApplication) getApplication();
-//                    app.deleteIncomeFromItems(Integer.valueOf(rowId));
-
-                    ExpensesDB db = new ExpensesDB(ShowIncome.this);
-                    db.open();
-                    db.deleteEntryIncome(rowId);
-
-                    db.close();
-                    Toast.makeText(ShowIncome.this, "Sucessfully deleted", Toast.LENGTH_SHORT).show();
-                    throw new  SQLException();
-                }catch(SQLException e){
-                    Toast.makeText(ShowIncome.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-
-            }
-        });
     }
 
 

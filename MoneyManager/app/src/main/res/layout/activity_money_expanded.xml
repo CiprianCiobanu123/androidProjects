@@ -10,37 +10,46 @@
     <ListView
         android:id="@+id/lvItems"
         android:layout_width="match_parent"
-        android:layout_height="236dp"
+        android:layout_height="325dp"
         android:layout_gravity="center_horizontal|center_vertical"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="10dp" />
 
+
     <Button
         android:id="@+id/btnAddExpense"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal|center_vertical"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="20dp"
-        android:text="@string/add_expense" />
+        android:background="@drawable/rectangularbutton"
+        android:foregroundGravity="center_vertical|center_horizontal"
+        android:gravity="center_horizontal|center_vertical"
+        android:padding="15dp"
+        android:text="Expense"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:textStyle="normal" />
 
     <Button
         android:id="@+id/btnAddIncome"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_gravity="center_horizontal|center_vertical"
         android:layout_marginLeft="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginRight="20dp"
-        android:text="@string/add_income" />
+        android:background="@drawable/rectangularbutton"
+        android:foregroundGravity="center_vertical|center_horizontal"
+        android:gravity="center_horizontal|center_vertical"
+        android:padding="15dp"
+        android:text="Income"
+        android:textColor="#FFFFFF"
+        android:textSize="14sp"
+        android:textStyle="normal" />
 
-    <Button
-        android:id="@+id/btnCancel"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="20dp"
-        android:text="@string/cancel" />
 
 </LinearLayout>

@@ -14,7 +14,7 @@ import java.util.ArrayList;
 
 public class moneyExpanded extends AppCompatActivity {
 
-    Button btnCancel, btnAddExepense, btnAddIncome;
+    Button  btnAddExepense, btnAddIncome;
     ListView lvItems;
     public final int requestCodeActivityAddIncome = 1;
     public final int requestCodeActivityAddExpense = 2;
@@ -27,17 +27,7 @@ public class moneyExpanded extends AppCompatActivity {
 
         btnAddExepense = findViewById(R.id.btnAddExpense);
         btnAddIncome = findViewById(R.id.btnAddIncome);
-        btnCancel = findViewById(R.id.btnCancel);
         lvItems = findViewById(R.id.lvItems);
-
-
-        btnCancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setResult(RESULT_CANCELED);
-                moneyExpanded.this.finish();
-            }
-        });
 
         btnAddExepense.setOnClickListener(new View.OnClickListener() {
             @Override
