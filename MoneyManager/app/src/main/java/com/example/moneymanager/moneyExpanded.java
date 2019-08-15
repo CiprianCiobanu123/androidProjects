@@ -76,6 +76,7 @@ public class moneyExpanded extends AppCompatActivity {
                         intent.putExtra("day",income.getDate().getDay());
                         intent.putExtra("month",income.getDate().getMonth());
                         intent.putExtra("year",income.getDate().getYear());
+                        intent.putExtra("rowId",i);
                         startActivity(intent);
                     }else if(adapterView.getItemAtPosition(i) instanceof Expense){
                         Expense expense=(Expense) adapterView.getItemAtPosition(i);

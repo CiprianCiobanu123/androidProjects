@@ -32,6 +32,7 @@ public class ShowIncome extends AppCompatActivity {
         int day = getIntent().getIntExtra("day",0);
         int month = getIntent().getIntExtra("month",0);
         int year = getIntent().getIntExtra("year",0);
+        final String rowId = String.valueOf(getIntent().getIntExtra("rowId",0));
 
         LocalDate date = LocalDate.of(year,month,day);
 
@@ -39,20 +40,26 @@ public class ShowIncome extends AppCompatActivity {
         tvShowType.setText(String.format("Type: %s", type));
         tvShowDate.setText(String.format("Date: %s", date));
 
-//        btnDelete.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                try{
-//                    ExpensesDB db = new ExpensesDB(ShowIncome.this);
-//                    db.open();
-//                    db.deleteEntryIncome()
-//                    db.close();
-//                }catch(SQLException e){
-//                    Toast.makeText(ShowIncome.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-//                }
-//
-//            }
-//        });
+        btnDelete.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                try{
+                    MyApplication app = (MyApplication) getApplication();
+//                    app.deleteIncomeFromItems(Integer.valueOf(rowId));
+
+                    ExpensesDB db = new ExpensesDB(ShowIncome.this);
+                    db.open();
+                    db.deleteEntryIncome(rowId);
+
+                    db.close();
+                    Toast.makeText(ShowIncome.this, "Sucessfully deleted", Toast.LENGTH_SHORT).show();
+                    throw new  SQLException();
+                }catch(SQLException e){
+                    Toast.makeText(ShowIncome.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
     }
 
 

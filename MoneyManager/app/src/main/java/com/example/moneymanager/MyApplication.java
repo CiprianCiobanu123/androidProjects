@@ -11,6 +11,14 @@ public class MyApplication  extends Application{
         items.add(income);
     }
 
+    public void deleteIncomeFromItems(String income){
+        items.remove(income);
+    }
+
+    public void deleteExpenseFromItems(Expense expense){
+        items.remove(expense);
+    }
+
     public void addExpenseToItems(Expense expense){
         items.add(expense);
     }
