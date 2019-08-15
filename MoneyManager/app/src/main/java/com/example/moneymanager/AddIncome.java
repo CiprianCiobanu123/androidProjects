@@ -11,9 +11,11 @@ import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 
 
 public class AddIncome extends AppCompatActivity {
@@ -77,19 +79,14 @@ public class AddIncome extends AppCompatActivity {
                 } else {
                     double sum = Double.parseDouble(etSum.getText().toString().trim());
                     String type = etType.getText().toString().trim();
-                    Date date = new Date(year ,month, day);
 
-                    Income income = new Income(sum,type,date);
+                    Income income = new Income(sum,type,day,month,year);
                     incomes.add(income);
-
 
                     try{
                         ExpensesDB db = new ExpensesDB(AddIncome.this);
                         db.open();
-//                        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
-//                        String dateFormated = dateFormat.format(date);
-
-                        db.createEntryIncome(type,sum,date);
+                        db.createEntryIncome(type,sum,day,month,year);
                         db.close();
                         Toast.makeText(AddIncome.this, "Succesfully saved", Toast.LENGTH_SHORT).show();
                     }catch(SQLException e){

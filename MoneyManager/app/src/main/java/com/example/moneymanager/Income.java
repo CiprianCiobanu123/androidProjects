@@ -7,12 +7,17 @@ import java.util.Date;
 public class Income implements Parcelable {
     private double sum;
     private String type;
+    private int dayIncome;
+    private int monthIncome;
+    private int yearIncome;
     private Date date;
-
-    public Income (double sum, String type, Date date){
+    public Income (double sum, String type, int dayIncome, int monthIncome, int yearIncome){
         this.sum = sum;
         this.type= type;
-        this.date=date;
+        this.dayIncome= dayIncome;
+        this.monthIncome=monthIncome;
+        this.yearIncome=yearIncome;
+        date = new Date(yearIncome,monthIncome,dayIncome);
     }
 
 
@@ -69,8 +74,35 @@ public class Income implements Parcelable {
         return "Income{" +
                 "sum=" + sum +
                 ", type='" + type + '\'' +
+                ", dayIncome=" + dayIncome +
+                ", monthIncome=" + monthIncome +
+                ", yearIncome=" + yearIncome +
                 ", date=" + date +
-                '}'+'+';
+                '}';
+    }
+
+    public int getDayIncome() {
+        return dayIncome;
+    }
+
+    public void setDayIncome(int dayIncome) {
+        this.dayIncome = dayIncome;
+    }
+
+    public int getMonthIncome() {
+        return monthIncome;
+    }
+
+    public void setMonthIncome(int monthIncome) {
+        this.monthIncome = monthIncome;
+    }
+
+    public int getYearIncome() {
+        return yearIncome;
+    }
+
+    public void setYearIncome(int yearIncome) {
+        this.yearIncome = yearIncome;
     }
 
     public void setDate(Date date) {

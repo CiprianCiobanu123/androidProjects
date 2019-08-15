@@ -5,7 +5,6 @@ import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,7 +12,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -35,6 +33,7 @@ public class moneyExpanded extends AppCompatActivity {
         btnAddIncome = findViewById(R.id.btnAddIncome);
         btnCancel = findViewById(R.id.btnCancel);
         lvItems = findViewById(R.id.lvItems);
+
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,7 +64,8 @@ public class moneyExpanded extends AppCompatActivity {
         Intent intentFromIncomes = getIntent();
         ArrayList<Income> incomes = intentFromIncomes.getParcelableArrayListExtra(MainActivity.INCOME_ARRAYLIST);
 
-        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, incomes);
+
+        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, items);
         lvItems.setAdapter(arrayAdapter);
         lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -73,13 +73,16 @@ public class moneyExpanded extends AppCompatActivity {
                 Income income =(Income) adapterView.getItemAtPosition(i);
                 String type = income.getType();
                 double sum = income.getSum();
+                int dayIncome = income.getDayIncome();
+                int monthIncome= income.getMonthIncome();
+                int yearIncome = income.getYearIncome();
                 Intent intent = new Intent(moneyExpanded.this,
                         com.example.moneymanager.ShowIncome.class);
                 intent.putExtra("type", type);
                 intent.putExtra("sum", sum);
-                intent.putExtra("day",income.getDate().getDay());
-                intent.putExtra("month",income.getDate().getMonth());
-                intent.putExtra("year",income.getDate().getYear());
+                intent.putExtra("day",dayIncome);
+                intent.putExtra("month",monthIncome);
+                intent.putExtra("year",yearIncome);
                 startActivity(intent);
             }
         });
@@ -97,7 +100,7 @@ public class moneyExpanded extends AppCompatActivity {
                 int day = data.getIntExtra("day", 0);
                 String type = data.getStringExtra("type");
                 Date date = new Date(year, month, day);
-                Income income = new Income(sum, type, date);
+                Income income = new Income(sum, type, day,month,year);
                 items.add(income);
                 ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, items);
                 lvItems.setAdapter(arrayAdapter);
@@ -111,9 +114,8 @@ public class moneyExpanded extends AppCompatActivity {
                 int year = data.getIntExtra("year",0);
                 int month = data.getIntExtra("month",0);
                 String product = data.getStringExtra("product");
-                Date date = new Date(year,month,day);
                 amountSpent = cantity * price;
-                Expense expense = new Expense(product, price, cantity, date, amountSpent);
+                Expense expense = new Expense(product, price, cantity, day,month,year, amountSpent);
                 items.add(expense);
                 ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, items);
                 lvItems.setAdapter(arrayAdapter);

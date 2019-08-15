@@ -11,7 +11,6 @@ import android.widget.Toast;
 
 import java.text.ParseException;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -19,6 +18,7 @@ public class MainActivity extends AppCompatActivity {
 
     TextView tvAccount ;
     ArrayList<Income> incomes = new ArrayList<>();
+    ArrayList<Expense> expenses = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,11 +32,9 @@ public class MainActivity extends AppCompatActivity {
             ExpensesDB db = new ExpensesDB(this);
             db.open();
             incomes =  db.getAllIncomeValues();
-            Income incomeTest= incomes.get(2);
-            Date date = incomeTest.getDate();
 
             db.close();
-            tvAccount.setText(date.toString());
+            tvAccount.setText(incomes.toString());
 
         }catch(SQLException e){
             Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();

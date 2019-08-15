@@ -18,10 +18,14 @@ public class ExpensesDB {
     public static final String KEY_PRODUCT = "_product";
     public static final String KEY_PRICE = "_price";
     public static final String KEY_CANTITY = "_cantity";
-    public static final String KEY_DATE_FOR_EXPENSES = "date_for_expenses";
+    public static final String KEY_DAY_FOR_EXPENSES = "day_for_expenses";
+    public static final String KEY_MONTH_FOR_EXPENSES = "month_for_expenses";
+    public static final String KEY_YEAR_FOR_EXPENSES = "year_for_expenses";
     public static final String KEY_TYPE = "_type";
     public static final String KEY_SUM = "_sum";
-    public static final String KEY_DATE_FOR_INCOMES = "date_for_incomes";
+    public static final String KEY_DAY_FOR_INCOMES = "day_for_incomes";
+    public static final String KEY_MONTH_FOR_INCOMES = "month_for_incomes";
+    public static final String KEY_YEAR_FOR_INCOMES = "year_for_incomes";
 
     private final String DATABASE_NAME = "SpendingDB";
     private final String DATABASE_TABLE_EXPENSE = "ExpenseTable";
@@ -52,13 +56,17 @@ public class ExpensesDB {
                     KEY_PRODUCT + " TEXT NOT NULL, " +
                     KEY_PRICE + " REAL, " +
                     KEY_CANTITY + " REAL, " +
-                    KEY_DATE_FOR_EXPENSES + " DATE)";
+                    KEY_DAY_FOR_EXPENSES + " INTEGER, " +
+                    KEY_MONTH_FOR_EXPENSES + " INTEGER, " +
+                    KEY_YEAR_FOR_EXPENSES + " INTEGER)";
 
             String sqlCodeForIncome = "CREATE TABLE " + DATABASE_TABLE_INCOME + " (" +
                     KEY_ROWID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
                     KEY_TYPE + " TEXT NOT NULL, " +
                     KEY_SUM + " REAL, " +
-                    KEY_DATE_FOR_INCOMES + " DATE);";
+                    KEY_DAY_FOR_INCOMES + " INTEGER, " +
+                    KEY_MONTH_FOR_INCOMES + " INTEGER, " +
+                    KEY_YEAR_FOR_INCOMES + " INTEGER)";
 
             sqLiteDatabase.execSQL(sqlCodeForExpense);
             sqLiteDatabase.execSQL(sqlCodeForIncome);
@@ -84,25 +92,26 @@ public class ExpensesDB {
         ourHelper.close();
     }
 
-    public long createEntryExpense(String product, double price, int cantity, Date dateExpenses) {
+    public long createEntryExpense(String product, double price, int cantity, int dayExpense, int monthExpense, int yearExpense) {
         ContentValues cv = new ContentValues();
         cv.put(KEY_PRODUCT, product);
         cv.put(KEY_PRICE, price);
         cv.put(KEY_CANTITY, cantity);
-        cv.put(KEY_DATE_FOR_EXPENSES, dateExpenses.toString());
-
+        cv.put(KEY_DAY_FOR_EXPENSES, dayExpense);
+        cv.put(KEY_MONTH_FOR_EXPENSES, monthExpense);
+        cv.put(KEY_YEAR_FOR_EXPENSES, yearExpense);
         return ourDatabase.insert(DATABASE_TABLE_EXPENSE, null, cv);
 
     }
 
-    public long createEntryIncome(String type, double sum, Date dateExpenses) {
+    public long createEntryIncome(String type, double sum, int dayIncome, int monthIncome, int yearIncome) {
         ContentValues cv = new ContentValues();
         cv.put(KEY_TYPE, type);
         cv.put(KEY_SUM, sum);
+        cv.put(KEY_DAY_FOR_INCOMES, dayIncome);
+        cv.put(KEY_MONTH_FOR_INCOMES, monthIncome);
+        cv.put(KEY_YEAR_FOR_INCOMES, yearIncome);
 
-        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
-        String date = dateFormat.format(dateExpenses);
-        cv.put(KEY_DATE_FOR_INCOMES, date);
         return ourDatabase.insert(DATABASE_TABLE_INCOME, null, cv);
     }
 
@@ -119,7 +128,6 @@ public class ExpensesDB {
         contentValues.put(KEY_PRODUCT, product);
         contentValues.put(KEY_PRICE, price);
         contentValues.put(KEY_CANTITY, cantity);
-        contentValues.put(KEY_DATE_FOR_EXPENSES, dateExpenses.toString());
         return ourDatabase.update(DATABASE_TABLE_EXPENSE, contentValues, KEY_ROWID + "=?", new String[]{rowId});
 
     }
@@ -128,7 +136,6 @@ public class ExpensesDB {
         ContentValues contentValues = new ContentValues();
         contentValues.put(KEY_TYPE, type);
         contentValues.put(KEY_SUM, sum);
-        contentValues.put(KEY_DATE_FOR_INCOMES, dateIncomes.toString());
         return ourDatabase.update(DATABASE_TABLE_INCOME, contentValues, KEY_ROWID + "=?", new String[]{rowId});
 
     }
@@ -141,17 +148,37 @@ public class ExpensesDB {
         while(!res.isAfterLast()){
             Double sum = res.getDouble(res.getColumnIndex(KEY_SUM));
             String type = res.getString(res.getColumnIndex(KEY_TYPE));
+            int dayIncome = res.getInt(res.getColumnIndex(KEY_DAY_FOR_INCOMES));
+            int monthIncome = res.getInt(res.getColumnIndex(KEY_MONTH_FOR_INCOMES));
+            int yearIncome = res.getInt(res.getColumnIndex(KEY_YEAR_FOR_INCOMES));
 
-            String dateFromDatabase = res.getString(res.getColumnIndex(KEY_DATE_FOR_INCOMES));
-            SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy",Locale.getDefault());
-            Date date = dateFormat.parse(dateFromDatabase);
 
-            Income income = new Income(sum, type, date);
+            Income income = new Income(sum, type, dayIncome,monthIncome,yearIncome);
             incomeArray.add(income);
             res.moveToNext();
         }
         return incomeArray;
     }
+    public ArrayList<Expense> getAllExpenseValues() throws ParseException {
+            SQLiteDatabase db = this.ourHelper.getReadableDatabase();
+            ArrayList<Expense> expenseArray = new ArrayList<>();
+            Cursor res = db.rawQuery("select * from " + DATABASE_TABLE_EXPENSE,null);
+            res.moveToFirst();
+            while(!res.isAfterLast()){
+                Double price = res.getDouble(res.getColumnIndex(KEY_PRICE));
+                int cantity = res.getInt(res.getColumnIndex(KEY_CANTITY));
+                String product = res.getString(res.getColumnIndex(KEY_PRODUCT));
+                int dayExpense = res.getInt(res.getColumnIndex(KEY_DAY_FOR_EXPENSES));
+                int monthExpense = res.getInt(res.getColumnIndex(KEY_MONTH_FOR_EXPENSES));
+                int yearExpense = res.getInt(res.getColumnIndex(KEY_YEAR_FOR_EXPENSES));
+
+
+                Expense expense = new Expense(product,price,cantity, dayExpense,monthExpense,yearExpense,0);
+                expenseArray.add(expense);
+                res.moveToNext();
+            }
+            return expenseArray;
+        }
 
 
 }
