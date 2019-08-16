@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         }catch(SQLException e){
             Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
         } catch (ParseException e) {
-            e.printStackTrace();
+            Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
         tvAccount.setOnClickListener(new View.OnClickListener() {

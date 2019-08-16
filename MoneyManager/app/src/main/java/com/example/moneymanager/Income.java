@@ -2,6 +2,7 @@ package com.example.moneymanager;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Income implements Parcelable {
@@ -10,14 +11,14 @@ public class Income implements Parcelable {
     private int dayIncome;
     private int monthIncome;
     private int yearIncome;
-    private Date date;
+    private LocalDate date;
     public Income (double sum, String type, int dayIncome, int monthIncome, int yearIncome){
         this.sum = sum;
         this.type= type;
         this.dayIncome= dayIncome;
         this.monthIncome=monthIncome;
         this.yearIncome=yearIncome;
-        date = new Date(yearIncome,monthIncome,dayIncome);
+        date = LocalDate.of(yearIncome,monthIncome,dayIncome);
     }
 
 
@@ -65,7 +66,7 @@ public class Income implements Parcelable {
         this.type = type;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
@@ -105,7 +106,7 @@ public class Income implements Parcelable {
         this.yearIncome = yearIncome;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

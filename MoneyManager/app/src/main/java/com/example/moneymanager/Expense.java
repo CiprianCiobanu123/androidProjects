@@ -1,5 +1,6 @@
 package com.example.moneymanager;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class Expense {
@@ -7,7 +8,7 @@ public class Expense {
     private String product;
     private double price;
     private int cantity;
-    private Date date;
+    private LocalDate date;
     private double spent;
     private int dayExpense;
     private int monthExpense;
@@ -59,7 +60,7 @@ public class Expense {
         this.dayExpense = dayExpense;
         this.monthExpense = monthExpense;
         this.yearExpense=yearExpense;
-        date = new Date(yearExpense,monthExpense,dayExpense);
+        date = LocalDate.of(yearExpense,monthExpense,dayExpense);
     }
 
     public double getSpent() {
@@ -94,11 +95,11 @@ public class Expense {
         this.cantity = cantity;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 

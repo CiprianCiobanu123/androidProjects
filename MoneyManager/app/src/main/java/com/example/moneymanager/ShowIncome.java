@@ -30,7 +30,6 @@ public class ShowIncome extends AppCompatActivity {
         int day = getIntent().getIntExtra("day",0);
         int month = getIntent().getIntExtra("month",0);
         int year = getIntent().getIntExtra("year",0);
-        final String rowId = String.valueOf(getIntent().getIntExtra("rowId",0));
 
         LocalDate date = LocalDate.of(year,month,day);
 

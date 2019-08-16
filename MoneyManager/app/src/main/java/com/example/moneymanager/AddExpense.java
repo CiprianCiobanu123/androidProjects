@@ -96,14 +96,6 @@ public class AddExpense extends AppCompatActivity {
                         Toast.makeText(AddExpense.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
-                    Intent intent = new Intent();
-                    intent.putExtra("cantity", cantity);
-                    intent.putExtra("price", price);
-                    intent.putExtra("product", product);
-                    intent.putExtra("day", day);
-                    intent.putExtra("month", month);
-                    intent.putExtra("year", year);
-                    setResult(RESULT_OK, intent);
                     AddExpense.this.finish();
 
                 }

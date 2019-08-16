@@ -88,17 +88,6 @@ public class AddIncome extends AppCompatActivity {
                         Toast.makeText(AddIncome.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
 
-                    Intent intent = new Intent();
-                    //Sending sum and type
-                    intent.putExtra("sum", sum);
-                    intent.putExtra("type", type);
-
-//                    //Sending data for DATE
-                    intent.putExtra("month", month);
-                    intent.putExtra("day", day);
-                    intent.putExtra("year", year);
-
-                    setResult(RESULT_OK, intent);
                     AddIncome.this.finish();
                 }
             }

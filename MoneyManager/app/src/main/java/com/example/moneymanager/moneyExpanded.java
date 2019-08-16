@@ -63,9 +63,9 @@ public class moneyExpanded extends AppCompatActivity {
                                 com.example.moneymanager.ShowIncome.class);
                         intent.putExtra("type", type);
                         intent.putExtra("sum", sum);
-                        intent.putExtra("day",income.getDate().getDay());
-                        intent.putExtra("month",income.getDate().getMonth());
-                        intent.putExtra("year",income.getDate().getYear());
+                        intent.putExtra("day",income.getDayIncome());
+                        intent.putExtra("month",income.getMonthIncome());
+                        intent.putExtra("year",income.getYearIncome());
                         intent.putExtra("rowId",i);
                         startActivity(intent);
                     }else if(adapterView.getItemAtPosition(i) instanceof Expense){
@@ -81,9 +81,9 @@ public class moneyExpanded extends AppCompatActivity {
                         intent.putExtra("cantity",cantity);
                         intent.putExtra("price",price);
                         intent.putExtra("amountSpent",amountSpent);
-                        intent.putExtra("day",expense.getDate().getDay());
-                        intent.putExtra("month",expense.getDate().getMonth());
-                        intent.putExtra("year",expense.getDate().getYear());
+                        intent.putExtra("day",expense.getDayExpense());
+                        intent.putExtra("month",expense.getMonthExpense());
+                        intent.putExtra("year",expense.getYearExpense());
                         startActivity(intent);
                     }
                 }
