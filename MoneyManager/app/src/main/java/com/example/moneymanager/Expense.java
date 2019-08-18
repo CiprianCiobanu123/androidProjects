@@ -19,7 +19,7 @@ public class Expense {
         return "Expense{" +
                 "product='" + product + '\'' +
                 ", price=" + price +
-                ", cantity=" + cantity +
+                ", quantity=" + cantity +
                 ", date=" + date +
                 ", spent=" + spent +
                 ", dayExpense=" + dayExpense +

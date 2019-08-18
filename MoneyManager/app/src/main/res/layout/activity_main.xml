@@ -9,19 +9,20 @@
 
 
     <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#873F4A"
+        android:fontFamily="cursive"
+        android:textSize="50sp"
         android:id="@+id/tvAccount"
-        android:layout_width="match_parent"
-        android:layout_height="173dp"
+        style="@style/MyGreenTextAppearance"
         android:layout_gravity="center_horizontal"
         android:layout_marginLeft="20dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="70dp"
         android:layout_marginRight="20dp"
         android:gravity="center_horizontal|center_vertical"
-        android:text="@string/tvAccount"
+        android:scrollbars="vertical"
         android:textAppearance="@style/TextAppearance.AppCompat.Display2"
-        android:textSize="36sp"
-        android:textStyle="bold|italic"
-        android:scrollbars = "vertical"
-        />
+        android:textStyle="bold|italic" />
 
 </LinearLayout>

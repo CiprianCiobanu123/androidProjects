@@ -3,7 +3,6 @@ package com.example.moneymanager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.TextView;
 
 import java.time.LocalDate;
@@ -11,8 +10,6 @@ import java.time.LocalDate;
 public class ShowIncome extends AppCompatActivity {
 
     TextView tvShowIncome, tvShowType, tvShowDate;
-    Button  btnEdit;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -22,8 +19,6 @@ public class ShowIncome extends AppCompatActivity {
         tvShowIncome  =  findViewById(R.  id.tvShowIncome);
         tvShowType  =  findViewById(R.id.tvShowType);
         tvShowDate  =  findViewById(R.id.tvShowDate);
-        btnEdit  =  findViewById(R.id.btnEdit);
-
 
         String type = getIntent().getStringExtra("type");
         double sum = getIntent().getDoubleExtra("sum",0);
@@ -36,8 +31,5 @@ public class ShowIncome extends AppCompatActivity {
         tvShowIncome.setText(String.format("+%s", sum));
         tvShowType.setText(String.format("Type: %s", type));
         tvShowDate.setText(String.format("Date: %s", date));
-
     }
-
-
 }

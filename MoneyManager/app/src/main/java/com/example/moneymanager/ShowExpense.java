@@ -3,7 +3,6 @@ package com.example.moneymanager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.widget.Button;
 import android.widget.TextView;
 
 import java.time.LocalDate;
@@ -11,7 +10,6 @@ import java.time.LocalDate;
 public class ShowExpense extends AppCompatActivity {
 
     TextView tvShowExpenseProduct, tvShowExpensePrice, tvShowExpenseCantity, tvShowExpenseDate, tvShowExpenseTotalSpent;
-    Button  btnEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,8 +21,6 @@ public class ShowExpense extends AppCompatActivity {
         tvShowExpenseCantity = findViewById(R.id.tvShowExpenseCantity);
         tvShowExpenseDate = findViewById(R.id.tvShowExpenseDate);
         tvShowExpenseTotalSpent = findViewById(R.id.tvShowExpenseTotalSpent);
-        btnEdit = findViewById(R.id.btnEdit);
-
 
        final String product = getIntent().getStringExtra("product");
        final double price = getIntent().getDoubleExtra("price",0);
@@ -34,17 +30,12 @@ public class ShowExpense extends AppCompatActivity {
         final int month = getIntent().getIntExtra("month",0);
         final int year = getIntent().getIntExtra("year",0);
 
-
         LocalDate date = LocalDate.of(year,month,day);
 
         tvShowExpenseProduct.setText(String.format("Product: %s", product));
         tvShowExpensePrice.setText(String.format("Price: %s", price));
-        tvShowExpenseCantity.setText(String.format("Cantity: %s", cantity));
+        tvShowExpenseCantity.setText(String.format("Quantity: %s", cantity));
         tvShowExpenseDate.setText(String.format("Date: %s", date));
         tvShowExpenseTotalSpent.setText("-" + amountSpent);
-
     }
-
-
-
 }
