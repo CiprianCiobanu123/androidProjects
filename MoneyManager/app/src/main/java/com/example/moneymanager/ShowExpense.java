@@ -3,6 +3,7 @@ package com.example.moneymanager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 
 import java.time.LocalDate;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 public class ShowExpense extends AppCompatActivity {
 
     TextView tvShowExpenseProduct, tvShowExpensePrice, tvShowExpenseCantity, tvShowExpenseDate, tvShowExpenseTotalSpent;
+    Button  btnEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,14 +23,17 @@ public class ShowExpense extends AppCompatActivity {
         tvShowExpenseCantity = findViewById(R.id.tvShowExpenseCantity);
         tvShowExpenseDate = findViewById(R.id.tvShowExpenseDate);
         tvShowExpenseTotalSpent = findViewById(R.id.tvShowExpenseTotalSpent);
+        btnEdit = findViewById(R.id.btnEdit);
 
-        String product = getIntent().getStringExtra("product");
-        double price = getIntent().getDoubleExtra("price",0);
-        double cantity = getIntent().getDoubleExtra("cantity",0);
-        double amountSpent = getIntent().getDoubleExtra("amountSpent",0);
-        int day = getIntent().getIntExtra("day",0);
-        int month = getIntent().getIntExtra("month",0);
-        int year = getIntent().getIntExtra("year",0);
+
+       final String product = getIntent().getStringExtra("product");
+       final double price = getIntent().getDoubleExtra("price",0);
+        final int cantity = getIntent().getIntExtra("cantity",0);
+        final double amountSpent = getIntent().getDoubleExtra("amountSpent",0);
+        final int day = getIntent().getIntExtra("day",0);
+        final int month = getIntent().getIntExtra("month",0);
+        final int year = getIntent().getIntExtra("year",0);
+
 
         LocalDate date = LocalDate.of(year,month,day);
 
@@ -37,11 +42,6 @@ public class ShowExpense extends AppCompatActivity {
         tvShowExpenseCantity.setText(String.format("Cantity: %s", cantity));
         tvShowExpenseDate.setText(String.format("Date: %s", date));
         tvShowExpenseTotalSpent.setText("-" + amountSpent);
-
-
-
-
-
 
     }
 

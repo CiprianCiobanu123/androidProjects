@@ -11,7 +11,7 @@ public class MyApplication  extends Application{
         items.add(income);
     }
 
-    public void deleteIncomeFromItems(String income){
+    public void deleteIncomeFromItems(Income income){
         items.remove(income);
     }
 

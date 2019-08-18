@@ -113,12 +113,12 @@ public class ExpensesDB {
         return ourDatabase.insert(DATABASE_TABLE_INCOME, null, cv);
     }
 
-    public long deleteEntryExpense(String rowId) {
-        return ourDatabase.delete(DATABASE_TABLE_EXPENSE, KEY_ROWID + "=?", new String[]{rowId});
+    public long deleteEntryExpense(String product) {
+        return ourDatabase.delete(DATABASE_TABLE_EXPENSE, KEY_PRODUCT + "=?", new String[]{product});
     }
 
-    public long deleteEntryIncome(String rowId) {
-        return ourDatabase.delete(DATABASE_TABLE_INCOME, KEY_ROWID + "=?", new String[]{rowId});
+    public long deleteEntryIncome(String type) {
+        return ourDatabase.delete(DATABASE_TABLE_INCOME, KEY_TYPE + "=?", new String[]{type});
     }
 
     public long updateEntryExpense(String rowId, String product, double price, int cantity, Date dateExpenses) {
@@ -130,11 +130,11 @@ public class ExpensesDB {
 
     }
 
-    public long updateEntryIncome(String rowId, String type, double sum, Date dateIncomes) {
+    public long updateEntryIncome( String type, double sum, Date dateIncomes) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(KEY_TYPE, type);
         contentValues.put(KEY_SUM, sum);
-        return ourDatabase.update(DATABASE_TABLE_INCOME, contentValues, KEY_ROWID + "=?", new String[]{rowId});
+        return ourDatabase.update(DATABASE_TABLE_INCOME, contentValues, KEY_TYPE + "=?", new String[]{type});
 
     }
 

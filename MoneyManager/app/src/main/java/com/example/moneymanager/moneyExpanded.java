@@ -1,14 +1,18 @@
 package com.example.moneymanager;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.SQLException;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -49,7 +53,7 @@ public class moneyExpanded extends AppCompatActivity {
 
         MyApplication app = (MyApplication) this.getApplication();
         ArrayList items = app.getItems();
-        ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, items);
+        final ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, items);
         lvItems.setAdapter(arrayAdapter);
 
         lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -88,5 +92,76 @@ public class moneyExpanded extends AppCompatActivity {
                     }
                 }
             });
+
+
+       lvItems.setOnItemLongClickListener( new AdapterView.OnItemLongClickListener() {
+           MyApplication app = (MyApplication) moneyExpanded.this.getApplication();
+
+           @Override
+            public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
+                if(adapterView.getItemAtPosition(i) instanceof  Income){
+                    final Income income = (Income) adapterView.getItemAtPosition(i);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(moneyExpanded.this);
+                    builder.setMessage("Do you want to remove the selected item?");
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i){
+
+                            ExpensesDB db = new ExpensesDB(moneyExpanded.this);
+                            db.open();
+                            app.deleteIncomeFromItems(income);
+                            db.deleteEntryIncome(income.getType());
+                            db.close();
+                            arrayAdapter.remove(income);
+                            arrayAdapter.notifyDataSetChanged();
+                            Toast.makeText(moneyExpanded.this, "The item has been removed", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                        }
+                    });
+                    builder.show();
+
+                }else if(adapterView.getItemAtPosition(i) instanceof  Expense){
+                    final Expense expense = (Expense) adapterView.getItemAtPosition(i);
+                    AlertDialog.Builder builder = new AlertDialog.Builder(moneyExpanded.this);
+                    builder.setMessage("Do you want to remove the selected item?");
+                    builder.setCancelable(false);
+                    builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            try{
+                                ExpensesDB db = new ExpensesDB(moneyExpanded.this);
+                                db.open();
+                                app.deleteExpenseFromItems(expense);
+                                db.deleteEntryExpense(expense.getProduct());
+                                db.close();
+                            }catch (SQLException e){
+                                Toast.makeText(moneyExpanded.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                            }
+                            arrayAdapter.remove(expense);
+                            arrayAdapter.notifyDataSetChanged();
+                            Toast.makeText(moneyExpanded.this, "The item has been removed", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
+                    builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.cancel();
+                        }
+                    });
+                    builder.show();
+                }
+                return true;
+            }
+        });
+
     }
+
 }

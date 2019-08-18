@@ -3,26 +3,26 @@ package com.example.moneymanager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class ShowIncome extends AppCompatActivity {
 
     TextView tvShowIncome, tvShowType, tvShowDate;
+    Button  btnEdit;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_income);
 
-        tvShowIncome  =  findViewById(R.id.tvShowIncome);
+        tvShowIncome  =  findViewById(R.  id.tvShowIncome);
         tvShowType  =  findViewById(R.id.tvShowType);
         tvShowDate  =  findViewById(R.id.tvShowDate);
+        btnEdit  =  findViewById(R.id.btnEdit);
 
 
         String type = getIntent().getStringExtra("type");
