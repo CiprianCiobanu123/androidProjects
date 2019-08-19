@@ -1,5 +1,6 @@
 package com.example.moneymanager;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -7,18 +8,23 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.SQLException;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
 public class moneyExpanded extends AppCompatActivity {
 
-    Button  btnAddExepense, btnAddIncome;
+    Button btnAddExepense, btnAddIncome;
     ListView lvItems;
     public final int requestCodeActivityAddIncome = 1;
     public final int requestCodeActivityAddExpense = 2;
@@ -53,68 +59,72 @@ public class moneyExpanded extends AppCompatActivity {
 
         MyApplication app = (MyApplication) this.getApplication();
         ArrayList items = app.getItems();
-        final ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, items);
-        lvItems.setAdapter(arrayAdapter);
+//        final ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, items);
+
+        final ItemsAdapter adapter = new ItemsAdapter(moneyExpanded.this, items);
+
+        lvItems.setAdapter(adapter);
+//        lvItems.setAdapter(arrayAdapter);
 
         lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                    if(adapterView.getItemAtPosition(i) instanceof Income){
-                        Income income =(Income) adapterView.getItemAtPosition(i);
-                        String type = income.getType();
-                        double sum = income.getSum();
-                        Intent intent = new Intent(moneyExpanded.this,
-                                com.example.moneymanager.ShowIncome.class);
-                        intent.putExtra("type", type);
-                        intent.putExtra("sum", sum);
-                        intent.putExtra("day",income.getDayIncome());
-                        intent.putExtra("month",income.getMonthIncome());
-                        intent.putExtra("year",income.getYearIncome());
-                        intent.putExtra("rowId",i);
-                        startActivity(intent);
-                    }else if(adapterView.getItemAtPosition(i) instanceof Expense){
-                        Expense expense=(Expense) adapterView.getItemAtPosition(i);
-                        String product = expense.getProduct();
-                        double cantity = expense.getCantity();
-                        double price = expense.getPrice();
-                        double amountSpent = expense.getSpent();
+            @Override
+            public void onItemClick(AdapterView<?> adapter, View view, int i, long l) {
+                if (adapter.getItemAtPosition(i) instanceof Income) {
+                    Income income = (Income) adapter.getItemAtPosition(i);
+                    String type = income.getType();
+                    double sum = income.getSum();
+                    Intent intent = new Intent(moneyExpanded.this,
+                            com.example.moneymanager.ShowIncome.class);
+                    intent.putExtra("type", type);
+                    intent.putExtra("sum", sum);
+                    intent.putExtra("day", income.getDayIncome());
+                    intent.putExtra("month", income.getMonthIncome());
+                    intent.putExtra("year", income.getYearIncome());
+                    intent.putExtra("rowId", i);
+                    startActivity(intent);
+                } else if (adapter.getItemAtPosition(i) instanceof Expense) {
+                    Expense expense = (Expense) adapter.getItemAtPosition(i);
+                    String product = expense.getProduct();
+                    int cantity = expense.getCantity();
+                    double price = expense.getPrice();
+                    double amountSpent = expense.getSpent();
 
-                        Intent intent = new Intent(moneyExpanded.this,
-                                com.example.moneymanager.ShowExpense.class);
-                        intent.putExtra("product",product);
-                        intent.putExtra("cantity",cantity);
-                        intent.putExtra("price",price);
-                        intent.putExtra("amountSpent",amountSpent);
-                        intent.putExtra("day",expense.getDayExpense());
-                        intent.putExtra("month",expense.getMonthExpense());
-                        intent.putExtra("year",expense.getYearExpense());
-                        startActivity(intent);
-                    }
+                    Intent intent = new Intent(moneyExpanded.this,
+                            com.example.moneymanager.ShowExpense.class);
+                    intent.putExtra("product", product);
+                    intent.putExtra("cantity", cantity);
+                    intent.putExtra("price", price);
+                    intent.putExtra("amountSpent", amountSpent);
+                    intent.putExtra("day", expense.getDayExpense());
+                    intent.putExtra("month", expense.getMonthExpense());
+                    intent.putExtra("year", expense.getYearExpense());
+                    startActivity(intent);
                 }
-            });
+            }
+        });
 
 
-       lvItems.setOnItemLongClickListener( new AdapterView.OnItemLongClickListener() {
-           MyApplication app = (MyApplication) moneyExpanded.this.getApplication();
+        lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            MyApplication app = (MyApplication) moneyExpanded.this.getApplication();
 
-           @Override
+            @Override
             public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if(adapterView.getItemAtPosition(i) instanceof  Income){
+                if (adapterView.getItemAtPosition(i) instanceof Income) {
                     final Income income = (Income) adapterView.getItemAtPosition(i);
                     AlertDialog.Builder builder = new AlertDialog.Builder(moneyExpanded.this);
                     builder.setMessage("Do you want to remove the selected item?");
                     builder.setCancelable(false);
                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
-                        public void onClick(DialogInterface dialogInterface, int i){
+                        public void onClick(DialogInterface dialogInterface, int i) {
 
                             ExpensesDB db = new ExpensesDB(moneyExpanded.this);
                             db.open();
                             app.deleteIncomeFromItems(income);
                             db.deleteEntryIncome(income.getType());
                             db.close();
-                            arrayAdapter.remove(income);
-                            arrayAdapter.notifyDataSetChanged();
+                            adapter.remove(income);
+                            adapter.notifyDataSetChanged();
                             Toast.makeText(moneyExpanded.this, "The item has been removed", Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -127,7 +137,7 @@ public class moneyExpanded extends AppCompatActivity {
                     });
                     builder.show();
 
-                }else if(adapterView.getItemAtPosition(i) instanceof  Expense){
+                } else if (adapterView.getItemAtPosition(i) instanceof Expense) {
                     final Expense expense = (Expense) adapterView.getItemAtPosition(i);
                     AlertDialog.Builder builder = new AlertDialog.Builder(moneyExpanded.this);
                     builder.setMessage("Do you want to remove the selected item?");
@@ -135,17 +145,17 @@ public class moneyExpanded extends AppCompatActivity {
                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            try{
+                            try {
                                 ExpensesDB db = new ExpensesDB(moneyExpanded.this);
                                 db.open();
                                 app.deleteExpenseFromItems(expense);
                                 db.deleteEntryExpense(expense.getProduct());
                                 db.close();
-                            }catch (SQLException e){
+                            } catch (SQLException e) {
                                 Toast.makeText(moneyExpanded.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                             }
-                            arrayAdapter.remove(expense);
-                            arrayAdapter.notifyDataSetChanged();
+                            adapter.remove(expense);
+                            adapter.notifyDataSetChanged();
                             Toast.makeText(moneyExpanded.this, "The item has been removed", Toast.LENGTH_SHORT).show();
                         }
                     });
