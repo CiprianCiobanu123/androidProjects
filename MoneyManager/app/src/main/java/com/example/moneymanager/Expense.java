@@ -6,6 +6,7 @@ import java.util.Date;
 public class Expense {
 
     private String product;
+    private String id;
     private double price;
     private int cantity;
     private LocalDate date;
@@ -48,14 +49,23 @@ public class Expense {
         return yearExpense;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public void setYearExpense(int yearExpense) {
         this.yearExpense = yearExpense;
     }
 
-    public Expense(String product, double price, int cantity, int dayExpense, int monthExpense, int yearExpense){
+    public Expense(String product, double price, int cantity, int dayExpense, int monthExpense, int yearExpense, String id){
         this.product = product;
         this.price = price;
         this.cantity = cantity;
+        this.id = id;
         this.spent = cantity * price;
         this.dayExpense = dayExpense;
         this.monthExpense = monthExpense;

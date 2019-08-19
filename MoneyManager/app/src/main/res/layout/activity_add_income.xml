@@ -47,8 +47,8 @@
         android:textColorHint="#ffffff" />
 
 
-
     <Button
+        android:id="@+id/btnAdd"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_gravity="center_horizontal"
@@ -57,11 +57,10 @@
         android:layout_marginRight="20dp"
         android:background="@drawable/roundedbutton"
         android:gravity="center_horizontal|center_vertical"
-        android:textColor="#FFFFFF"
-        android:textColorHint="#0FFFFFFF"
-        android:textSize="15dp"
-        android:id="@+id/btnAdd"
-        android:text="@string/add" />
+        android:text="@string/add"
+        android:textColor="#1b5e20"
+        android:textColorHint="#1b5e20"
+        android:textSize="15dp" />
 
     <Button
         android:id="@+id/btnCancel"
@@ -74,9 +73,8 @@
         android:background="@drawable/roundedbutton"
         android:gravity="center_horizontal|center_vertical"
         android:text="@string/cancel"
-        android:textColor="#FFFFFF"
+        android:textColor="#1b5e20"
         android:textColorHint="#0FFFFFFF"
-        android:textSize="15dp"
- />
+        android:textSize="15dp" />
 
 </LinearLayout>

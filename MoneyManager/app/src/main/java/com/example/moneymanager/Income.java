@@ -12,12 +12,14 @@ public class Income implements Parcelable {
     private int monthIncome;
     private int yearIncome;
     private LocalDate date;
-    public Income (double sum, String type, int dayIncome, int monthIncome, int yearIncome){
+    private String id;
+    public Income (double sum, String type, int dayIncome, int monthIncome, int yearIncome, String id){
         this.sum = sum;
         this.type= type;
         this.dayIncome= dayIncome;
         this.monthIncome=monthIncome;
         this.yearIncome=yearIncome;
+        this.id = id;
         date = LocalDate.of(yearIncome,monthIncome,dayIncome);
     }
 
@@ -25,6 +27,14 @@ public class Income implements Parcelable {
     protected Income(Parcel in) {
         sum = in.readDouble();
         type = in.readString();
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 
     @Override

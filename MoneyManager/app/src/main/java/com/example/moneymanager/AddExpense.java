@@ -90,7 +90,7 @@ public class AddExpense extends AppCompatActivity {
                         ExpensesDB db = new ExpensesDB(AddExpense.this);
                         db.open();
                         db.createEntryExpense(product, price, cantity, day, month, year);
-                        app.addExpenseToItems(new Expense(product, price, cantity, day, month, year));
+                        app.addExpenseToItems(new Expense(product, price, cantity, day, month, year,null));
                         db.close();
                         Toast.makeText(AddExpense.this, "Succesfully Saved", Toast.LENGTH_SHORT).show();
                     } catch (SQLException e) {

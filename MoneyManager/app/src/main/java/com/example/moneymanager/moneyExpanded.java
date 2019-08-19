@@ -121,7 +121,7 @@ public class moneyExpanded extends AppCompatActivity {
                             ExpensesDB db = new ExpensesDB(moneyExpanded.this);
                             db.open();
                             app.deleteIncomeFromItems(income);
-                            db.deleteEntryIncome(income.getType());
+                            db.deleteEntryIncome(income.getId());
                             db.close();
                             adapter.remove(income);
                             adapter.notifyDataSetChanged();
@@ -149,7 +149,7 @@ public class moneyExpanded extends AppCompatActivity {
                                 ExpensesDB db = new ExpensesDB(moneyExpanded.this);
                                 db.open();
                                 app.deleteExpenseFromItems(expense);
-                                db.deleteEntryExpense(expense.getProduct());
+                                db.deleteEntryExpense(expense.getId());
                                 db.close();
                             } catch (SQLException e) {
                                 Toast.makeText(moneyExpanded.this, e.getMessage(), Toast.LENGTH_SHORT).show();

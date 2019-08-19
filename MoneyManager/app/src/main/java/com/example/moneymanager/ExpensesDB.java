@@ -113,12 +113,12 @@ public class ExpensesDB {
         return ourDatabase.insert(DATABASE_TABLE_INCOME, null, cv);
     }
 
-    public long deleteEntryExpense(String product) {
-        return ourDatabase.delete(DATABASE_TABLE_EXPENSE, KEY_PRODUCT + "=?", new String[]{product});
+    public long deleteEntryExpense(String id) {
+        return ourDatabase.delete(DATABASE_TABLE_EXPENSE, KEY_ROWID + "=?", new String[]{id});
     }
 
-    public long deleteEntryIncome(String type) {
-        return ourDatabase.delete(DATABASE_TABLE_INCOME, KEY_TYPE + "=?", new String[]{type});
+    public long deleteEntryIncome(String id) {
+        return ourDatabase.delete(DATABASE_TABLE_INCOME, KEY_ROWID + "=?", new String[]{id});
     }
 
     public long updateEntryExpense(String rowId, String product, double price, int cantity, Date dateExpenses) {
@@ -144,14 +144,14 @@ public class ExpensesDB {
         Cursor res = db.rawQuery("select * from " + DATABASE_TABLE_INCOME,null);
         res.moveToFirst();
         while(!res.isAfterLast()){
+            String id = res.getString(res.getColumnIndex(KEY_ROWID));
             Double sum = res.getDouble(res.getColumnIndex(KEY_SUM));
             String type = res.getString(res.getColumnIndex(KEY_TYPE));
             int dayIncome = res.getInt(res.getColumnIndex(KEY_DAY_FOR_INCOMES));
             int monthIncome = res.getInt(res.getColumnIndex(KEY_MONTH_FOR_INCOMES));
             int yearIncome = res.getInt(res.getColumnIndex(KEY_YEAR_FOR_INCOMES));
 
-
-            Income income = new Income(sum, type, dayIncome,monthIncome,yearIncome);
+            Income income = new Income(sum, type, dayIncome,monthIncome,yearIncome,id);
             incomeArray.add(income);
             res.moveToNext();
         }
@@ -163,6 +163,7 @@ public class ExpensesDB {
             Cursor res = db.rawQuery("select * from " + DATABASE_TABLE_EXPENSE,null);
             res.moveToFirst();
             while(!res.isAfterLast()){
+                String id = res.getString(res.getColumnIndex(KEY_ROWID));
                 Double price = res.getDouble(res.getColumnIndex(KEY_PRICE));
                 int cantity = res.getInt(res.getColumnIndex(KEY_CANTITY));
                 String product = res.getString(res.getColumnIndex(KEY_PRODUCT));
@@ -171,7 +172,7 @@ public class ExpensesDB {
                 int yearExpense = res.getInt(res.getColumnIndex(KEY_YEAR_FOR_EXPENSES));
 
 
-                Expense expense = new Expense(product,price,cantity, dayExpense,monthExpense,yearExpense);
+                Expense expense = new Expense(product,price,cantity, dayExpense,monthExpense,yearExpense,id);
                 expenseArray.add(expense);
                 res.moveToNext();
             }

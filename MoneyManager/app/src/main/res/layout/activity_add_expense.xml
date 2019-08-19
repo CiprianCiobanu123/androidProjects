@@ -69,7 +69,7 @@
         android:background="@drawable/roundedbutton"
         android:gravity="center_horizontal|center_vertical"
         android:text="@string/add"
-        android:textColor="#FFFFFF"
+        android:textColor="#1b5e20"
         android:textColorHint="#FFFFFF"
         android:textSize="15dp" />
 
@@ -84,7 +84,7 @@
         android:background="@drawable/roundedbutton"
         android:gravity="center_horizontal|center_vertical"
         android:text="@string/cancel"
-        android:textColor="#FFFFFF"
+        android:textColor="#1b5e20"
         android:textColorHint="#0FFFFFFF"
         android:textSize="15dp" />
 

@@ -17,7 +17,6 @@ public class AddIncome extends AppCompatActivity {
 
     EditText etType, etSum;
     Button btnAdd, btnCancel, btnDate;
-    private Calendar myCalendar = Calendar.getInstance();
     private int day, month, year;
 
     @Override
@@ -31,9 +30,7 @@ public class AddIncome extends AppCompatActivity {
         etSum = findViewById(R.id.etSum);
         btnDate = findViewById(R.id.btnDate);
 
-        day = myCalendar.get(Calendar.DAY_OF_MONTH);
-        year = myCalendar.get(Calendar.YEAR);
-        month = myCalendar.get(Calendar.MONTH);
+
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -55,6 +52,11 @@ public class AddIncome extends AppCompatActivity {
                         btnDate.setText(dayOfMonth + "/" + monthOfYear + "/" + year);
                     }
                 };
+                 Calendar myCalendar = Calendar.getInstance();
+                day = myCalendar.get(Calendar.DAY_OF_MONTH);
+                year = myCalendar.get(Calendar.YEAR);
+                month = myCalendar.get(Calendar.MONTH);
+
                 DatePickerDialog dpDialog = new DatePickerDialog(AddIncome.this, listener, year, month, day);
                 dpDialog.show();
             }
@@ -80,7 +82,7 @@ public class AddIncome extends AppCompatActivity {
                         db.createEntryIncome(type,sum,day,month,year);
 
                         MyApplication app = (MyApplication) AddIncome.this.getApplication();
-                        app.addIncomeToItems(new Income(sum,type,day,month,year));
+                        app.addIncomeToItems(new Income(sum,type,day,month,year,null));
 
                         db.close();
                         Toast.makeText(AddIncome.this, "Succesfully saved", Toast.LENGTH_SHORT).show();
