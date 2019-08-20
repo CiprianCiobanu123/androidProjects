@@ -15,6 +15,10 @@ public class MyApplication  extends Application{
         items.remove(income);
     }
 
+    public void deleteItemsArray(){
+        items.clear();
+    }
+
     public void deleteExpenseFromItems(Expense expense){
         items.remove(expense);
     }

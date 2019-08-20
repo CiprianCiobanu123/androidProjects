@@ -23,7 +23,7 @@
     <ListView
         android:id="@+id/lvItems"
         android:layout_width="match_parent"
-        android:layout_height="418dp"
+        android:layout_height="290dp"
         android:layout_gravity="center_horizontal|center_vertical"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
@@ -62,4 +62,10 @@
         android:textColor="#ffffff"
         android:textSize="14sp"
         android:textStyle="normal" />
+
+    <Button
+        android:id="@+id/nextDay"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Button" />
 </LinearLayout>

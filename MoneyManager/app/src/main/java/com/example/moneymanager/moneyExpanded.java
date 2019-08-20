@@ -19,12 +19,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.time.LocalDate;
+import java.time.MonthDay;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.StringTokenizer;
 
 public class moneyExpanded extends AppCompatActivity {
 
-    Button btnAddExepense, btnAddIncome;
+    Button btnAddExepense, btnAddIncome, nextDay;
     ListView lvItems;
     TextView tvToday;
     public final int requestCodeActivityAddIncome = 1;
@@ -41,42 +43,75 @@ public class moneyExpanded extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_money_expanded);
 
-         final int day = calendar.get(Calendar.DAY_OF_MONTH);
-         final int month = calendar.get(Calendar.MONTH);
-         final int year = calendar.get(Calendar.YEAR);
+        final int day = calendar.get(Calendar.DAY_OF_MONTH);
+        final int month = calendar.get(Calendar.MONTH);
+        final int year = calendar.get(Calendar.YEAR);
 
         btnAddExepense = findViewById(R.id.btnAddExpense);
         btnAddIncome = findViewById(R.id.btnAddIncome);
+        nextDay = findViewById(R.id.nextDay);
         lvItems = findViewById(R.id.lvItems);
         tvToday = findViewById(R.id.tvToday);
 
-        tvToday.setText(LocalDate.of(year,month+1,day).toString());
+        tvToday.setText(LocalDate.of(year, month + 1, day).toString());
 
         final MyApplication app = (MyApplication) this.getApplication();
 //        ArrayList items = app.getItems();
-            try{
-                ExpensesDB db = new ExpensesDB(moneyExpanded.this);
-                db.open();
-                incomes = db.getIncomesByDate(String.valueOf(day),String.valueOf(month),String.valueOf(year));
-                expenses = db.getExpensesByDate(String.valueOf(day),String.valueOf(month), String.valueOf(year));
-                db.close();
+        try {
+            ExpensesDB db = new ExpensesDB(moneyExpanded.this);
+            db.open();
+            incomes = db.getIncomesByDate(String.valueOf(day), String.valueOf(month), String.valueOf(year));
+            expenses = db.getExpensesByDate(String.valueOf(day), String.valueOf(month), String.valueOf(year));
+            db.close();
 
-                for (int i = 0; i < incomes.size(); i++) {
-                    items.add(incomes.get(i));
-                }
-                for (int i = 0; i < expenses.size(); i++) {
-                    items.add(expenses.get(i));
-                }
-
-                app.setItems(items);
-
-            }catch(SQLException e){
-                Toast.makeText(moneyExpanded.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            for (int i = 0; i < incomes.size(); i++) {
+                items.add(incomes.get(i));
+            }
+            for (int i = 0; i < expenses.size(); i++) {
+                items.add(expenses.get(i));
             }
 
-        final ItemsAdapter adapter = new ItemsAdapter(moneyExpanded.this, items);
+            app.setItems(items);
 
+        } catch (SQLException e) {
+            Toast.makeText(moneyExpanded.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
+
+        final ItemsAdapter adapter = new ItemsAdapter(moneyExpanded.this, items);
         lvItems.setAdapter(adapter);
+
+        nextDay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                StringTokenizer tokens = new StringTokenizer(tvToday.getText().toString().trim(), "-");
+                int yearToModify = Integer.parseInt(tokens.nextToken());
+                int monthToModify = Integer.parseInt(tokens.nextToken());
+                int dayToModify = Integer.parseInt(tokens.nextToken()) + 1;
+                tvToday.setText(LocalDate.of(year, month + 1, dayToModify).toString());
+                try {
+                    ExpensesDB db = new ExpensesDB(moneyExpanded.this);
+                    db.open();
+                    incomes = db.getIncomesByDate(String.valueOf(dayToModify), String.valueOf(month), String.valueOf(year));
+                    expenses = db.getExpensesByDate(String.valueOf(dayToModify), String.valueOf(month), String.valueOf(year));
+                    db.close();
+
+                    app.deleteItemsArray();
+
+                    for (int i = 0; i < incomes.size(); i++) {
+                        items.add(incomes.get(i));
+                    }
+                    for (int i = 0; i < expenses.size(); i++) {
+                        items.add(expenses.get(i));
+                    }
+
+                    app.setItems(items);
+
+                } catch (SQLException e) {
+                    Toast.makeText(moneyExpanded.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
 
         lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -192,7 +227,7 @@ public class moneyExpanded extends AppCompatActivity {
                 DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        monthOfYear ++;
+                        monthOfYear++;
                         tvToday.setText(year + "-" + monthOfYear + "-" + dayOfMonth);
                     }
                 };
