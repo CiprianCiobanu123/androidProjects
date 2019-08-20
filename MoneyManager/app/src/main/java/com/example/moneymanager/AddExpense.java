@@ -3,7 +3,6 @@ package com.example.moneymanager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.database.SQLException;
 import android.os.Bundle;
 import android.view.View;
@@ -13,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.StringTokenizer;
 
 public class AddExpense extends AppCompatActivity {
 
@@ -37,8 +37,6 @@ public class AddExpense extends AppCompatActivity {
         year = myCalendar.get(Calendar.YEAR);
         month = myCalendar.get(Calendar.MONTH);
 
-
-
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -58,7 +56,8 @@ public class AddExpense extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
 
-                        btnDate.setText(dayOfMonth + "/" + monthOfYear + "/" + year);
+                        monthOfYear ++;
+                        btnDate.setText(year + "-" + monthOfYear + "-"  + dayOfMonth );
                     }
                 };
 
@@ -70,6 +69,7 @@ public class AddExpense extends AppCompatActivity {
         btnAdd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 if (etPrice.getText().toString().trim().isEmpty()) {
                     Toast.makeText(AddExpense.this, "Please enter all fields", Toast.LENGTH_SHORT).show();
                 } else if (etProduct.getText().toString().trim().isEmpty()) {
@@ -79,31 +79,30 @@ public class AddExpense extends AppCompatActivity {
                 } else if (etCantity.getText().toString().trim().isEmpty()) {
                     Toast.makeText(AddExpense.this, "Please enter all fields", Toast.LENGTH_SHORT).show();
                 } else {
-
                     String product = etProduct.getText().toString().trim();
                     int cantity = Integer.parseInt(etCantity.getText().toString().trim());
                     double price = Double.parseDouble(etPrice.getText().toString().trim());
+                    String dateFromInput = btnDate.getText().toString().trim();
 
+                    StringTokenizer tokens = new StringTokenizer(dateFromInput,"-");
+                    int yearFromButton =  Integer.parseInt(tokens.nextToken());
+                    int monthFromButton =  Integer.parseInt(tokens.nextToken());
+                    int dayFromButton =  Integer.parseInt(tokens.nextToken());
 
                     try {
                         MyApplication app = (MyApplication) AddExpense.this.getApplication();
                         ExpensesDB db = new ExpensesDB(AddExpense.this);
                         db.open();
-                        db.createEntryExpense(product, price, cantity, day, month, year);
-                        app.addExpenseToItems(new Expense(product, price, cantity, day, month, year,null));
+                        db.createEntryExpense(product, price, cantity, dayFromButton, monthFromButton, yearFromButton);
+                        app.addExpenseToItems(new Expense(product, price, cantity, dayFromButton, monthFromButton, yearFromButton,null));
                         db.close();
                         Toast.makeText(AddExpense.this, "Succesfully Saved", Toast.LENGTH_SHORT).show();
                     } catch (SQLException e) {
                         Toast.makeText(AddExpense.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-
                     AddExpense.this.finish();
-
                 }
             }
         });
-
     }
-
-
 }

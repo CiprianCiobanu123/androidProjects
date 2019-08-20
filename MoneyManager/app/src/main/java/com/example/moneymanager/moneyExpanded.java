@@ -1,70 +1,86 @@
 package com.example.moneymanager;
 
-import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.SQLException;
+import android.os.Build;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.ImageView;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class moneyExpanded extends AppCompatActivity {
 
     Button btnAddExepense, btnAddIncome;
     ListView lvItems;
+    TextView tvToday;
     public final int requestCodeActivityAddIncome = 1;
     public final int requestCodeActivityAddExpense = 2;
-    ArrayList items = new ArrayList();
+    Calendar calendar = Calendar.getInstance();
 
+    ArrayList items = new ArrayList();
+    ArrayList<Income> incomes = new ArrayList();
+    ArrayList<Expense> expenses = new ArrayList();
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_money_expanded);
 
+         final int day = calendar.get(Calendar.DAY_OF_MONTH);
+         final int month = calendar.get(Calendar.MONTH);
+         final int year = calendar.get(Calendar.YEAR);
+
         btnAddExepense = findViewById(R.id.btnAddExpense);
         btnAddIncome = findViewById(R.id.btnAddIncome);
         lvItems = findViewById(R.id.lvItems);
+        tvToday = findViewById(R.id.tvToday);
 
-        btnAddExepense.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(moneyExpanded.this,
-                        com.example.moneymanager.AddExpense.class);
-                startActivityForResult(intent, requestCodeActivityAddExpense);
-            }
-        });
+        tvToday.setText(LocalDate.of(year,month+1,day).toString());
 
-        btnAddIncome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(moneyExpanded.this,
-                        com.example.moneymanager.AddIncome.class);
-                startActivityForResult(intent, requestCodeActivityAddIncome);
-            }
-        });
+
+
 
         MyApplication app = (MyApplication) this.getApplication();
-        ArrayList items = app.getItems();
-//        final ArrayAdapter arrayAdapter = new ArrayAdapter(this, android.R.layout.simple_list_item_1, items);
+//        ArrayList items = app.getItems();
+
+        try{
+            ExpensesDB db = new ExpensesDB(moneyExpanded.this);
+            db.open();
+            incomes = db.getIncomesByDate(String.valueOf(day),String.valueOf(month),String.valueOf(year));
+            expenses = db.getExpensesByDate(String.valueOf(day),String.valueOf(month), String.valueOf(year));
+            db.close();
+
+            for (int i = 0; i < incomes.size(); i++) {
+                items.add(incomes.get(i));
+            }
+            for (int i = 0; i < expenses.size(); i++) {
+                items.add(expenses.get(i));
+            }
+
+            app.setItems(items);
+
+        }catch(SQLException e){
+            Toast.makeText(moneyExpanded.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+        }
 
         final ItemsAdapter adapter = new ItemsAdapter(moneyExpanded.this, items);
 
         lvItems.setAdapter(adapter);
-//        lvItems.setAdapter(arrayAdapter);
 
         lvItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -172,6 +188,44 @@ public class moneyExpanded extends AppCompatActivity {
             }
         });
 
+        tvToday.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DateDialog();
+            }
+
+            void DateDialog() {
+                DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
+                    @Override
+                    public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        monthOfYear ++;
+                        tvToday.setText(year + "-" + monthOfYear + "-" + dayOfMonth);
+                    }
+                };
+                DatePickerDialog dpDialog = new DatePickerDialog(moneyExpanded.this, listener, year, month, day);
+                dpDialog.show();
+            }
+        });
+
+        btnAddExepense.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(moneyExpanded.this,
+                        com.example.moneymanager.AddExpense.class);
+                startActivityForResult(intent, requestCodeActivityAddExpense);
+            }
+        });
+
+        btnAddIncome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(moneyExpanded.this,
+                        com.example.moneymanager.AddIncome.class);
+                startActivityForResult(intent, requestCodeActivityAddIncome);
+            }
+        });
+
     }
+
 
 }

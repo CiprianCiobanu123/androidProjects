@@ -2,7 +2,6 @@ package com.example.moneymanager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
-import android.content.Intent;
 import android.database.SQLException;
 import android.os.Bundle;
 import android.view.View;
@@ -12,12 +11,14 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.StringTokenizer;
 
 public class AddIncome extends AppCompatActivity {
 
     EditText etType, etSum;
     Button btnAdd, btnCancel, btnDate;
     private int day, month, year;
+    Calendar myCalendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,6 +30,10 @@ public class AddIncome extends AppCompatActivity {
         etType = findViewById(R.id.etType);
         etSum = findViewById(R.id.etSum);
         btnDate = findViewById(R.id.btnDate);
+
+        day = myCalendar.get(Calendar.DAY_OF_MONTH);
+        year = myCalendar.get(Calendar.YEAR);
+        month = myCalendar.get((Calendar.MONTH) + 1);
 
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -49,13 +54,10 @@ public class AddIncome extends AppCompatActivity {
                 DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        btnDate.setText(dayOfMonth + "/" + monthOfYear + "/" + year);
+                        monthOfYear ++;
+                        btnDate.setText( year + "-" + monthOfYear + "-"  + dayOfMonth );
                     }
                 };
-                 Calendar myCalendar = Calendar.getInstance();
-                day = myCalendar.get(Calendar.DAY_OF_MONTH);
-                year = myCalendar.get(Calendar.YEAR);
-                month = myCalendar.get(Calendar.MONTH);
 
                 DatePickerDialog dpDialog = new DatePickerDialog(AddIncome.this, listener, year, month, day);
                 dpDialog.show();
@@ -75,14 +77,20 @@ public class AddIncome extends AppCompatActivity {
                 } else {
                     double sum = Double.parseDouble(etSum.getText().toString().trim());
                     String type = etType.getText().toString().trim();
+                    String dateFromInput = btnDate.getText().toString().trim();
+
+                    StringTokenizer tokens = new StringTokenizer(dateFromInput,"-");
+                    int yearFromButton =  Integer.parseInt(tokens.nextToken());
+                    int monthFromButton =  Integer.parseInt(tokens.nextToken());
+                    int dayFromButton =  Integer.parseInt(tokens.nextToken());
 
                     try{
                         ExpensesDB db = new ExpensesDB(AddIncome.this);
                         db.open();
-                        db.createEntryIncome(type,sum,day,month,year);
+                        db.createEntryIncome(type,sum,dayFromButton,monthFromButton,yearFromButton);
 
                         MyApplication app = (MyApplication) AddIncome.this.getApplication();
-                        app.addIncomeToItems(new Income(sum,type,day,month,year,null));
+                        app.addIncomeToItems(new Income(sum,type,dayFromButton,monthFromButton,yearFromButton,null));
 
                         db.close();
                         Toast.makeText(AddIncome.this, "Succesfully saved", Toast.LENGTH_SHORT).show();

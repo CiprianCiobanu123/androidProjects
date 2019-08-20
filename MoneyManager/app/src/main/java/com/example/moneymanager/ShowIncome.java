@@ -2,6 +2,7 @@ package com.example.moneymanager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -27,6 +28,8 @@ public class ShowIncome extends AppCompatActivity {
         int year = getIntent().getIntExtra("year",0);
 
         LocalDate date = LocalDate.of(year,month,day);
+
+        tvShowIncome.setTextColor(Color.GREEN);
 
         tvShowIncome.setText(String.format("+%s", sum));
         tvShowType.setText(String.format("Type: %s", type));

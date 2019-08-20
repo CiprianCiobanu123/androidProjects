@@ -2,6 +2,7 @@ package com.example.moneymanager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.TextView;
 
@@ -22,8 +23,8 @@ public class ShowExpense extends AppCompatActivity {
         tvShowExpenseDate = findViewById(R.id.tvShowExpenseDate);
         tvShowExpenseTotalSpent = findViewById(R.id.tvShowExpenseTotalSpent);
 
-       final String product = getIntent().getStringExtra("product");
-       final double price = getIntent().getDoubleExtra("price",0);
+        final String product = getIntent().getStringExtra("product");
+        final double price = getIntent().getDoubleExtra("price",0);
         final int cantity = getIntent().getIntExtra("cantity",0);
         final double amountSpent = getIntent().getDoubleExtra("amountSpent",0);
         final int day = getIntent().getIntExtra("day",0);
@@ -31,6 +32,8 @@ public class ShowExpense extends AppCompatActivity {
         final int year = getIntent().getIntExtra("year",0);
 
         LocalDate date = LocalDate.of(year,month,day);
+
+        tvShowExpenseTotalSpent.setTextColor(Color.RED);
 
         tvShowExpenseProduct.setText(String.format("Product: %s", product));
         tvShowExpensePrice.setText(String.format("Price: %s", price));

@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.database.SQLException;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
@@ -57,8 +58,12 @@ public class MainActivity extends AppCompatActivity {
             db.close();
             if (totalAccount == 0) {
                 tvAccount.setText("0");
-            } else {
-                tvAccount.setText(String.valueOf(totalAccount));
+            } else if(totalAccount > 0) {
+                tvAccount.setText(String.valueOf("+ " +  totalAccount));
+                tvAccount.setTextColor(Color.GREEN);
+            }else{
+                tvAccount.setText(String.valueOf("" + totalAccount));
+                tvAccount.setTextColor(Color.RED);
             }
 
         } catch (SQLException e) {

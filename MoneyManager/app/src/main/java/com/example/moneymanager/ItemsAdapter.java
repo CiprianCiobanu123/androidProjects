@@ -2,6 +2,7 @@ package com.example.moneymanager;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,9 +36,11 @@ public class ItemsAdapter extends ArrayAdapter {
         if(items.get(position) instanceof  Income){
             ivIncome.setImageResource(R.mipmap.moneybagincome);
             Income income = (Income) items.get(position);
+            tvIncomeExpense.setTextColor(Color.GREEN);
             tvIncomeExpense.setText("+" + String.valueOf(income.getSum()));
             tvDescription.setText(income.getType());
         }else{
+            tvIncomeExpense.setTextColor(Color.RED);
             ivIncome.setImageResource(R.mipmap.expense);
             Expense expense = (Expense )items.get(position);
             tvIncomeExpense.setText("-" + String.valueOf(expense.getSpent()));
