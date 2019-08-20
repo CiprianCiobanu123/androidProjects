@@ -32,8 +32,8 @@ public class moneyExpanded extends AppCompatActivity {
     Calendar calendar = Calendar.getInstance();
 
     ArrayList items = new ArrayList();
-    ArrayList<Income> incomes = new ArrayList();
-    ArrayList<Expense> expenses = new ArrayList();
+    ArrayList<Income> incomes = new ArrayList<>();
+    ArrayList<Expense> expenses = new ArrayList<>();
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -52,31 +52,27 @@ public class moneyExpanded extends AppCompatActivity {
 
         tvToday.setText(LocalDate.of(year,month+1,day).toString());
 
-
-
-
-        MyApplication app = (MyApplication) this.getApplication();
+        final MyApplication app = (MyApplication) this.getApplication();
 //        ArrayList items = app.getItems();
+            try{
+                ExpensesDB db = new ExpensesDB(moneyExpanded.this);
+                db.open();
+                incomes = db.getIncomesByDate(String.valueOf(day),String.valueOf(month),String.valueOf(year));
+                expenses = db.getExpensesByDate(String.valueOf(day),String.valueOf(month), String.valueOf(year));
+                db.close();
 
-        try{
-            ExpensesDB db = new ExpensesDB(moneyExpanded.this);
-            db.open();
-            incomes = db.getIncomesByDate(String.valueOf(day),String.valueOf(month),String.valueOf(year));
-            expenses = db.getExpensesByDate(String.valueOf(day),String.valueOf(month), String.valueOf(year));
-            db.close();
+                for (int i = 0; i < incomes.size(); i++) {
+                    items.add(incomes.get(i));
+                }
+                for (int i = 0; i < expenses.size(); i++) {
+                    items.add(expenses.get(i));
+                }
 
-            for (int i = 0; i < incomes.size(); i++) {
-                items.add(incomes.get(i));
+                app.setItems(items);
+
+            }catch(SQLException e){
+                Toast.makeText(moneyExpanded.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
-            for (int i = 0; i < expenses.size(); i++) {
-                items.add(expenses.get(i));
-            }
-
-            app.setItems(items);
-
-        }catch(SQLException e){
-            Toast.makeText(moneyExpanded.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-        }
 
         final ItemsAdapter adapter = new ItemsAdapter(moneyExpanded.this, items);
 
@@ -119,7 +115,6 @@ public class moneyExpanded extends AppCompatActivity {
             }
         });
 
-
         lvItems.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             MyApplication app = (MyApplication) moneyExpanded.this.getApplication();
 
@@ -133,7 +128,6 @@ public class moneyExpanded extends AppCompatActivity {
                     builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-
                             ExpensesDB db = new ExpensesDB(moneyExpanded.this);
                             db.open();
                             app.deleteIncomeFromItems(income);
@@ -202,6 +196,8 @@ public class moneyExpanded extends AppCompatActivity {
                         tvToday.setText(year + "-" + monthOfYear + "-" + dayOfMonth);
                     }
                 };
+
+
                 DatePickerDialog dpDialog = new DatePickerDialog(moneyExpanded.this, listener, year, month, day);
                 dpDialog.show();
             }
@@ -226,6 +222,5 @@ public class moneyExpanded extends AppCompatActivity {
         });
 
     }
-
 
 }

@@ -55,7 +55,6 @@ public class AddExpense extends AppCompatActivity {
                 DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-
                         monthOfYear ++;
                         btnDate.setText(year + "-" + monthOfYear + "-"  + dayOfMonth );
                     }
