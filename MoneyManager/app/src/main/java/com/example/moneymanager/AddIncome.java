@@ -18,7 +18,7 @@ public class AddIncome extends AppCompatActivity {
     EditText etType, etSum;
     Button btnAdd, btnCancel, btnDate;
     private int day, month, year;
-    Calendar myCalendar = Calendar.getInstance();
+    private Calendar myCalendar = Calendar.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,7 +33,7 @@ public class AddIncome extends AppCompatActivity {
 
         day = myCalendar.get(Calendar.DAY_OF_MONTH);
         year = myCalendar.get(Calendar.YEAR);
-        month = myCalendar.get((Calendar.MONTH) + 1);
+        month = myCalendar.get(Calendar.MONTH);
 
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
@@ -55,7 +55,7 @@ public class AddIncome extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         monthOfYear ++;
-                        btnDate.setText( year + "-" + monthOfYear + "-"  + dayOfMonth );
+                        btnDate.setText(year + "-" + monthOfYear + "-"  + dayOfMonth );
                     }
                 };
 
@@ -88,10 +88,8 @@ public class AddIncome extends AppCompatActivity {
                         ExpensesDB db = new ExpensesDB(AddIncome.this);
                         db.open();
                         db.createEntryIncome(type,sum,dayFromButton,monthFromButton,yearFromButton);
-
                         MyApplication app = (MyApplication) AddIncome.this.getApplication();
                         app.addIncomeToItems(new Income(sum,type,dayFromButton,monthFromButton,yearFromButton,null));
-
                         db.close();
                         Toast.makeText(AddIncome.this, "Succesfully saved", Toast.LENGTH_SHORT).show();
                     }catch(SQLException e){

@@ -26,7 +26,7 @@ import java.util.StringTokenizer;
 
 public class moneyExpanded extends AppCompatActivity {
 
-    Button btnAddExepense, btnAddIncome, nextDay;
+    Button btnAddExepense, btnAddIncome, nextDay, btnPrevious;
     ListView lvItems;
     TextView tvToday;
     public final int requestCodeActivityAddIncome = 1;
@@ -49,6 +49,7 @@ public class moneyExpanded extends AppCompatActivity {
 
         btnAddExepense = findViewById(R.id.btnAddExpense);
         btnAddIncome = findViewById(R.id.btnAddIncome);
+        btnPrevious = findViewById(R.id.btnPrevious);
         nextDay = findViewById(R.id.nextDay);
         lvItems = findViewById(R.id.lvItems);
         tvToday = findViewById(R.id.tvToday);
@@ -56,7 +57,7 @@ public class moneyExpanded extends AppCompatActivity {
         tvToday.setText(LocalDate.of(year, month + 1, day).toString());
 
         final MyApplication app = (MyApplication) this.getApplication();
-//        ArrayList items = app.getItems();
+
         try {
             ExpensesDB db = new ExpensesDB(moneyExpanded.this);
             db.open();
@@ -71,6 +72,7 @@ public class moneyExpanded extends AppCompatActivity {
                 items.add(expenses.get(i));
             }
 
+
             app.setItems(items);
 
         } catch (SQLException e) {
@@ -79,6 +81,7 @@ public class moneyExpanded extends AppCompatActivity {
 
         final ItemsAdapter adapter = new ItemsAdapter(moneyExpanded.this, items);
         lvItems.setAdapter(adapter);
+        adapter.notifyDataSetChanged();
 
         nextDay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -95,7 +98,7 @@ public class moneyExpanded extends AppCompatActivity {
                     expenses = db.getExpensesByDate(String.valueOf(dayToModify), String.valueOf(month), String.valueOf(year));
                     db.close();
 
-                    app.deleteItemsArray();
+                    adapter.clear();
 
                     for (int i = 0; i < incomes.size(); i++) {
                         items.add(incomes.get(i));
@@ -104,7 +107,41 @@ public class moneyExpanded extends AppCompatActivity {
                         items.add(expenses.get(i));
                     }
 
-                    app.setItems(items);
+                    adapter.notifyDataSetChanged();
+
+                } catch (SQLException e) {
+                    Toast.makeText(moneyExpanded.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+
+            }
+        });
+
+
+        btnPrevious.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                StringTokenizer tokens = new StringTokenizer(tvToday.getText().toString().trim(), "-");
+                int yearToModify = Integer.parseInt(tokens.nextToken());
+                int monthToModify = Integer.parseInt(tokens.nextToken());
+                int dayToModify = Integer.parseInt(tokens.nextToken()) - 1;
+                tvToday.setText(LocalDate.of(year, month + 1, dayToModify).toString());
+                try {
+                    ExpensesDB db = new ExpensesDB(moneyExpanded.this);
+                    db.open();
+                    incomes = db.getIncomesByDate(String.valueOf(dayToModify), String.valueOf(month), String.valueOf(year));
+                    expenses = db.getExpensesByDate(String.valueOf(dayToModify), String.valueOf(month), String.valueOf(year));
+                    db.close();
+
+                    adapter.clear();
+                    adapter.notifyDataSetChanged();
+
+                    for (int i = 0; i < incomes.size(); i++) {
+                        items.add(incomes.get(i));
+                    }
+                    for (int i = 0; i < expenses.size(); i++) {
+                        items.add(expenses.get(i));
+                    }
+
 
                 } catch (SQLException e) {
                     Toast.makeText(moneyExpanded.this, e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -165,7 +202,7 @@ public class moneyExpanded extends AppCompatActivity {
                         public void onClick(DialogInterface dialogInterface, int i) {
                             ExpensesDB db = new ExpensesDB(moneyExpanded.this);
                             db.open();
-                            app.deleteIncomeFromItems(income);
+//                            app.deleteIncomeFromItems(income);
                             db.deleteEntryIncome(income.getId());
                             db.close();
                             adapter.remove(income);
@@ -193,7 +230,7 @@ public class moneyExpanded extends AppCompatActivity {
                             try {
                                 ExpensesDB db = new ExpensesDB(moneyExpanded.this);
                                 db.open();
-                                app.deleteExpenseFromItems(expense);
+//                                app.deleteExpenseFromItems(expense);
                                 db.deleteEntryExpense(expense.getId());
                                 db.close();
                             } catch (SQLException e) {

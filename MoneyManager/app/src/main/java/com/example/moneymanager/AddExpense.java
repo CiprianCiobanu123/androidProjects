@@ -89,10 +89,10 @@ public class AddExpense extends AppCompatActivity {
                     int dayFromButton =  Integer.parseInt(tokens.nextToken());
 
                     try {
-                        MyApplication app = (MyApplication) AddExpense.this.getApplication();
                         ExpensesDB db = new ExpensesDB(AddExpense.this);
                         db.open();
                         db.createEntryExpense(product, price, cantity, dayFromButton, monthFromButton, yearFromButton);
+                        MyApplication app = (MyApplication) AddExpense.this.getApplication();
                         app.addExpenseToItems(new Expense(product, price, cantity, dayFromButton, monthFromButton, yearFromButton,null));
                         db.close();
                         Toast.makeText(AddExpense.this, "Succesfully Saved", Toast.LENGTH_SHORT).show();
