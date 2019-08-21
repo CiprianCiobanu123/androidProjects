@@ -17,24 +17,23 @@ public class AddIncome extends AppCompatActivity {
 
     EditText etType, etSum;
     Button btnAdd, btnCancel, btnDate;
-    private int day, month, year;
     private Calendar myCalendar = Calendar.getInstance();
+    private int day, month, year;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_income);
 
-        btnCancel = findViewById(R.id.btnCancel);
+        btnDate = findViewById(R.id.btnDate);
         btnAdd = findViewById(R.id.btnAdd);
         etType = findViewById(R.id.etType);
         etSum = findViewById(R.id.etSum);
-        btnDate = findViewById(R.id.btnDate);
+        btnCancel = findViewById(R.id.btnCancel);
 
         day = myCalendar.get(Calendar.DAY_OF_MONTH);
         year = myCalendar.get(Calendar.YEAR);
         month = myCalendar.get(Calendar.MONTH);
-
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override

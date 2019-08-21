@@ -141,7 +141,8 @@ public class ExpensesDB {
     public ArrayList<Income> getIncomesByDate(String day, String month, String year) {
         SQLiteDatabase db = this.ourHelper.getReadableDatabase();
         ArrayList<Income> incomeArray = new ArrayList<>();
-        Cursor res = db.rawQuery("select * from " + DATABASE_TABLE_INCOME + " where "+  KEY_DAY_FOR_INCOMES + " =? " , new String[] {day} );
+        Cursor res = db.rawQuery("select * from " + DATABASE_TABLE_INCOME + " where "+  KEY_DAY_FOR_INCOMES + " =? AND " +  KEY_MONTH_FOR_INCOMES + " =? AND "
+                + KEY_YEAR_FOR_INCOMES + " =? ", new String[] {day , month, year} );
         res.moveToFirst();
         while (!res.isAfterLast()) {
             String id = res.getString(res.getColumnIndex(KEY_ROWID));
@@ -158,11 +159,11 @@ public class ExpensesDB {
         return incomeArray;
     }
 
-
     public ArrayList<Expense> getExpensesByDate(String day, String month, String year) {
         SQLiteDatabase db = this.ourHelper.getReadableDatabase();
         ArrayList<Expense> expenseArray = new ArrayList<>();
-        Cursor res = db.rawQuery("select * from " + DATABASE_TABLE_EXPENSE + " where "+  KEY_DAY_FOR_EXPENSES + " =? " , new String[] {day} );
+        Cursor res = db.rawQuery("select * from " + DATABASE_TABLE_EXPENSE + " where "+  KEY_DAY_FOR_EXPENSES + " =? AND " +  KEY_MONTH_FOR_EXPENSES + " =? AND "
+                + KEY_YEAR_FOR_EXPENSES + " =? ", new String[] {day , month, year} );
         res.moveToFirst();
         while (!res.isAfterLast()) {
             String id = res.getString(res.getColumnIndex(KEY_ROWID));

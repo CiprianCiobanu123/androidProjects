@@ -89,7 +89,12 @@ public class MainActivity extends AppCompatActivity {
             Intent refresh = new Intent(this, MainActivity.class);
             startActivity(refresh);
             this.finish();
+            overridePendingTransition( 0, 0);
+            startActivity(getIntent());
+            overridePendingTransition( 0, 0);
         }
     }
+
+
 }
 

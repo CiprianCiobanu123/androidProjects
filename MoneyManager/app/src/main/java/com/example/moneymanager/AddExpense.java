@@ -1,7 +1,6 @@
 package com.example.moneymanager;
 
 import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.DatePickerDialog;
 import android.database.SQLException;
 import android.os.Bundle;
