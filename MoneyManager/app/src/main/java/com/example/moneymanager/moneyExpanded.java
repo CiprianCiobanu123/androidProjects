@@ -291,5 +291,7 @@ public class moneyExpanded extends AppCompatActivity {
                 startActivityForResult(intent, requestCodeActivityAddIncome);
             }
         });
+
     }
+
 }

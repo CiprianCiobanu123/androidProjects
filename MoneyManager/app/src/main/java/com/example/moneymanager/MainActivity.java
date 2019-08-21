@@ -36,12 +36,17 @@ public class MainActivity extends AppCompatActivity {
             db.open();
             incomes = db.getAllIncomeValues();
             expenses = db.getAllExpenseValues();
+            db.close();
             for (int i = 0; i < incomes.size(); i++) {
                 items.add(incomes.get(i));
             }
             for (int i = 0; i < expenses.size(); i++) {
                 items.add(expenses.get(i));
             }
+
+            MyApplication app = (MyApplication) MainActivity.this.getApplication();
+            app.setItems(items);
+
             double totalAccount = 0;
 
             for (int i = 0; i < items.size(); i++) {
@@ -52,16 +57,13 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            MyApplication app = (MyApplication) this.getApplication();
-            app.setItems(items);
 
-            db.close();
             if (totalAccount == 0) {
                 tvAccount.setText("0");
-            } else if(totalAccount > 0) {
-                tvAccount.setText(String.valueOf("+ " +  totalAccount));
+            } else if (totalAccount > 0) {
+                tvAccount.setText(String.valueOf("+ " + totalAccount));
                 tvAccount.setTextColor(Color.GREEN);
-            }else{
+            } else {
                 tvAccount.setText(String.valueOf("" + totalAccount));
                 tvAccount.setTextColor(Color.RED);
             }
@@ -87,10 +89,8 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_CANCELED) {
             Intent refresh = new Intent(this, MainActivity.class);
-            this.finish();
-            overridePendingTransition( 0, 0);
             startActivity(refresh);
-            overridePendingTransition( 0, 0);
+            this.finish();
         }
     }
 
