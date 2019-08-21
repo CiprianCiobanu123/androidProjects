@@ -87,10 +87,9 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_CANCELED) {
             Intent refresh = new Intent(this, MainActivity.class);
-            startActivity(refresh);
             this.finish();
             overridePendingTransition( 0, 0);
-            startActivity(getIntent());
+            startActivity(refresh);
             overridePendingTransition( 0, 0);
         }
     }

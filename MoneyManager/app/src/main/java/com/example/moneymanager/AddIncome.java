@@ -28,12 +28,13 @@ public class AddIncome extends AppCompatActivity {
         btnDate = findViewById(R.id.btnDate);
         btnAdd = findViewById(R.id.btnAdd);
         etType = findViewById(R.id.etType);
-        etSum = findViewById(R.id.etSum);
         btnCancel = findViewById(R.id.btnCancel);
+        etSum = findViewById(R.id.etSum);
 
         day = myCalendar.get(Calendar.DAY_OF_MONTH);
         year = myCalendar.get(Calendar.YEAR);
         month = myCalendar.get(Calendar.MONTH);
+
 
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
