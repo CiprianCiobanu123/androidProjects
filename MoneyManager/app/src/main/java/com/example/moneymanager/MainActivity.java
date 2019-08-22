@@ -62,10 +62,10 @@ public class MainActivity extends AppCompatActivity {
                 tvAccount.setText("0");
             } else if (totalAccount > 0) {
                 tvAccount.setText(String.valueOf("+ " + totalAccount));
-                tvAccount.setTextColor(Color.GREEN);
+                tvAccount.setTextColor(Color.parseColor("#388e3c"));
             } else {
                 tvAccount.setText(String.valueOf("" + totalAccount));
-                tvAccount.setTextColor(Color.RED);
+                tvAccount.setTextColor(Color.parseColor("#b91400"));
             }
 
         } catch (SQLException e) {

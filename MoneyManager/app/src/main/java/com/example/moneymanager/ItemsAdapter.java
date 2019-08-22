@@ -36,11 +36,11 @@ public class ItemsAdapter extends ArrayAdapter {
         if(items.get(position) instanceof  Income){
             ivIncome.setImageResource(R.mipmap.moneybagincome);
             Income income = (Income) items.get(position);
-            tvIncomeExpense.setTextColor(Color.GREEN);
+            tvIncomeExpense.setTextColor(Color.parseColor("#388e3c"));
             tvIncomeExpense.setText("+" + String.valueOf(income.getSum()));
             tvDescription.setText(income.getType());
         }else{
-            tvIncomeExpense.setTextColor(Color.RED);
+            tvIncomeExpense.setTextColor(Color.parseColor("#b91400"));
             ivIncome.setImageResource(R.mipmap.expense);
             Expense expense = (Expense )items.get(position);
             tvIncomeExpense.setText("-" + String.valueOf(expense.getSpent()));

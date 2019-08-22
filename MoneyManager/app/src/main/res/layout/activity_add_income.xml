@@ -72,7 +72,7 @@
                 android:background="@drawable/roundedbutton"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="@string/cancel"
-                android:textColor="#1b5e20"
+                android:textColor="#ef9a9a"
                 android:textColorHint="#0FFFFFFF"
                 android:textSize="15dp" />
 
@@ -84,10 +84,10 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginRight="20dp"
-                android:background="@drawable/roundedbutton"
+                android:background="@drawable/roundedbuttonadd"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="@string/add"
-                android:textColor="#1b5e20"
+                android:textColor="#1c313a"
                 android:textColorHint="#1b5e20"
                 android:textSize="15dp" />
         </LinearLayout>

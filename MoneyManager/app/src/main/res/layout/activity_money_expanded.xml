@@ -51,11 +51,11 @@
                 android:layout_width="246dp"
                 android:layout_height="82dp"
                 android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_marginLeft="00dp"
+                android:layout_marginLeft="0dp"
                 android:layout_marginTop="0dp"
                 android:layout_marginRight="0dp"
                 android:gravity="center_horizontal|center_vertical"
-                android:text="TextView"
+                android:text="@string/textview"
                 android:textSize="24sp"
                 android:textStyle="bold|italic" />
 
@@ -97,7 +97,7 @@
         android:gravity="center_horizontal|center_vertical"
         android:padding="15dp"
         android:text="@string/expense"
-        android:textColor="#1b5e20"
+        android:textColor="@color/colorPrimaryDark"
         android:textSize="14sp"
         android:textStyle="normal" />
 

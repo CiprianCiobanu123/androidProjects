@@ -37,7 +37,7 @@ public class ShowIncome extends AppCompatActivity {
         int year = getIntent().getIntExtra("year",0);
 
 
-        tvShowIncome.setTextColor(Color.GREEN);
+        tvShowIncome.setTextColor(Color.parseColor("#388e3c"));
 
         String date = day + "-" + month + "-" + year;
 
