@@ -58,8 +58,8 @@ public class AddExpense extends AppCompatActivity {
                 DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        monthOfYear ++;
-                        btnDate.setText(year + "-" + monthOfYear + "-"  + dayOfMonth );
+                        myCalendar.set(MONTH, monthOfYear);
+                        btnDate.setText(year + "-" + myCalendar.getDisplayName(MONTH,SHORT, Locale.getDefault()) + "-"  + dayOfMonth );
                     }
                 };
 
@@ -88,7 +88,7 @@ public class AddExpense extends AppCompatActivity {
 
                     StringTokenizer tokens = new StringTokenizer(dateFromInput,"-");
                     int yearFromButton =  Integer.parseInt(tokens.nextToken());
-                    int monthFromButton =  Integer.parseInt(tokens.nextToken());
+                    String monthFromButton =  tokens.nextToken();
                     int dayFromButton =  Integer.parseInt(tokens.nextToken());
 
                     try {

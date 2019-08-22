@@ -59,7 +59,7 @@ public class AddIncome extends AppCompatActivity {
                 DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        monthOfYear ++;
+                        myCalendar.set(MONTH, monthOfYear);
                         btnDate.setText(year + "-" + myCalendar.getDisplayName(MONTH,SHORT, Locale.getDefault()) + "-"  + dayOfMonth );
                     }
                 };
