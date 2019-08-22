@@ -14,12 +14,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.time.LocalDate;
-import java.time.Month;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
@@ -32,6 +31,7 @@ public class moneyExpanded extends AppCompatActivity {
     Button btnAddExepense, btnAddIncome, nextDay, btnPrevious;
     ListView lvItems;
     TextView tvToday;
+    ImageView ivNext, ivPrevious;
     public final int requestCodeActivityAddIncome = 1;
     public final int requestCodeActivityAddExpense = 2;
     Calendar calendar = getInstance();
@@ -46,6 +46,7 @@ public class moneyExpanded extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_money_expanded);
 
+
         final int day = calendar.get(DAY_OF_MONTH);
         final int month = calendar.get(MONTH);
         final int year = calendar.get(YEAR);
@@ -56,6 +57,9 @@ public class moneyExpanded extends AppCompatActivity {
         nextDay = findViewById(R.id.nextDay);
         lvItems = findViewById(R.id.lvItems);
         tvToday = findViewById(R.id.tvToday);
+
+        nextDay.setBackgroundResource(R.drawable.nexttotomorrow);
+        btnPrevious.setBackgroundResource(R.drawable.previoustoyesterday);
         int monthToShow = month + 1;
         tvToday.setText(year + "-" + calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()) + "-" + day);
 
@@ -193,7 +197,7 @@ public class moneyExpanded extends AppCompatActivity {
                     String type = income.getType();
                     double sum = income.getSum();
                     Intent intent = new Intent(moneyExpanded.this,
-                            com.example.moneymanager.ShowIncome.class);
+                            ShowIncome.class);
                     intent.putExtra("type", type);
                     intent.putExtra("sum", sum);
                     intent.putExtra("day", income.getDayIncome());
@@ -209,7 +213,7 @@ public class moneyExpanded extends AppCompatActivity {
                     double amountSpent = expense.getSpent();
 
                     Intent intent = new Intent(moneyExpanded.this,
-                            com.example.moneymanager.ShowExpense.class);
+                            ShowExpense.class);
                     intent.putExtra("product", product);
                     intent.putExtra("cantity", cantity);
                     intent.putExtra("price", price);
@@ -332,7 +336,7 @@ public class moneyExpanded extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(moneyExpanded.this,
-                        com.example.moneymanager.AddExpense.class);
+                        AddExpense.class);
                 startActivityForResult(intent, requestCodeActivityAddExpense);
             }
         });
@@ -341,7 +345,7 @@ public class moneyExpanded extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(moneyExpanded.this,
-                        com.example.moneymanager.AddIncome.class);
+                        AddIncome.class);
                 startActivityForResult(intent, requestCodeActivityAddIncome);
             }
         });

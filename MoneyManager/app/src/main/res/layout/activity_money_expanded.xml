@@ -3,8 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:orientation="vertical"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".moneyExpanded">
 
     <LinearLayout
@@ -17,28 +17,38 @@
             android:layout_width="wrap_content"
             android:layout_height="104dp"
             android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_marginLeft="5dp"
             android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
+            android:layout_marginBottom="5dp"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btnPrevious"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="center_horizontal|center_vertical"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="0dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="5dp"
-                android:background="@drawable/roundedbutton"
-                android:gravity="center_horizontal|center_vertical"
-                android:text="Previous"
-                android:textColor="#1b5e20"
-                android:textColorHint="#0FFFFFFF"
-                android:textSize="10dp" />
+                android:gravity="center_horizontal|center_vertical" />
+            <!--android:background="@drawable/roundedbutton"-->
+            <!--android:text="Previous"-->
+            <!--android:textColor="#1b5e20"-->
+            <!--android:textColorHint="#0FFFFFFF"-->
+            <!--android:textSize="10dp" /-->
+            <!--&gt;-->
+
+            <!--android:background="@drawable/roundedbutton"-->
+            <!--android:text="Next"-->
+            <!--android:textColor="#1b5e20"-->
+            <!--android:textColorHint="#0FFFFFFF"-->
+            <!--android:textSize="10dp" />-->
 
             <TextView
                 android:id="@+id/tvToday"
-                android:layout_width="140dp"
+                android:layout_width="246dp"
                 android:layout_height="82dp"
                 android:layout_gravity="center_horizontal|center_vertical"
                 android:layout_marginLeft="00dp"
@@ -53,17 +63,14 @@
                 android:id="@+id/nextDay"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_gravity="center_horizontal"
+                android:layout_gravity="center_horizontal|center_vertical"
                 android:layout_marginLeft="20dp"
-                android:layout_marginTop="50dp"
+                android:layout_marginTop="0dp"
                 android:layout_marginRight="20dp"
                 android:layout_marginBottom="5dp"
-                android:background="@drawable/roundedbutton"
-                android:gravity="center_horizontal|center_vertical"
-                android:text="Next"
-                android:textColor="#1b5e20"
-                android:textColorHint="#0FFFFFFF"
-                android:textSize="10dp" />
+                android:gravity="center_horizontal|center_vertical" />
+
+
         </LinearLayout>
     </LinearLayout>
 
@@ -72,9 +79,10 @@
         android:layout_width="match_parent"
         android:layout_height="365dp"
         android:layout_gravity="center_horizontal|center_vertical"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp" />
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="5dp"
+        android:layout_marginBottom="5dp" />
 
     <Button
         android:id="@+id/btnAddExpense"
