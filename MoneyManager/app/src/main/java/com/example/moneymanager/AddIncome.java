@@ -2,6 +2,7 @@ package com.example.moneymanager;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.database.SQLException;
 import android.os.Bundle;
 import android.view.View;
@@ -83,6 +84,11 @@ public class AddIncome extends AppCompatActivity {
                     int yearFromButton =  Integer.parseInt(tokens.nextToken());
                     int monthFromButton =  Integer.parseInt(tokens.nextToken());
                     int dayFromButton =  Integer.parseInt(tokens.nextToken());
+
+                    Intent intent =  new Intent();
+                    intent.putExtra("type", type);
+                    intent.putExtra("sum", sum);
+                    intent.putExtra("date", dateFromInput);
 
                     try{
                         ExpensesDB db = new ExpensesDB(AddIncome.this);

@@ -1,6 +1,5 @@
 package com.example.moneymanager;
 
-import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -56,6 +55,8 @@ public class moneyExpanded extends AppCompatActivity {
         nextDay = findViewById(R.id.nextDay);
         lvItems = findViewById(R.id.lvItems);
         tvToday = findViewById(R.id.tvToday);
+        tvToday.setText(LocalDate.now().toString());
+//        Toast.makeText(moneyExpanded.this, String.valueOf(LocalDate.now().getMonthValue()), Toast.LENGTH_SHORT).show();
         tvToday.setText(LocalDate.of(year, month , day).toString());
 
         final MyApplication app = (MyApplication) moneyExpanded.this.getApplication();
@@ -81,10 +82,8 @@ public class moneyExpanded extends AppCompatActivity {
 
         final ItemsAdapter adapter = new ItemsAdapter(moneyExpanded.this, items);
         lvItems.setAdapter(adapter);
-        adapter.notifyDataSetChanged();
 
         nextDay.setOnClickListener(new View.OnClickListener() {
-            int maxDayFromCurrentMonth = getInstance().getActualMaximum(DAY_OF_MONTH);
             @Override
             public void onClick(View view) {
                 StringTokenizer tokens = new StringTokenizer(tvToday.getText().toString().trim(), "-");
@@ -92,8 +91,18 @@ public class moneyExpanded extends AppCompatActivity {
                 int monthToModify = Integer.parseInt(tokens.nextToken()) ;
                 int dayToModify = Integer.parseInt(tokens.nextToken());
 
+                int maxDayFromCurrentMonth = calendar.getActualMaximum(DAY_OF_MONTH);
+
                 dayToModify++;
-                tvToday.setText(LocalDate.of(year, month , dayToModify).toString());
+                if( dayToModify <= maxDayFromCurrentMonth){
+                    tvToday.setText(LocalDate.of(year, monthToModify , dayToModify).toString());
+
+                }else{
+                    dayToModify = 1;
+                    monthToModify = monthToModify +1;
+                   calendar.set(month, monthToModify);
+                    tvToday.setText(LocalDate.of(year, monthToModify , dayToModify).toString());
+                }
 
                 try {
                     ExpensesDB db = new ExpensesDB(moneyExpanded.this);
@@ -116,18 +125,30 @@ public class moneyExpanded extends AppCompatActivity {
                 } catch (SQLException e) {
                     Toast.makeText(moneyExpanded.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
 
         btnPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
                 StringTokenizer tokens = new StringTokenizer(tvToday.getText().toString().trim(), "-");
                 int yearToModify = Integer.parseInt(tokens.nextToken());
-                int monthToModify = Integer.parseInt(tokens.nextToken());
-                int dayToModify = Integer.parseInt(tokens.nextToken()) - 1;
-                tvToday.setText(LocalDate.of(year, month , dayToModify).toString());
+                int monthToModify = Integer.parseInt(tokens.nextToken()) ;
+                int dayToModify = Integer.parseInt(tokens.nextToken());
+
+                int minDayFromCurrentMonth = calendar.getActualMinimum(DAY_OF_MONTH);
+
+                dayToModify--;
+                if( dayToModify >= minDayFromCurrentMonth){
+                    tvToday.setText(LocalDate.of(year, monthToModify , dayToModify).toString());
+
+                }else{
+                    monthToModify = monthToModify -1;
+                    dayToModify = calendar.getActualMaximum(DAY_OF_MONTH);
+                    calendar.set(month, monthToModify);
+                    tvToday.setText(LocalDate.of(year, monthToModify , dayToModify).toString());
+                }
                 try {
                     ExpensesDB db = new ExpensesDB(moneyExpanded.this);
                     db.open();
@@ -149,7 +170,6 @@ public class moneyExpanded extends AppCompatActivity {
                 } catch (SQLException e) {
                     Toast.makeText(moneyExpanded.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                 }
-
             }
         });
 
@@ -293,5 +313,4 @@ public class moneyExpanded extends AppCompatActivity {
         });
 
     }
-
 }
