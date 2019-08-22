@@ -11,7 +11,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.StringTokenizer;
+
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.SHORT;
 
 public class AddExpense extends AppCompatActivity {
 
@@ -90,9 +94,9 @@ public class AddExpense extends AppCompatActivity {
                     try {
                         ExpensesDB db = new ExpensesDB(AddExpense.this);
                         db.open();
-                        db.createEntryExpense(product, price, cantity, dayFromButton, monthFromButton, yearFromButton);
+                        db.createEntryExpense(product, price, cantity, dayFromButton, myCalendar.getDisplayName(MONTH,SHORT, Locale.getDefault()), yearFromButton);
                         MyApplication app = (MyApplication) AddExpense.this.getApplication();
-                        app.addExpenseToItems(new Expense(product, price, cantity, dayFromButton, monthFromButton, yearFromButton,null));
+                        app.addExpenseToItems(new Expense(product, price, cantity, dayFromButton, myCalendar.getDisplayName(MONTH,SHORT, Locale.getDefault()), yearFromButton,null));
                         db.close();
                         Toast.makeText(AddExpense.this, "Succesfully Saved", Toast.LENGTH_SHORT).show();
                     } catch (SQLException e) {

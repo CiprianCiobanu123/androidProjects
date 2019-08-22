@@ -7,15 +7,24 @@ import android.os.Bundle;
 import android.widget.TextView;
 
 import java.time.LocalDate;
+import java.util.Calendar;
 
 public class ShowIncome extends AppCompatActivity {
 
     TextView tvShowIncome, tvShowType, tvShowDate;
+    Calendar myCalendar = Calendar.getInstance();
+    private int day, month, year;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_income);
+
+        day = myCalendar.get(Calendar.DAY_OF_MONTH);
+        month = myCalendar.get(Calendar.MONTH);
+        year = myCalendar.get(Calendar.YEAR);
+
 
         tvShowIncome  =  findViewById(R.  id.tvShowIncome);
         tvShowType  =  findViewById(R.id.tvShowType);
@@ -24,12 +33,13 @@ public class ShowIncome extends AppCompatActivity {
         String type = getIntent().getStringExtra("type");
         double sum = getIntent().getDoubleExtra("sum",0);
         int day = getIntent().getIntExtra("day",0);
-        int month = getIntent().getIntExtra("month",0);
+        String month = getIntent().getStringExtra("month");
         int year = getIntent().getIntExtra("year",0);
 
-        LocalDate date = LocalDate.of(year,month,day);
 
         tvShowIncome.setTextColor(Color.GREEN);
+
+        String date = day + "-" + month + "-" + year;
 
         tvShowIncome.setText(String.format("+%s", sum));
         tvShowType.setText(String.format("Type: %s", type));

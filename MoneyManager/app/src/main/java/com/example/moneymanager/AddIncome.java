@@ -12,7 +12,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.StringTokenizer;
+
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.SHORT;
 
 public class AddIncome extends AppCompatActivity {
 
@@ -56,7 +60,7 @@ public class AddIncome extends AppCompatActivity {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         monthOfYear ++;
-                        btnDate.setText(year + "-" + monthOfYear + "-"  + dayOfMonth );
+                        btnDate.setText(year + "-" + myCalendar.getDisplayName(MONTH,SHORT, Locale.getDefault()) + "-"  + dayOfMonth );
                     }
                 };
 
@@ -82,7 +86,7 @@ public class AddIncome extends AppCompatActivity {
 
                     StringTokenizer tokens = new StringTokenizer(dateFromInput,"-");
                     int yearFromButton =  Integer.parseInt(tokens.nextToken());
-                    int monthFromButton =  Integer.parseInt(tokens.nextToken());
+                    String monthFromButton = tokens.nextToken();
                     int dayFromButton =  Integer.parseInt(tokens.nextToken());
 
                     Intent intent =  new Intent();
@@ -93,9 +97,9 @@ public class AddIncome extends AppCompatActivity {
                     try{
                         ExpensesDB db = new ExpensesDB(AddIncome.this);
                         db.open();
-                        db.createEntryIncome(type,sum,dayFromButton,monthFromButton,yearFromButton);
+                        db.createEntryIncome(type,sum,dayFromButton, myCalendar.getDisplayName(MONTH,SHORT, Locale.getDefault()),yearFromButton);
                         MyApplication app = (MyApplication) AddIncome.this.getApplication();
-                        app.addIncomeToItems(new Income(sum,type,dayFromButton,monthFromButton,yearFromButton,null));
+                        app.addIncomeToItems(new Income(sum,type,dayFromButton, myCalendar.getDisplayName(MONTH,SHORT, Locale.getDefault()),yearFromButton,null));
                         db.close();
                         Toast.makeText(AddIncome.this, "Succesfully saved", Toast.LENGTH_SHORT).show();
                     }catch(SQLException e){

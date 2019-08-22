@@ -19,8 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.StringTokenizer;
 
 import static java.util.Calendar.*;
@@ -55,15 +57,15 @@ public class moneyExpanded extends AppCompatActivity {
         lvItems = findViewById(R.id.lvItems);
         tvToday = findViewById(R.id.tvToday);
         int monthToShow = month + 1;
-        tvToday.setText(year + "-" + monthToShow + "-" + day);
+        tvToday.setText(year + "-" + calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()) + "-" + day);
 
         final MyApplication app = (MyApplication) moneyExpanded.this.getApplication();
 
         try {
             ExpensesDB db = new ExpensesDB(moneyExpanded.this);
             db.open();
-            incomes = db.getIncomesByDate(String.valueOf(day), String.valueOf(monthToShow), String.valueOf(year));
-            expenses = db.getExpensesByDate(String.valueOf(day), String.valueOf(monthToShow), String.valueOf(year));
+            incomes = db.getIncomesByDate(String.valueOf(day), calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(year));
+            expenses = db.getExpensesByDate(String.valueOf(day), calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(year));
             db.close();
 
             for (int i = 0; i < incomes.size(); i++) {
@@ -86,37 +88,35 @@ public class moneyExpanded extends AppCompatActivity {
             public void onClick(View view) {
                 StringTokenizer tokens = new StringTokenizer(tvToday.getText().toString().trim(), "-");
                 int yearToModify = Integer.parseInt(tokens.nextToken());
-                int monthToModify = Integer.parseInt(tokens.nextToken());
+                String monthToModify = tokens.nextToken();
                 int dayToModify = Integer.parseInt(tokens.nextToken());
 
-                calendar.set(MONTH, monthToModify - 1);
                 int maxDayFromCurrentMonth = calendar.getActualMaximum(DAY_OF_MONTH);
 
                 dayToModify++;
 
                 if (dayToModify <= maxDayFromCurrentMonth) {
-                    tvToday.setText(yearToModify + "-" + monthToModify + "-" + dayToModify);
-                    Toast.makeText(moneyExpanded.this, ""+calendar.get(MONTH), Toast.LENGTH_SHORT).show();
+                    tvToday.setText(yearToModify + "-" + calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()) + "-" + dayToModify);
                 } else {
                     dayToModify = 1;
-                    monthToModify = monthToModify + 1;
-                    if (monthToModify -1  <= 11) {
-                        tvToday.setText(yearToModify + "-" + monthToModify + "-" + dayToModify);
+                    int monthToVerifyForChangingYear = calendar.get(MONTH) + 1;
+                    calendar.set(MONTH, calendar.get(MONTH) + 1);
+                    if (monthToVerifyForChangingYear <= 11) {
+                        tvToday.setText(yearToModify + "-" + calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()) + "-" + dayToModify);
                     } else {
                         dayToModify = 1;
-                        monthToModify = 1;
                         yearToModify = yearToModify + 1;
-                        tvToday.setText(yearToModify + "-" + monthToModify + "-" + dayToModify);
+                        calendar.set(MONTH, calendar.get(MONTH));
+                        tvToday.setText(yearToModify + "-" + calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()) + "-" + dayToModify);
                     }
                 }
 
                 try {
                     ExpensesDB db = new ExpensesDB(moneyExpanded.this);
                     db.open();
-                    incomes = db.getIncomesByDate(String.valueOf(dayToModify), String.valueOf(monthToModify), String.valueOf(yearToModify));
-                    expenses = db.getExpensesByDate(String.valueOf(dayToModify), String.valueOf(monthToModify), String.valueOf(yearToModify));
+                    incomes = db.getIncomesByDate(String.valueOf(dayToModify), calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(yearToModify));
+                    expenses = db.getExpensesByDate(String.valueOf(dayToModify), calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(yearToModify));
                     db.close();
-
                     adapter.clear();
 
                     for (int i = 0; i < incomes.size(); i++) {
@@ -139,36 +139,33 @@ public class moneyExpanded extends AppCompatActivity {
             public void onClick(View view) {
                 StringTokenizer tokens = new StringTokenizer(tvToday.getText().toString().trim(), "-");
                 int yearToModify = Integer.parseInt(tokens.nextToken());
-                int monthToModify = Integer.parseInt(tokens.nextToken());
+                String monthToModify = tokens.nextToken();
                 int dayToModify = Integer.parseInt(tokens.nextToken());
-
-                calendar.set(MONTH, monthToModify - 1);
-
-                int maxDayFromCurrentMonth = calendar.getMaximum(DAY_OF_MONTH);
+                int maxDayFromCurrentMonth = calendar.getActualMaximum(DAY_OF_MONTH);
 
                 dayToModify--;
 
                 if (dayToModify >= 1) {
-                    Toast.makeText(moneyExpanded.this, ""+calendar.get(MONTH), Toast.LENGTH_SHORT).show();
-                    tvToday.setText(yearToModify + "-" + monthToModify + "-" + dayToModify);
+                    tvToday.setText(yearToModify + "-" + calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()) + "-" + dayToModify);
                 } else {
-                    --monthToModify;
-                    calendar.set(MONTH, monthToModify );
+                    int monthToVerifyForChangingYear = calendar.get(MONTH) - 1;
+                    calendar.set(MONTH, calendar.get(MONTH) - 1);
                     dayToModify = calendar.getActualMaximum(DAY_OF_MONTH);
-                    if (monthToModify +1 >= 0) {
-                        tvToday.setText(yearToModify + "-" + monthToModify + "-" + dayToModify);
+                    if (monthToVerifyForChangingYear >= 0) {
+                        tvToday.setText(yearToModify + "-" + calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()) + "-" + dayToModify);
                     } else {
                         dayToModify = maxDayFromCurrentMonth;
-                        monthToModify = 11;
+                        calendar.set(MONTH, calendar.get(MONTH));
                         yearToModify = yearToModify - 1;
-                        tvToday.setText(yearToModify + "-" + monthToModify + "-" + dayToModify);
+                        tvToday.setText(yearToModify + "-" + calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()) + "-" + dayToModify);
                     }
                 }
+
                 try {
                     ExpensesDB db = new ExpensesDB(moneyExpanded.this);
                     db.open();
-                    incomes = db.getIncomesByDate(String.valueOf(dayToModify), String.valueOf(monthToModify), String.valueOf(yearToModify));
-                    expenses = db.getExpensesByDate(String.valueOf(dayToModify), String.valueOf(monthToModify), String.valueOf(yearToModify));
+                    incomes = db.getIncomesByDate(String.valueOf(dayToModify), calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(yearToModify));
+                    expenses = db.getExpensesByDate(String.valueOf(dayToModify), calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(yearToModify));
                     db.close();
 
                     adapter.clear();
@@ -300,8 +297,30 @@ public class moneyExpanded extends AppCompatActivity {
                 DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        monthOfYear++;
-                        tvToday.setText(year + "-" + monthOfYear + "-" + dayOfMonth);
+                        calendar.set(MONTH, monthOfYear);
+                        tvToday.setText(year + "-" + calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()) + "-" + dayOfMonth);
+                        try {
+                            ExpensesDB db = new ExpensesDB(moneyExpanded.this);
+                            db.open();
+                            incomes = db.getIncomesByDate(String.valueOf(dayOfMonth), calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(year));
+                            expenses = db.getExpensesByDate(String.valueOf(dayOfMonth), calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(year));
+                            db.close();
+
+                            adapter.clear();
+
+                            for (int i = 0; i < incomes.size(); i++) {
+                                items.add(incomes.get(i));
+                            }
+                            for (int i = 0; i < expenses.size(); i++) {
+                                items.add(expenses.get(i));
+                            }
+
+                            adapter.notifyDataSetChanged();
+
+                        } catch (SQLException e) {
+                            Toast.makeText(moneyExpanded.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+
                     }
                 };
                 DatePickerDialog dpDialog = new DatePickerDialog(moneyExpanded.this, listener, year, month, day);

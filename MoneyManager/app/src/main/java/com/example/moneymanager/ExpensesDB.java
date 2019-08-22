@@ -90,7 +90,7 @@ public class ExpensesDB {
         ourHelper.close();
     }
 
-    public long createEntryExpense(String product, double price, int cantity, int dayExpense, int monthExpense, int yearExpense) {
+    public long createEntryExpense(String product, double price, int cantity, int dayExpense, String monthExpense, int yearExpense) {
         ContentValues cv = new ContentValues();
         cv.put(KEY_PRODUCT, product);
         cv.put(KEY_PRICE, price);
@@ -102,7 +102,7 @@ public class ExpensesDB {
 
     }
 
-    public long createEntryIncome(String type, double sum, int dayIncome, int monthIncome, int yearIncome) {
+    public long createEntryIncome(String type, double sum, int dayIncome, String monthIncome, int yearIncome) {
         ContentValues cv = new ContentValues();
         cv.put(KEY_TYPE, type);
         cv.put(KEY_SUM, sum);
@@ -149,7 +149,7 @@ public class ExpensesDB {
             Double sum = res.getDouble(res.getColumnIndex(KEY_SUM));
             String type = res.getString(res.getColumnIndex(KEY_TYPE));
             int dayIncome = res.getInt(res.getColumnIndex(KEY_DAY_FOR_INCOMES));
-            int monthIncome = res.getInt(res.getColumnIndex(KEY_MONTH_FOR_INCOMES));
+            String monthIncome = res.getString(res.getColumnIndex(KEY_MONTH_FOR_INCOMES));
             int yearIncome = res.getInt(res.getColumnIndex(KEY_YEAR_FOR_INCOMES));
 
             Income income = new Income(sum, type, dayIncome, monthIncome, yearIncome, id);
@@ -171,7 +171,7 @@ public class ExpensesDB {
             int cantity = res.getInt(res.getColumnIndex(KEY_CANTITY));
             String product = res.getString(res.getColumnIndex(KEY_PRODUCT));
             int dayExpense = res.getInt(res.getColumnIndex(KEY_DAY_FOR_EXPENSES));
-            int monthExpense = res.getInt(res.getColumnIndex(KEY_MONTH_FOR_EXPENSES));
+            String monthExpense = res.getString(res.getColumnIndex(KEY_MONTH_FOR_EXPENSES));
             int yearExpense = res.getInt(res.getColumnIndex(KEY_YEAR_FOR_EXPENSES));
 
             Expense expense = new Expense(product, price, cantity, dayExpense, monthExpense, yearExpense, id);
@@ -191,7 +191,7 @@ public class ExpensesDB {
             Double sum = res.getDouble(res.getColumnIndex(KEY_SUM));
             String type = res.getString(res.getColumnIndex(KEY_TYPE));
             int dayIncome = res.getInt(res.getColumnIndex(KEY_DAY_FOR_INCOMES));
-            int monthIncome = res.getInt(res.getColumnIndex(KEY_MONTH_FOR_INCOMES));
+            String monthIncome = res.getString(res.getColumnIndex(KEY_MONTH_FOR_INCOMES));
             int yearIncome = res.getInt(res.getColumnIndex(KEY_YEAR_FOR_INCOMES));
 
             Income income = new Income(sum, type, dayIncome, monthIncome, yearIncome, id);
@@ -212,7 +212,7 @@ public class ExpensesDB {
             int cantity = res.getInt(res.getColumnIndex(KEY_CANTITY));
             String product = res.getString(res.getColumnIndex(KEY_PRODUCT));
             int dayExpense = res.getInt(res.getColumnIndex(KEY_DAY_FOR_EXPENSES));
-            int monthExpense = res.getInt(res.getColumnIndex(KEY_MONTH_FOR_EXPENSES));
+            String monthExpense = res.getString(res.getColumnIndex(KEY_MONTH_FOR_EXPENSES));
             int yearExpense = res.getInt(res.getColumnIndex(KEY_YEAR_FOR_EXPENSES));
 
 

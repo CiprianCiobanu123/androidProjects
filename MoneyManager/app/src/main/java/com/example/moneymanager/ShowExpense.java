@@ -28,10 +28,10 @@ public class ShowExpense extends AppCompatActivity {
         final int cantity = getIntent().getIntExtra("cantity",0);
         final double amountSpent = getIntent().getDoubleExtra("amountSpent",0);
         final int day = getIntent().getIntExtra("day",0);
-        final int month = getIntent().getIntExtra("month",0);
+        final String month = getIntent().getStringExtra("month");
         final int year = getIntent().getIntExtra("year",0);
 
-        LocalDate date = LocalDate.of(year,month,day);
+        String date = day + "-" + month + "-" + year;
 
         tvShowExpenseTotalSpent.setTextColor(Color.RED);
 

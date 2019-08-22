@@ -2,25 +2,21 @@ package com.example.moneymanager;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.time.LocalDate;
-import java.util.Date;
 
 public class Income implements Parcelable {
     private double sum;
     private String type;
     private int dayIncome;
-    private int monthIncome;
+    private String monthIncome;
     private int yearIncome;
-    private LocalDate date;
     private String id;
-    public Income (double sum, String type, int dayIncome, int monthIncome, int yearIncome, String id){
+    public Income (double sum, String type, int dayIncome, String monthIncome, int yearIncome, String id){
         this.sum = sum;
         this.type= type;
         this.dayIncome= dayIncome;
         this.monthIncome=monthIncome;
         this.yearIncome=yearIncome;
         this.id = id;
-        date = LocalDate.of(yearIncome,monthIncome,dayIncome);
     }
 
 
@@ -76,9 +72,6 @@ public class Income implements Parcelable {
         this.type = type;
     }
 
-    public LocalDate getDate() {
-        return date;
-    }
 
     @Override
     public String toString() {
@@ -88,7 +81,6 @@ public class Income implements Parcelable {
                 ", dayIncome=" + dayIncome +
                 ", monthIncome=" + monthIncome +
                 ", yearIncome=" + yearIncome +
-                ", date=" + date +
                 '}';
     }
 
@@ -100,11 +92,11 @@ public class Income implements Parcelable {
         this.dayIncome = dayIncome;
     }
 
-    public int getMonthIncome() {
+    public String getMonthIncome() {
         return monthIncome;
     }
 
-    public void setMonthIncome(int monthIncome) {
+    public void setMonthIncome(String monthIncome) {
         this.monthIncome = monthIncome;
     }
 
@@ -116,8 +108,5 @@ public class Income implements Parcelable {
         this.yearIncome = yearIncome;
     }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
 
 }

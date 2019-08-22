@@ -12,7 +12,7 @@ public class Expense {
     private LocalDate date;
     private double spent;
     private int dayExpense;
-    private int monthExpense;
+    private String monthExpense;
     private int yearExpense;
 
     @Override
@@ -37,11 +37,11 @@ public class Expense {
         this.dayExpense = dayExpense;
     }
 
-    public int getMonthExpense() {
+    public String getMonthExpense() {
         return monthExpense;
     }
 
-    public void setMonthExpense(int monthExpense) {
+    public void setMonthExpense(String monthExpense) {
         this.monthExpense = monthExpense;
     }
 
@@ -61,7 +61,7 @@ public class Expense {
         this.yearExpense = yearExpense;
     }
 
-    public Expense(String product, double price, int cantity, int dayExpense, int monthExpense, int yearExpense, String id){
+    public Expense(String product, double price, int cantity, int dayExpense, String monthExpense, int yearExpense, String id){
         this.product = product;
         this.price = price;
         this.cantity = cantity;
@@ -70,7 +70,6 @@ public class Expense {
         this.dayExpense = dayExpense;
         this.monthExpense = monthExpense;
         this.yearExpense=yearExpense;
-        date = LocalDate.of(yearExpense,monthExpense,dayExpense);
     }
 
     public double getSpent() {
@@ -105,12 +104,6 @@ public class Expense {
         this.cantity = cantity;
     }
 
-    public LocalDate getDate() {
-        return date;
-    }
 
-    public void setDate(LocalDate date) {
-        this.date = date;
-    }
 
 }
