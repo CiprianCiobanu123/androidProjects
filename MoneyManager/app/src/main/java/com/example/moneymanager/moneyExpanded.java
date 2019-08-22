@@ -62,8 +62,8 @@ public class moneyExpanded extends AppCompatActivity {
         try {
             ExpensesDB db = new ExpensesDB(moneyExpanded.this);
             db.open();
-            incomes = db.getIncomesByDate(String.valueOf(day), String.valueOf(month), String.valueOf(year));
-            expenses = db.getExpensesByDate(String.valueOf(day), String.valueOf(month), String.valueOf(year));
+            incomes = db.getIncomesByDate(String.valueOf(day), String.valueOf(monthToShow), String.valueOf(year));
+            expenses = db.getExpensesByDate(String.valueOf(day), String.valueOf(monthToShow), String.valueOf(year));
             db.close();
 
             for (int i = 0; i < incomes.size(); i++) {
@@ -96,7 +96,7 @@ public class moneyExpanded extends AppCompatActivity {
 
                 if (dayToModify <= maxDayFromCurrentMonth) {
                     tvToday.setText(yearToModify + "-" + monthToModify + "-" + dayToModify);
-                    Toast.makeText(moneyExpanded.this, ""+monthToModify, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(moneyExpanded.this, ""+calendar.get(MONTH), Toast.LENGTH_SHORT).show();
                 } else {
                     dayToModify = 1;
                     monthToModify = monthToModify + 1;
@@ -143,16 +143,18 @@ public class moneyExpanded extends AppCompatActivity {
                 int dayToModify = Integer.parseInt(tokens.nextToken());
 
                 calendar.set(MONTH, monthToModify - 1);
-                int maxDayFromCurrentMonth = calendar.getActualMaximum(DAY_OF_MONTH);
+
+                int maxDayFromCurrentMonth = calendar.getMaximum(DAY_OF_MONTH);
 
                 dayToModify--;
 
                 if (dayToModify >= 1) {
+                    Toast.makeText(moneyExpanded.this, ""+calendar.get(MONTH), Toast.LENGTH_SHORT).show();
                     tvToday.setText(yearToModify + "-" + monthToModify + "-" + dayToModify);
-                    Toast.makeText(moneyExpanded.this, ""+monthToModify, Toast.LENGTH_SHORT).show();
                 } else {
-                    dayToModify = maxDayFromCurrentMonth;
-                    monthToModify = monthToModify -1;
+                    --monthToModify;
+                    calendar.set(MONTH, monthToModify );
+                    dayToModify = calendar.getActualMaximum(DAY_OF_MONTH);
                     if (monthToModify +1 >= 0) {
                         tvToday.setText(yearToModify + "-" + monthToModify + "-" + dayToModify);
                     } else {
@@ -165,8 +167,8 @@ public class moneyExpanded extends AppCompatActivity {
                 try {
                     ExpensesDB db = new ExpensesDB(moneyExpanded.this);
                     db.open();
-                    incomes = db.getIncomesByDate(String.valueOf(dayToModify), String.valueOf(month), String.valueOf(year));
-                    expenses = db.getExpensesByDate(String.valueOf(dayToModify), String.valueOf(month), String.valueOf(year));
+                    incomes = db.getIncomesByDate(String.valueOf(dayToModify), String.valueOf(monthToModify), String.valueOf(yearToModify));
+                    expenses = db.getExpensesByDate(String.valueOf(dayToModify), String.valueOf(monthToModify), String.valueOf(yearToModify));
                     db.close();
 
                     adapter.clear();
