@@ -18,13 +18,7 @@
         android:id="@+id/tvShowExpenseProduct"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center_horizontal|center_vertical"
-        android:textSize="36sp" />
-
-    <TextView
-        android:id="@+id/tvShowExpensePrice"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_marginTop="200dp"
         android:gravity="center_horizontal|center_vertical"
         android:textSize="36sp" />
 
@@ -37,6 +31,13 @@
 
     <TextView
         android:id="@+id/tvShowExpenseDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal|center_vertical"
+        android:textSize="36sp" />
+
+    <TextView
+        android:id="@+id/tvShowExpensePrice"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal|center_vertical"
