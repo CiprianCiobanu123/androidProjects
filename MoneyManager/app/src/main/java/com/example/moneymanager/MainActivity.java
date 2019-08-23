@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
             "KWD",
     };
 
+    private static final String[] valuesToShowAccount = {"Yearly", "Monthly", "Daily"};
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -81,7 +83,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         final AlertDialog.Builder b = new AlertDialog.Builder(this);
+        final AlertDialog.Builder b1 = new AlertDialog.Builder(this);
         b.setTitle("Change Currency");
+        b1.setTitle("Sort");
 
         b.setItems(paths, new DialogInterface.OnClickListener() {
 
@@ -95,6 +99,14 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
+        b1.setItems(valuesToShowAccount, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+
+            }
+        });
+
 
         btnChangeCurrency.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -103,20 +115,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-//        tvCurrency.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                prefs.edit().putBoolean("firstrun", true).apply();
-//            }
-//        });
-
         btnSort.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Toast.makeText(MainActivity.this, "Button working", Toast.LENGTH_SHORT).show();
+                b1.show();
             }
         });
+
 
         spinnerCurrency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
