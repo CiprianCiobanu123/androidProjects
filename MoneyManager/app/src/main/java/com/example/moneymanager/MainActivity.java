@@ -1,8 +1,10 @@
 package com.example.moneymanager;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.SQLException;
@@ -16,7 +18,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -25,15 +26,16 @@ import static android.view.View.GONE;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String INCOME_ARRAYLIST = "incomes";
     public static final int waitForCancel = 1;
 
     TextView tvAccount, tvCurrency;
-    Button btnSort;
+    Button btnSort, btnChangeCurrency;
     Spinner spinnerCurrency;
     ArrayList<Income> incomes = new ArrayList<>();
     ArrayList<Expense> expenses = new ArrayList<>();
     ArrayList items = new ArrayList();
+    SharedPreferences prefs = null;
+
     private static final String[] paths = {"RON",
             "USD",
             "EUR",
@@ -52,9 +54,6 @@ public class MainActivity extends AppCompatActivity {
             "KWD",
     };
 
-    SharedPreferences prefs = null;
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -63,25 +62,50 @@ public class MainActivity extends AppCompatActivity {
         tvAccount = findViewById(R.id.tvAccount);
         tvCurrency = findViewById(R.id.tvCurrency);
         btnSort = findViewById(R.id.btnSort);
+        btnChangeCurrency = findViewById(R.id.btnChangeCurrency);
         spinnerCurrency = findViewById(R.id.spinnerCurrency);
         spinnerCurrency.setVisibility(GONE);
 
         prefs = getSharedPreferences("com.mycompany.MoneyManager", 0);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this,
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this,
                 android.R.layout.simple_spinner_item, paths);
 
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCurrency.setAdapter(adapter);
-
         Arrays.sort(paths);
 
-        tvCurrency.setOnClickListener(new View.OnClickListener() {
+
+        final AlertDialog.Builder b = new AlertDialog.Builder(this);
+        b.setTitle("Change Currency");
+
+        b.setItems(paths, new DialogInterface.OnClickListener() {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                dialog.dismiss();
+                prefs.edit().putString("currency", spinnerCurrency.getAdapter().getItem(which).toString()).apply();
+                tvCurrency.setText(spinnerCurrency.getAdapter().getItem(which).toString());
+            }
+
+        });
+
+
+        btnChangeCurrency.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                prefs.edit().putBoolean("firstrun", true).apply();
+                b.show();
             }
         });
+
+
+//        tvCurrency.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                prefs.edit().putBoolean("firstrun", true).apply();
+//            }
+//        });
 
         btnSort.setOnClickListener(new View.OnClickListener() {
             @Override

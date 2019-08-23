@@ -62,6 +62,8 @@ public class moneyExpanded extends AppCompatActivity {
         nextDay.setBackgroundResource(R.drawable.nexttotomorrow);
         btnPrevious.setBackgroundResource(R.drawable.previoustoyesterday);
         int monthToShow = month + 1;
+
+
         tvToday.setText(year + "-" + calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()) + "-" + day);
 
         final MyApplication app = (MyApplication) moneyExpanded.this.getApplication();

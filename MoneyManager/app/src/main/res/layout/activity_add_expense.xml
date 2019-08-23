@@ -88,7 +88,7 @@
                 android:text="@string/cancel"
                 android:textColor="#ef9a9a"
                 android:textColorHint="#0FFFFFFF"
-                android:textSize="15dp" />
+                android:textSize="10sp" />
 
             <Button
                 android:id="@+id/btnAdd"
@@ -103,7 +103,7 @@
                 android:text="@string/add"
                 android:textColor="#1c313a"
                 android:textColorHint="#FFFFFF"
-                android:textSize="15dp" />
+                android:textSize="10sp" />
         </LinearLayout>
     </LinearLayout>
 
