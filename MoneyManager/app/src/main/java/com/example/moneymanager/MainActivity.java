@@ -22,21 +22,29 @@ import android.widget.Toast;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
+import java.util.Locale;
 
 import static android.view.View.GONE;
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.SHORT;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final int waitForCancel = 1;
 
-    TextView tvAccount, tvCurrency;
+    TextView tvAccount, tvCurrency, tvDailyMonthlyYearly;
     Button btnSort, btnChangeCurrency;
-    Spinner spinnerCurrency;
+    Spinner spinnerCurrency, spinnerMonthly;
     LinearLayout llAccount, hlForBackground;
     ArrayList<Income> incomes = new ArrayList<>();
     ArrayList<Expense> expenses = new ArrayList<>();
     ArrayList items = new ArrayList();
     SharedPreferences prefs = null;
+    Calendar calendar = Calendar.getInstance();
+    int day = calendar.get(Calendar.DAY_OF_MONTH);
+    int month = calendar.get(Calendar.MONTH);
+    int year = calendar.get(Calendar.YEAR);
 
     private static final String[] paths = {"RON",
             "USD",
@@ -65,20 +73,31 @@ public class MainActivity extends AppCompatActivity {
 
         tvAccount = findViewById(R.id.tvAccount);
         tvCurrency = findViewById(R.id.tvCurrency);
+        tvDailyMonthlyYearly = findViewById(R.id.tvDailyMonthlyYearly);
         btnSort = findViewById(R.id.btnSort);
         btnChangeCurrency = findViewById(R.id.btnChangeCurrency);
         spinnerCurrency = findViewById(R.id.spinnerCurrency);
+        spinnerMonthly = findViewById(R.id.spinnerMonthly);
         llAccount = findViewById(R.id.llAccount);
         hlForBackground = findViewById(R.id.hlForBackground);
         spinnerCurrency.setVisibility(GONE);
+        spinnerMonthly.setVisibility(GONE);
+
+        tvDailyMonthlyYearly.setText("Yearly");
+        tvDailyMonthlyYearly.setTextColor(Color.parseColor("#790e8b"));
+        tvCurrency.setTextColor(Color.parseColor("#790e8b"));
 
         prefs = getSharedPreferences("com.mycompany.MoneyManager", 0);
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this,
                 android.R.layout.simple_spinner_item, paths);
 
+        final ArrayAdapter<String> adapterMonthly = new ArrayAdapter<>(MainActivity.this,
+                android.R.layout.simple_spinner_item, valuesToShowAccount);
+
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCurrency.setAdapter(adapter);
+        spinnerMonthly.setAdapter(adapterMonthly);
         Arrays.sort(paths);
 
 
@@ -101,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
         b1.setItems(valuesToShowAccount, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                tvDailyMonthlyYearly.setText(spinnerMonthly.getAdapter().getItem(which).toString().trim());
                 dialog.dismiss();
 
             }
@@ -133,11 +153,26 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        spinnerMonthly.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                tvDailyMonthlyYearly.setText(adapterView.getItemAtPosition(position).toString().trim());
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
         try {
             ExpensesDB db = new ExpensesDB(this);
             db.open();
+
             incomes = db.getAllIncomeValues();
             expenses = db.getAllExpenseValues();
+
             db.close();
             for (int i = 0; i < incomes.size(); i++) {
                 items.add(incomes.get(i));
@@ -172,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
         } catch (SQLException e) {
             Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
         } catch (ParseException e) {
-            Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
 
         llAccount.setOnClickListener(new View.OnClickListener() {
