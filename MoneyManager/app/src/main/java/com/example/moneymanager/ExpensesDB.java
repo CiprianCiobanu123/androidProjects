@@ -19,16 +19,22 @@ public class ExpensesDB {
     public static final String KEY_DAY_FOR_EXPENSES = "day_for_expenses";
     public static final String KEY_MONTH_FOR_EXPENSES = "month_for_expenses";
     public static final String KEY_YEAR_FOR_EXPENSES = "year_for_expenses";
+
     public static final String KEY_TYPE = "_type";
     public static final String KEY_SUM = "_sum";
     public static final String KEY_DAY_FOR_INCOMES = "day_for_incomes";
     public static final String KEY_MONTH_FOR_INCOMES = "month_for_incomes";
     public static final String KEY_YEAR_FOR_INCOMES = "year_for_incomes";
 
+    public static final String KEY_CURRENCY = "year_for_incomes";
+
+
     private final String DATABASE_NAME = "SpendingDB";
     private final String DATABASE_TABLE_EXPENSE = "ExpenseTable";
     private final String DATABASE_TABLE_INCOME = "IncomeTable";
+    private final String DATABASE_TABLE_CURRENCY = "CurrencyTable";
     private final int DATABASE_VERSION = 1;
+
 
     private DBHelper ourHelper;
     private final Context ourContext;
@@ -66,16 +72,21 @@ public class ExpensesDB {
                     KEY_MONTH_FOR_INCOMES + " INTEGER, " +
                     KEY_YEAR_FOR_INCOMES + " INTEGER)";
 
+            String sqlCodeForCurrency = "CREATE TABLE " + DATABASE_TABLE_CURRENCY + " (" +
+                    KEY_ROWID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                    KEY_CURRENCY + " TEXTX NOT NULL)";
+
             sqLiteDatabase.execSQL(sqlCodeForExpense);
             sqLiteDatabase.execSQL(sqlCodeForIncome);
+            sqLiteDatabase.execSQL(sqlCodeForCurrency);
 
         }
 
         @Override
         public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
-
             sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_INCOME);
             sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_EXPENSE);
+            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_CURRENCY);
             onCreate(sqLiteDatabase);
         }
     }
@@ -113,6 +124,16 @@ public class ExpensesDB {
         return ourDatabase.insert(DATABASE_TABLE_INCOME, null, cv);
     }
 
+    public long createEntryCurrency(String currency) {
+        ContentValues cv = new ContentValues();
+        cv.put(KEY_CURRENCY, currency);
+        return ourDatabase.insert(DATABASE_TABLE_CURRENCY, null, cv);
+    }
+
+    public long deleteEntryCurrency(String id) {
+        return ourDatabase.delete(DATABASE_TABLE_CURRENCY, KEY_ROWID + "=?", new String[]{id});
+    }
+
     public long deleteEntryExpense(String id) {
         return ourDatabase.delete(DATABASE_TABLE_EXPENSE, KEY_ROWID + "=?", new String[]{id});
     }
@@ -127,7 +148,6 @@ public class ExpensesDB {
         contentValues.put(KEY_PRICE, price);
         contentValues.put(KEY_CANTITY, cantity);
         return ourDatabase.update(DATABASE_TABLE_EXPENSE, contentValues, KEY_ROWID + "=?", new String[]{rowId});
-
     }
 
     public long updateEntryIncome(String type, double sum, Date dateIncomes) {
@@ -138,11 +158,28 @@ public class ExpensesDB {
 
     }
 
+    public Currency getCurrency() {
+        SQLiteDatabase db = this.ourHelper.getReadableDatabase();
+        Cursor res = (Cursor) db.rawQuery("select * from " + DATABASE_TABLE_CURRENCY,null );
+        Currency currencyFromDb = new Currency();
+        res.moveToFirst();
+
+        while (!res.isAfterLast()) {
+
+            String id = res.getString(res.getColumnIndex(KEY_ROWID));
+            String currency = res.getString(res.getColumnIndex(KEY_CURRENCY));
+            currencyFromDb = new Currency(currency, id);
+            res.moveToNext();
+        }
+        return currencyFromDb;
+    }
+
+
     public ArrayList<Income> getIncomesByDate(String day, String month, String year) {
         SQLiteDatabase db = this.ourHelper.getReadableDatabase();
         ArrayList<Income> incomeArray = new ArrayList<>();
-        Cursor res = db.rawQuery("select * from " + DATABASE_TABLE_INCOME + " where "+  KEY_DAY_FOR_INCOMES + " =? AND " +  KEY_MONTH_FOR_INCOMES + " =? AND "
-                + KEY_YEAR_FOR_INCOMES + " =? ", new String[] {day , month, year} );
+        Cursor res = db.rawQuery("select * from " + DATABASE_TABLE_INCOME + " where " + KEY_DAY_FOR_INCOMES + " =? AND " + KEY_MONTH_FOR_INCOMES + " =? AND "
+                + KEY_YEAR_FOR_INCOMES + " =? ", new String[]{day, month, year});
         res.moveToFirst();
         while (!res.isAfterLast()) {
             String id = res.getString(res.getColumnIndex(KEY_ROWID));
@@ -162,8 +199,8 @@ public class ExpensesDB {
     public ArrayList<Expense> getExpensesByDate(String day, String month, String year) {
         SQLiteDatabase db = this.ourHelper.getReadableDatabase();
         ArrayList<Expense> expenseArray = new ArrayList<>();
-        Cursor res = db.rawQuery("select * from " + DATABASE_TABLE_EXPENSE + " where "+  KEY_DAY_FOR_EXPENSES + " =? AND " +  KEY_MONTH_FOR_EXPENSES + " =? AND "
-                + KEY_YEAR_FOR_EXPENSES + " =? ", new String[] {day , month, year} );
+        Cursor res = db.rawQuery("select * from " + DATABASE_TABLE_EXPENSE + " where " + KEY_DAY_FOR_EXPENSES + " =? AND " + KEY_MONTH_FOR_EXPENSES + " =? AND "
+                + KEY_YEAR_FOR_EXPENSES + " =? ", new String[]{day, month, year});
         res.moveToFirst();
         while (!res.isAfterLast()) {
             String id = res.getString(res.getColumnIndex(KEY_ROWID));
