@@ -47,6 +47,9 @@ public class AddExpense extends AppCompatActivity {
                 AddExpense.this.finish();
             }
         });
+        btnDate.setText(year + "-" + myCalendar.getDisplayName(MONTH,SHORT, Locale.getDefault()) + "-"  + day );
+
+
 
         btnDate.setOnClickListener(new View.OnClickListener() {
             @Override

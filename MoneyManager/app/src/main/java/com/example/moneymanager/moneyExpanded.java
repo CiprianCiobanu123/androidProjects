@@ -1,5 +1,6 @@
 package com.example.moneymanager;
 
+import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -351,4 +352,6 @@ public class moneyExpanded extends AppCompatActivity {
         });
 
     }
+
 }
+

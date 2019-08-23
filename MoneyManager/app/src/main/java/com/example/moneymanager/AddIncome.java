@@ -48,6 +48,8 @@ public class AddIncome extends AppCompatActivity {
                 AddIncome.this.finish();
             }
         });
+        btnDate.setText(year + "-" + myCalendar.getDisplayName(MONTH,SHORT, Locale.getDefault()) + "-"  + day );
+
 
         btnDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -88,6 +90,7 @@ public class AddIncome extends AppCompatActivity {
                     int yearFromButton =  Integer.parseInt(tokens.nextToken());
                     String monthFromButton = tokens.nextToken();
                     int dayFromButton =  Integer.parseInt(tokens.nextToken());
+
 
                     Intent intent =  new Intent();
                     intent.putExtra("type", type);

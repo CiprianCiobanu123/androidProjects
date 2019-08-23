@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -28,6 +29,7 @@ public class MainActivity extends AppCompatActivity {
     public static final int waitForCancel = 1;
 
     TextView tvAccount, tvCurrency;
+    Button btnSort;
     Spinner spinnerCurrency;
     ArrayList<Income> incomes = new ArrayList<>();
     ArrayList<Expense> expenses = new ArrayList<>();
@@ -60,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
 
         tvAccount = findViewById(R.id.tvAccount);
         tvCurrency = findViewById(R.id.tvCurrency);
+        btnSort = findViewById(R.id.btnSort);
         spinnerCurrency = findViewById(R.id.spinnerCurrency);
         spinnerCurrency.setVisibility(GONE);
 
@@ -77,6 +80,13 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 prefs.edit().putBoolean("firstrun", true).apply();
+            }
+        });
+
+        btnSort.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(MainActivity.this, "Button working", Toast.LENGTH_SHORT).show();
             }
         });
 
