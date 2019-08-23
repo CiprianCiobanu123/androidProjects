@@ -2,6 +2,7 @@ package com.example.moneymanager;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,11 +17,14 @@ public class ItemsAdapter extends ArrayAdapter {
 
     private final Context context;
     private final ArrayList items;
+    SharedPreferences prefs = null;
+
 
     public ItemsAdapter(Context context, ArrayList items) {
         super(context, R.layout.row_layout, items);
         this.context = context;
         this.items = items;
+        prefs = this.getContext().getSharedPreferences("com.mycompany.MoneyManager", 0);
     }
 
     @SuppressLint("SetTextI18n")
@@ -31,7 +35,10 @@ public class ItemsAdapter extends ArrayAdapter {
 
         TextView tvIncomeExpense = rowView.findViewById(R.id.tvIncomeExpense);
         TextView tvDescription = rowView.findViewById(R.id.tvDescription);
+        TextView tvCurrencyIncomeExpense = rowView.findViewById(R.id.tvCurrencyIncomeExpense);
         ImageView ivIncome = rowView.findViewById(R.id.ivIncome);
+        tvCurrencyIncomeExpense.setText(prefs.getString("currency",""));
+
 
         if(items.get(position) instanceof  Income){
             ivIncome.setImageResource(R.mipmap.moneybagincome);
@@ -39,7 +46,10 @@ public class ItemsAdapter extends ArrayAdapter {
             tvIncomeExpense.setTextColor(Color.parseColor("#388e3c"));
             tvIncomeExpense.setText("+" + String.valueOf(income.getSum()));
             tvDescription.setText(income.getType());
-        }else{
+
+
+
+            }else{
             tvIncomeExpense.setTextColor(Color.parseColor("#b91400"));
             ivIncome.setImageResource(R.mipmap.expense);
             Expense expense = (Expense )items.get(position);

@@ -15,8 +15,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.lang.reflect.Array;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import static android.view.View.GONE;
 
@@ -30,9 +32,26 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Income> incomes = new ArrayList<>();
     ArrayList<Expense> expenses = new ArrayList<>();
     ArrayList items = new ArrayList();
-    private static final String[] paths = {"LEU", "USD", "EURO"};
+    private static final String[] paths = {"RON",
+            "USD",
+            "EUR",
+            "AFN",
+            "ALL",
+            "DZD",
+            "AOA",
+            "ARS",
+            "BSD",
+            "BOB",
+            "BGN",
+            "BIF",
+            "CNY",
+            "CUP",
+            "JPY",
+            "KWD",
+    };
 
     SharedPreferences prefs = null;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
         spinnerCurrency = findViewById(R.id.spinnerCurrency);
         spinnerCurrency.setVisibility(GONE);
 
-        prefs = getSharedPreferences("com.mycompany.MoneyManager", MODE_PRIVATE);
+        prefs = getSharedPreferences("com.mycompany.MoneyManager", 0);
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this,
                 android.R.layout.simple_spinner_item, paths);
@@ -52,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerCurrency.setAdapter(adapter);
 
+        Arrays.sort(paths);
 
         tvCurrency.setOnClickListener(new View.OnClickListener() {
             @Override
