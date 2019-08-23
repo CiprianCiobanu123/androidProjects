@@ -96,7 +96,6 @@ public class MainActivity extends AppCompatActivity {
                 prefs.edit().putString("currency", spinnerCurrency.getAdapter().getItem(which).toString()).apply();
                 tvCurrency.setText(spinnerCurrency.getAdapter().getItem(which).toString());
             }
-
         });
 
         b1.setItems(valuesToShowAccount, new DialogInterface.OnClickListener() {
@@ -106,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
 
         btnChangeCurrency.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,7 +119,6 @@ public class MainActivity extends AppCompatActivity {
                 b1.show();
             }
         });
-
 
         spinnerCurrency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
