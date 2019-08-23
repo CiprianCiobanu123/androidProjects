@@ -14,7 +14,6 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
-            android:layout_marginTop="10dp"
             android:layout_weight="1"
             app:srcCompat="@mipmap/ic_launcher" />
 
@@ -28,8 +27,6 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
-                android:layout_marginTop="10dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -37,18 +34,18 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginTop="10dp"
-                    android:gravity="left"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginRight="10dp"
                     android:text="TextView"
                     android:textSize="24sp" />
 
                 <TextView
                     android:id="@+id/tvCurrencyIncomeExpense"
-                    android:layout_width="128dp"
+                    android:layout_width="131dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
+                    android:layout_marginLeft="70dp"
+                    android:layout_marginTop="5dp"
                     android:layout_weight="1"
-                    android:gravity="right"
                     android:text="TextView"
                     android:textSize="24sp"
                     android:textStyle="bold" />
@@ -60,7 +57,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
                 android:layout_marginRight="10dp"
-                android:gravity="left"
                 android:text="TextView"
                 android:textSize="16sp"
                 android:textStyle="bold|italic" />
