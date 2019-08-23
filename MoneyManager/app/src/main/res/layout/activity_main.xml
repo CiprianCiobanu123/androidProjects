@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#e8eaf6"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -14,41 +15,50 @@
         android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="1"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/btnSort"
                 android:layout_width="30dp"
                 android:layout_height="30dp"
-                android:layout_marginRight="100dp"
+                android:layout_gravity="left"
+                android:layout_weight="0"
                 android:background="@drawable/sorting"
                 android:textStyle="normal" />
 
             <Button
                 android:id="@+id/btnChangeCurrency"
-                android:layout_width="30dp"
+                android:layout_width="33dp"
                 android:layout_height="30dp"
-                android:layout_marginLeft="100dp"
-                android:background="@drawable/changecurrency" />
+                android:layout_gravity="right"
+                android:layout_weight="0"
+                android:background="@drawable/changecurrency"
+                android:gravity="right" />
+
         </LinearLayout>
+
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
+        android:id="@+id/llAccount"
+        android:layout_width="300dp"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|center_vertical"
         android:layout_marginTop="150dp"
         android:background="@drawable/borderforaccount"
+        android:gravity="center_vertical"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="20dp"
+            android:gravity="center_horizontal|center_vertical"
             android:orientation="horizontal">
 
             <TextView
@@ -71,7 +81,20 @@
                 android:text="NADA"
                 android:textSize="24sp"
                 android:textStyle="bold|italic" />
+
         </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/hlForBackground"
+            android:layout_width="match_parent"
+            android:layout_height="30dp"
+            android:layout_gravity="bottom"
+            android:layout_marginTop="20dp"
+            android:layout_weight="1"
+            android:background="@color/colorPrimary"
+            android:foregroundGravity="bottom|center_vertical"
+            android:orientation="horizontal" />
+
     </LinearLayout>
 
     <Spinner

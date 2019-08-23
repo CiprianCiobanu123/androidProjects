@@ -14,6 +14,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     TextView tvAccount, tvCurrency;
     Button btnSort, btnChangeCurrency;
     Spinner spinnerCurrency;
+    LinearLayout llAccount, hlForBackground;
     ArrayList<Income> incomes = new ArrayList<>();
     ArrayList<Expense> expenses = new ArrayList<>();
     ArrayList items = new ArrayList();
@@ -64,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
         btnSort = findViewById(R.id.btnSort);
         btnChangeCurrency = findViewById(R.id.btnChangeCurrency);
         spinnerCurrency = findViewById(R.id.spinnerCurrency);
+        llAccount = findViewById(R.id.llAccount);
+        hlForBackground = findViewById(R.id.hlForBackground);
         spinnerCurrency.setVisibility(GONE);
 
         prefs = getSharedPreferences("com.mycompany.MoneyManager", 0);
@@ -169,7 +173,7 @@ public class MainActivity extends AppCompatActivity {
             Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
-        tvAccount.setOnClickListener(new View.OnClickListener() {
+        llAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MainActivity.this,
