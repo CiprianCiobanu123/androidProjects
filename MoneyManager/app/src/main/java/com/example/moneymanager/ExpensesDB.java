@@ -72,13 +72,8 @@ public class ExpensesDB {
                     KEY_MONTH_FOR_INCOMES + " INTEGER, " +
                     KEY_YEAR_FOR_INCOMES + " INTEGER)";
 
-            String sqlCodeForCurrency = "CREATE TABLE " + DATABASE_TABLE_CURRENCY + " (" +
-                    KEY_ROWID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                    KEY_CURRENCY + " TEXTX NOT NULL)";
-
             sqLiteDatabase.execSQL(sqlCodeForExpense);
             sqLiteDatabase.execSQL(sqlCodeForIncome);
-            sqLiteDatabase.execSQL(sqlCodeForCurrency);
 
         }
 
@@ -86,7 +81,6 @@ public class ExpensesDB {
         public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
             sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_INCOME);
             sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_EXPENSE);
-            sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + DATABASE_TABLE_CURRENCY);
             onCreate(sqLiteDatabase);
         }
     }
@@ -124,15 +118,6 @@ public class ExpensesDB {
         return ourDatabase.insert(DATABASE_TABLE_INCOME, null, cv);
     }
 
-    public long createEntryCurrency(String currency) {
-        ContentValues cv = new ContentValues();
-        cv.put(KEY_CURRENCY, currency);
-        return ourDatabase.insert(DATABASE_TABLE_CURRENCY, null, cv);
-    }
-
-    public long deleteEntryCurrency(String id) {
-        return ourDatabase.delete(DATABASE_TABLE_CURRENCY, KEY_ROWID + "=?", new String[]{id});
-    }
 
     public long deleteEntryExpense(String id) {
         return ourDatabase.delete(DATABASE_TABLE_EXPENSE, KEY_ROWID + "=?", new String[]{id});
@@ -156,22 +141,6 @@ public class ExpensesDB {
         contentValues.put(KEY_SUM, sum);
         return ourDatabase.update(DATABASE_TABLE_INCOME, contentValues, KEY_TYPE + "=?", new String[]{type});
 
-    }
-
-    public Currency getCurrency() {
-        SQLiteDatabase db = this.ourHelper.getReadableDatabase();
-        Cursor res = (Cursor) db.rawQuery("select * from " + DATABASE_TABLE_CURRENCY,null );
-        Currency currencyFromDb = new Currency();
-        res.moveToFirst();
-
-        while (!res.isAfterLast()) {
-
-            String id = res.getString(res.getColumnIndex(KEY_ROWID));
-            String currency = res.getString(res.getColumnIndex(KEY_CURRENCY));
-            currencyFromDb = new Currency(currency, id);
-            res.moveToNext();
-        }
-        return currencyFromDb;
     }
 
 
