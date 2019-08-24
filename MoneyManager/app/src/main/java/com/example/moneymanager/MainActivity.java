@@ -23,11 +23,8 @@ import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
-import java.util.Locale;
 
 import static android.view.View.GONE;
-import static java.util.Calendar.MONTH;
-import static java.util.Calendar.SHORT;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -83,9 +80,10 @@ public class MainActivity extends AppCompatActivity {
         spinnerCurrency.setVisibility(GONE);
         spinnerMonthly.setVisibility(GONE);
 
-        tvDailyMonthlyYearly.setText("Yearly");
-        tvDailyMonthlyYearly.setTextColor(Color.parseColor("#790e8b"));
-        tvCurrency.setTextColor(Color.parseColor("#790e8b"));
+//        tvDailyMonthlyYearly.setText("Yearly");
+        tvDailyMonthlyYearly.setText("Balance");
+        tvDailyMonthlyYearly.setTextColor(Color.parseColor("#ef9a9a"));
+        tvCurrency.setTextColor(Color.parseColor("#ef9a9a"));
 
         prefs = getSharedPreferences("com.mycompany.MoneyManager", 0);
 
@@ -103,17 +101,21 @@ public class MainActivity extends AppCompatActivity {
 
         final AlertDialog.Builder b = new AlertDialog.Builder(this);
         final AlertDialog.Builder b1 = new AlertDialog.Builder(this);
+
         b.setTitle("Change Currency");
         b1.setTitle("Sort");
+
 
         b.setItems(paths, new DialogInterface.OnClickListener() {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
 
-                dialog.dismiss();
                 prefs.edit().putString("currency", spinnerCurrency.getAdapter().getItem(which).toString()).apply();
                 tvCurrency.setText(spinnerCurrency.getAdapter().getItem(which).toString());
+
+                dialog.dismiss();
+
             }
         });
 
@@ -126,10 +128,13 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+
         btnChangeCurrency.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                b.show();
+                b.show().getWindow().setLayout(1000, 2000);
+
+
             }
         });
 

@@ -2,6 +2,7 @@ package com.example.moneymanager;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.widget.TextView;
@@ -10,8 +11,9 @@ import java.time.LocalDate;
 
 public class ShowExpense extends AppCompatActivity {
 
-    TextView tvShowExpenseProduct, tvShowExpensePrice, tvShowExpenseCantity, tvShowExpenseDate, tvShowExpenseTotalSpent;
+    TextView tvShowExpenseProduct, tvShowExpensePrice, tvShowExpenseCantity, tvShowExpenseDate, tvShowExpenseTotalSpent, tvTotalSpent;
 
+    @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -22,6 +24,7 @@ public class ShowExpense extends AppCompatActivity {
         tvShowExpenseCantity = findViewById(R.id.tvShowExpenseCantity);
         tvShowExpenseDate = findViewById(R.id.tvShowExpenseDate);
         tvShowExpenseTotalSpent = findViewById(R.id.tvShowExpenseTotalSpent);
+
 
         final String product = getIntent().getStringExtra("product");
         final double price = getIntent().getDoubleExtra("price",0);
@@ -39,6 +42,6 @@ public class ShowExpense extends AppCompatActivity {
         tvShowExpensePrice.setText(String.format("Price: %s", price));
         tvShowExpenseCantity.setText(String.format("Quantity: %s", cantity));
         tvShowExpenseDate.setText(String.format("Date: %s", date));
-        tvShowExpenseTotalSpent.setText("-" + amountSpent);
+        tvShowExpenseTotalSpent.setText("Spent: " +amountSpent);
     }
 }
