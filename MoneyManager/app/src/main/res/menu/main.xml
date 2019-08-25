@@ -1,35 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
-
-    <item android:id="@+id/changeCurrency"
-        android:title=""
+    <item
+        android:id="@+id/changeCurrency"
         android:icon="@drawable/changecurrency"
         android:orderInCategory="100"
-        app:showAsAction="always"/>
+        android:title=""
+        app:showAsAction="always" />
 
 
-    <item android:id="@+id/monthlyYearly"
-        android:title="Yearly"
+    <item
+        android:id="@+id/monthlyYearly"
         android:orderInCategory="100"
-        app:showAsAction="always"/>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+        android:title="Yearly"
+        app:showAsAction="always" />
 
 
 </menu>

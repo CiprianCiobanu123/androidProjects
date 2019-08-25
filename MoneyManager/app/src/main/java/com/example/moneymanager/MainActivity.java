@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.SQLException;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +46,7 @@ public class MainActivity extends AppCompatActivity {
     ArrayList<Expense> expenses = new ArrayList<>();
     ArrayList items = new ArrayList();
     SharedPreferences prefs = null;
+    ProgressBar pb;
     Calendar calendar = Calendar.getInstance();
     int day = calendar.get(Calendar.DAY_OF_MONTH);
     int month = calendar.get(Calendar.MONTH);
@@ -107,11 +110,13 @@ public class MainActivity extends AppCompatActivity {
         spinnerCurrency.setVisibility(GONE);
         spinnerMonthly.setVisibility(GONE);
 
+
         tvDailyMonthlyYearly.setTextColor(Color.parseColor("#ef9a9a"));
         tvCurrency.setTextColor((Color.BLACK));
 
         prefs = getSharedPreferences("com.mycompany.MoneyManager", 0);
         tvDailyMonthlyYearly.setText(prefs.getString("monthlyOrYearly", ""));
+
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this,
                 android.R.layout.simple_spinner_item, paths);
