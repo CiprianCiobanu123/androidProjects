@@ -26,23 +26,23 @@ public class ShowIncome extends AppCompatActivity {
         year = myCalendar.get(Calendar.YEAR);
 
 
-        tvShowIncome  =  findViewById(R.  id.tvShowIncome);
-        tvShowType  =  findViewById(R.id.tvShowType);
-        tvShowDate  =  findViewById(R.id.tvShowDate);
+        tvShowIncome = findViewById(R.id.tvShowIncome);
+        tvShowType = findViewById(R.id.tvShowType);
+        tvShowDate = findViewById(R.id.tvShowDate);
 
         String type = getIntent().getStringExtra("type");
-        double sum = getIntent().getDoubleExtra("sum",0);
-        int day = getIntent().getIntExtra("day",0);
+        double sum = getIntent().getDoubleExtra("sum", 0);
+        int day = getIntent().getIntExtra("day", 0);
         String month = getIntent().getStringExtra("month");
-        int year = getIntent().getIntExtra("year",0);
+        int year = getIntent().getIntExtra("year", 0);
 
 
         tvShowIncome.setTextColor(Color.parseColor("#388e3c"));
 
         String date = day + "-" + month + "-" + year;
 
-        tvShowIncome.setText(String.format("+%s", sum));
-        tvShowType.setText(String.format("Type: %s", type));
-        tvShowDate.setText(String.format("Date: %s", date));
+        tvShowIncome.setText(String.format("" + sum));
+        tvShowType.setText(String.format("" + type));
+        tvShowDate.setText(String.format("" + date));
     }
 }

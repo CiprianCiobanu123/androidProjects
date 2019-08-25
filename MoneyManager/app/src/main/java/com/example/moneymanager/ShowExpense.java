@@ -22,7 +22,6 @@ public class ShowExpense extends AppCompatActivity {
         tvShowExpenseProduct = findViewById(R.id.tvShowExpenseProduct);
         tvShowExpensePrice = findViewById(R.id.tvShowExpensePrice);
         tvShowExpenseCantity = findViewById(R.id.tvShowExpenseCantity);
-        tvLabelSpent = findViewById(R.id.tvLabelSpent);
         tvShowExpenseDate = findViewById(R.id.tvShowExpenseDate);
         tvShowExpenseTotalSpent = findViewById(R.id.tvShowExpenseTotalSpent);
 
@@ -40,9 +39,9 @@ public class ShowExpense extends AppCompatActivity {
         tvShowExpenseTotalSpent.setTextColor(Color.parseColor("#b91400"));
 
         tvShowExpenseProduct.setText(String.format(""+product));
-        tvShowExpensePrice.setText(String.format("Price: %s", price));
-        tvShowExpenseCantity.setText(String.format("Quantity: %s", cantity));
-        tvShowExpenseDate.setText(String.format("Date: %s", date));
+        tvShowExpensePrice.setText(String.format(""+ price));
+        tvShowExpenseCantity.setText(String.format( ""+cantity));
+        tvShowExpenseDate.setText(String.format(""+ date));
         tvShowExpenseTotalSpent.setText(""+amountSpent);
     }
 }
