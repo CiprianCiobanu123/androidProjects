@@ -1,5 +1,6 @@
 package com.example.moneymanager;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -10,6 +11,9 @@ import android.content.SharedPreferences;
 import android.database.SQLException;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -63,6 +67,26 @@ public class MainActivity extends AppCompatActivity {
 
     private static final String[] valuesToShowAccount = {"Yearly", "Monthly", "Daily"};
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.monthlyYearly:
+                Toast.makeText(this, "Yearly", Toast.LENGTH_SHORT).show();
+                break;
+            case R.id.changeCurrency:
+                Toast.makeText(this, "Curency", Toast.LENGTH_SHORT).show();
+        }
+
+
+        return super.onOptionsItemSelected(item);
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -80,12 +104,12 @@ public class MainActivity extends AppCompatActivity {
         spinnerCurrency.setVisibility(GONE);
         spinnerMonthly.setVisibility(GONE);
 
-//        tvDailyMonthlyYearly.setText("Yearly");
         tvDailyMonthlyYearly.setText("Balance");
         tvDailyMonthlyYearly.setTextColor(Color.parseColor("#ef9a9a"));
         tvCurrency.setTextColor(Color.parseColor("#ef9a9a"));
 
         prefs = getSharedPreferences("com.mycompany.MoneyManager", 0);
+
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this,
                 android.R.layout.simple_spinner_item, paths);
@@ -127,6 +151,14 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+//        final int abYearlytitleId = getResources().getIdentifier("main","toolbar",this.getPackageName());
+//        findViewById(abYearlytitleId).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                b1.show();
+//            }
+//        });
 
 
         btnChangeCurrency.setOnClickListener(new View.OnClickListener() {
