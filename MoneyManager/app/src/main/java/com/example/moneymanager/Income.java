@@ -19,6 +19,15 @@ public class Income implements Parcelable {
         this.id = id;
     }
 
+
+    public Income(double sum, String type, String monthIncome, int yearIncome, String id){
+        this.sum = sum;
+        this.type= type;
+        this.monthIncome=monthIncome;
+        this.yearIncome=yearIncome;
+        this.id = id;
+    }
+
     protected Income(Parcel in) {
         sum = in.readDouble();
         type = in.readString();
