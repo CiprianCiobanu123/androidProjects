@@ -75,7 +75,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20dp"
-                android:background="@drawable/roundedbuttonsupportimage"
                 android:layout_marginTop="10dp"
                 android:layout_weight="0"
                 app:srcCompat="@drawable/papermoney" />

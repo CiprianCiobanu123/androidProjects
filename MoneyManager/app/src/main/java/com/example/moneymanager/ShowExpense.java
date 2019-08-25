@@ -11,7 +11,7 @@ import java.time.LocalDate;
 
 public class ShowExpense extends AppCompatActivity {
 
-    TextView tvShowExpenseProduct, tvShowExpensePrice, tvShowExpenseCantity, tvShowExpenseDate, tvShowExpenseTotalSpent, tvTotalSpent;
+    TextView tvShowExpenseProduct, tvShowExpensePrice, tvShowExpenseCantity, tvShowExpenseDate, tvShowExpenseTotalSpent, tvLabelSpent;
 
     @SuppressLint("SetTextI18n")
     @Override
@@ -22,6 +22,7 @@ public class ShowExpense extends AppCompatActivity {
         tvShowExpenseProduct = findViewById(R.id.tvShowExpenseProduct);
         tvShowExpensePrice = findViewById(R.id.tvShowExpensePrice);
         tvShowExpenseCantity = findViewById(R.id.tvShowExpenseCantity);
+        tvLabelSpent = findViewById(R.id.tvLabelSpent);
         tvShowExpenseDate = findViewById(R.id.tvShowExpenseDate);
         tvShowExpenseTotalSpent = findViewById(R.id.tvShowExpenseTotalSpent);
 
@@ -38,10 +39,10 @@ public class ShowExpense extends AppCompatActivity {
 
         tvShowExpenseTotalSpent.setTextColor(Color.parseColor("#b91400"));
 
-        tvShowExpenseProduct.setText(String.format("Product: %s", product));
+        tvShowExpenseProduct.setText(String.format(""+product));
         tvShowExpensePrice.setText(String.format("Price: %s", price));
         tvShowExpenseCantity.setText(String.format("Quantity: %s", cantity));
         tvShowExpenseDate.setText(String.format("Date: %s", date));
-        tvShowExpenseTotalSpent.setText("Spent: " +amountSpent);
+        tvShowExpenseTotalSpent.setText(""+amountSpent);
     }
 }
