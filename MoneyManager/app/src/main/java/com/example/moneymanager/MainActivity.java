@@ -36,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int waitForCancel = 1;
 
-    TextView tvAccount, tvCurrency, tvDailyMonthlyYearly;
+    TextView tvAccount, tvCurrency, tvDailyMonthlyYearly, tvMonthOrYear;
     Button btnSort, btnChangeCurrency;
     Spinner spinnerCurrency, spinnerMonthly;
     LinearLayout llAccount, hlForBackground;
@@ -101,11 +101,14 @@ public class MainActivity extends AppCompatActivity {
         spinnerMonthly = findViewById(R.id.spinnerMonthly);
         llAccount = findViewById(R.id.llAccount);
         hlForBackground = findViewById(R.id.hlForBackground);
+        tvMonthOrYear = findViewById(R.id.tvMonthOrYear);
+        tvMonthOrYear.setText(calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()));
+        tvMonthOrYear.setTextColor(Color.parseColor("#ef9a9a"));
         spinnerCurrency.setVisibility(GONE);
         spinnerMonthly.setVisibility(GONE);
 
         tvDailyMonthlyYearly.setTextColor(Color.parseColor("#ef9a9a"));
-        tvCurrency.setTextColor(Color.parseColor("#ef9a9a"));
+        tvCurrency.setTextColor((Color.BLACK));
 
         prefs = getSharedPreferences("com.mycompany.MoneyManager", 0);
         tvDailyMonthlyYearly.setText(prefs.getString("monthlyOrYearly", ""));
@@ -143,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
 
                 if (spinnerMonthly.getAdapter().getItem(which).toString().trim().equals("Yearly")) {
                     tvDailyMonthlyYearly.setText(spinnerMonthly.getAdapter().getItem(which).toString().trim());
+                    tvMonthOrYear.setText(String.valueOf(calendar.get(Calendar.YEAR)));
                     try {
                         ExpensesDB db = new ExpensesDB(MainActivity.this);
                         db.open();
@@ -189,11 +193,11 @@ public class MainActivity extends AppCompatActivity {
                     }
                 } else {
                     tvDailyMonthlyYearly.setText(spinnerMonthly.getAdapter().getItem(which).toString().trim());
+                    tvMonthOrYear.setText(calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()));
                     prefs.edit().putString("monthlyOrYearly", "Monthly").apply();
                     try {
                         ExpensesDB db = new ExpensesDB(MainActivity.this);
                         db.open();
-
 
 
                         incomes = db.getIncomesByMonthAndYear(calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(calendar.get(Calendar.YEAR)));
@@ -263,6 +267,7 @@ public class MainActivity extends AppCompatActivity {
                 tvCurrency.setText(adapterView.getItemAtPosition(position).toString().trim());
                 prefs.edit().putString("currency", tvCurrency.getText().toString().trim()).apply();
             }
+
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
             }
@@ -343,6 +348,7 @@ public class MainActivity extends AppCompatActivity {
                 expenses = db.getExpensesByMonthAndYear(calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(calendar.get(Calendar.YEAR)));
 
                 db.close();
+                items.clear();
                 for (int i = 0; i < incomes.size(); i++) {
                     items.add(incomes.get(i));
                 }
@@ -399,7 +405,7 @@ public class MainActivity extends AppCompatActivity {
             // Do first run stuff here then set 'firstrun' as false
             spinnerCurrency.setVisibility(View.VISIBLE);
             tvDailyMonthlyYearly.setText("Monthly");
-            prefs.edit().putString("monthlyOrYearly","Monthly").commit();
+            prefs.edit().putString("monthlyOrYearly", "Monthly").commit();
 
             // using the following line to edit/commit prefs
 
