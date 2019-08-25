@@ -152,14 +152,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-//        final int abYearlytitleId = getResources().getIdentifier("main","toolbar",this.getPackageName());
-//        findViewById(abYearlytitleId).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                b1.show();
-//            }
-//        });
-
 
         btnChangeCurrency.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -169,6 +161,22 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
+//        final int abYearlytitleId = getResources().getIdentifier(  "changeCurrency","id", "main");
+//        final int abYearlytitleId = getResources().getIdentifier("com.example.moneymanager:menu/main",null, null);
+//        findViewById(abYearlytitleId).setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                b.show().getWindow().setLayout(1000, 2000);
+//            }
+//        });
+
+//        btnSort.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                Toast.makeText(MainActivity.this, abYearlytitleId, Toast.LENGTH_SHORT).show();
+//            }
+//        });
 
         btnSort.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -255,6 +263,8 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, waitForCancel);
             }
         });
+
+
     }
 
     @Override
