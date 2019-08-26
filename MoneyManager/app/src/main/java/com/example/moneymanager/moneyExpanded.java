@@ -118,54 +118,11 @@ public class moneyExpanded extends AppCompatActivity {
         }
 
 
-//        if(tvToday.getText().toString().trim().equals(String.valueOf(calendar.get(YEAR)))){
-//            try {
-//                ExpensesDB db = new ExpensesDB(moneyExpanded.this);
-//                db.open();
-//                incomes = db.getIncomesByDate(String.valueOf(day), calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(year));
-//                expenses = db.getExpensesByDate(String.valueOf(day), calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(year));
-//
-////                incomes = db.getIncomesByyear(String.valueOf(calendar.get(YEAR)));
-////                expenses = db.getExpensesByYear( String.valueOf(calendar.get(YEAR)));
-//                db.close();
-//                for (int i = 0; i < incomes.size(); i++) {
-//                    items.add(incomes.get(i));
-//                }
-//                for (int i = 0; i < expenses.size(); i++) {
-//                    items.add(expenses.get(i));
-//                }
-//                app.setItems(items);
-//            } catch (SQLException e) {
-//                Toast.makeText(moneyExpanded.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-//            }
-//        }
-
         final ItemsAdapter adapter = new ItemsAdapter(moneyExpanded.this, items);
         lvItems.setAdapter(adapter);
 
 //        tvToday.setText(year + "-" + calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()) + "-" + day);
 
-//        try {
-//            ExpensesDB db = new ExpensesDB(moneyExpanded.this);
-//            db.open();
-//            incomes = db.getIncomesByDate(String.valueOf(day), calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(year));
-//            expenses = db.getExpensesByDate(String.valueOf(day), calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(year));
-//
-////                incomes = db.getIncomesByyear(String.valueOf(calendar.get(YEAR)));
-////                expenses = db.getExpensesByYear( String.valueOf(calendar.get(YEAR)));
-//            db.close();
-//
-//            for (int i = 0; i < incomes.size(); i++) {
-//                items.add(incomes.get(i));
-//            }
-//            for (int i = 0; i < expenses.size(); i++) {
-//                items.add(expenses.get(i));
-//            }
-//
-//            app.setItems(items);
-//        } catch (SQLException e) {
-//            Toast.makeText(moneyExpanded.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-//        }
 
         nextDay.setOnClickListener(new View.OnClickListener() {
             @Override
