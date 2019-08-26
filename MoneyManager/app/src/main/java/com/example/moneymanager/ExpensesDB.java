@@ -186,6 +186,27 @@ public class ExpensesDB {
         return incomeArray;
     }
 
+
+    public ArrayList<Income> getIncomesByyear(  String year) {
+        SQLiteDatabase db = this.ourHelper.getReadableDatabase();
+        ArrayList<Income> incomeArray = new ArrayList<>();
+        Cursor res = db.rawQuery("select * from " + DATABASE_TABLE_INCOME + " where "  + KEY_YEAR_FOR_INCOMES + " =? ", new String[]{ year});
+        res.moveToFirst();
+        while (!res.isAfterLast()) {
+            String id = res.getString(res.getColumnIndex(KEY_ROWID));
+            Double sum = res.getDouble(res.getColumnIndex(KEY_SUM));
+            String type = res.getString(res.getColumnIndex(KEY_TYPE));
+            int dayIncome = res.getInt(res.getColumnIndex(KEY_DAY_FOR_INCOMES));
+            String monthIncome = res.getString(res.getColumnIndex(KEY_MONTH_FOR_INCOMES));
+            int yearIncome = res.getInt(res.getColumnIndex(KEY_YEAR_FOR_INCOMES));
+
+            Income income = new Income(sum, type, yearIncome, id);
+            incomeArray.add(income);
+            res.moveToNext();
+        }
+        return incomeArray;
+    }
+
     public ArrayList<Expense> getExpensesByDate(String day, String month, String year) {
         SQLiteDatabase db = this.ourHelper.getReadableDatabase();
         ArrayList<Expense> expenseArray = new ArrayList<>();
@@ -224,6 +245,27 @@ public class ExpensesDB {
             int yearExpense = res.getInt(res.getColumnIndex(KEY_YEAR_FOR_EXPENSES));
 
             Expense expense = new Expense(product, price, cantity, monthExpense, yearExpense, id);
+            expenseArray.add(expense);
+            res.moveToNext();
+        }
+        return expenseArray;
+    }
+
+    public ArrayList<Expense> getExpensesByYear( String year) {
+        SQLiteDatabase db = this.ourHelper.getReadableDatabase();
+        ArrayList<Expense> expenseArray = new ArrayList<>();
+        Cursor res = db.rawQuery("select * from " + DATABASE_TABLE_EXPENSE + " where "   + KEY_YEAR_FOR_EXPENSES + " =? ", new String[]{year});
+        res.moveToFirst();
+        while (!res.isAfterLast()) {
+            String id = res.getString(res.getColumnIndex(KEY_ROWID));
+            Double price = res.getDouble(res.getColumnIndex(KEY_PRICE));
+            int cantity = res.getInt(res.getColumnIndex(KEY_CANTITY));
+            String product = res.getString(res.getColumnIndex(KEY_PRODUCT));
+            int dayExpense = res.getInt(res.getColumnIndex(KEY_DAY_FOR_EXPENSES));
+            String monthExpense = res.getString(res.getColumnIndex(KEY_MONTH_FOR_EXPENSES));
+            int yearExpense = res.getInt(res.getColumnIndex(KEY_YEAR_FOR_EXPENSES));
+
+            Expense expense = new Expense(product, price, cantity, yearExpense, id);
             expenseArray.add(expense);
             res.moveToNext();
         }

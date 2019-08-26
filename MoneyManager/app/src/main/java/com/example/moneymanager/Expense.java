@@ -82,6 +82,15 @@ public class Expense {
         this.yearExpense=yearExpense;
     }
 
+    public Expense(String product, double price, int cantity, int yearExpense, String id){
+        this.product = product;
+        this.price = price;
+        this.cantity = cantity;
+        this.id = id;
+        this.spent = cantity * price;
+        this.yearExpense=yearExpense;
+    }
+
     public double getSpent() {
         return spent;
     }

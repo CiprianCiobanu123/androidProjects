@@ -52,9 +52,7 @@ public class MainActivity extends AppCompatActivity {
 
     double valueIncomes, valueExpenses;
     Calendar calendar = Calendar.getInstance();
-    int day = calendar.get(Calendar.DAY_OF_MONTH);
-    int month = calendar.get(Calendar.MONTH);
-    int year = calendar.get(Calendar.YEAR);
+
 
     public final int requestCodeActivityAddIncome = 1;
     public final int requestCodeActivityAddExpense = 2;
@@ -102,6 +100,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+        int month = calendar.get(Calendar.MONTH);
+        int year = calendar.get(Calendar.YEAR);
+
+
         tvAccount = findViewById(R.id.tvAccount);
         tvCurrency = findViewById(R.id.tvCurrency);
         tvBalanceIncomes = findViewById(R.id.tvBalanceIncomes);
@@ -120,7 +123,7 @@ public class MainActivity extends AppCompatActivity {
         btnAddExepense = findViewById(R.id.btnAddExpense);
         btnAddIncome = findViewById(R.id.btnAddIncome);
 
-        tvMonthOrYear.setText(calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()));
+        tvMonthOrYear.setText(calendar.getDisplayName(MONTH, Calendar.LONG, Locale.getDefault()));
 
         tvMonthOrYear.setTextColor(Color.parseColor("#ef9a9a"));
         tvIncomesSum.setTextColor(Color.parseColor("#388e3c"));
@@ -188,16 +191,16 @@ public class MainActivity extends AppCompatActivity {
 
                 if (spinnerMonthly.getAdapter().getItem(which).toString().trim().equals("Yearly")) {
                     tvMonthOrYear.setText(String.valueOf(calendar.get(Calendar.YEAR)));
-                    prefs.edit().putString("monthlyOrYearly", "Yearly").commit();
-                    prefs.edit().putInt("year",calendar.get(Calendar.YEAR)).commit();
+                    prefs.edit().putString("monthlyOrYearly", "Yearly").apply();
+                    prefs.edit().putString("year", String.valueOf(calendar.get(Calendar.YEAR))).apply();
                     valueExpenses = 0;
                     valueIncomes = 0;
                     try {
                         ExpensesDB db = new ExpensesDB(MainActivity.this);
                         db.open();
 
-                        incomes = db.getAllIncomeValues();
-                        expenses = db.getAllExpenseValues();
+                        incomes = db.getIncomesByyear(String.valueOf(calendar.get(Calendar.YEAR)));
+                        expenses = db.getExpensesByYear(String.valueOf(calendar.get(Calendar.YEAR)));
 
                         db.close();
                         items.clear();
@@ -238,13 +241,11 @@ public class MainActivity extends AppCompatActivity {
 
                     } catch (SQLException e) {
                         Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                    } catch (ParseException e) {
-                        e.printStackTrace();
                     }
                 } else {
-                    tvMonthOrYear.setText(calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()));
+                    tvMonthOrYear.setText(calendar.getDisplayName(MONTH, Calendar.LONG, Locale.getDefault()));
                     prefs.edit().putString("monthlyOrYearly", "Monthly").commit();
-                    prefs.edit().putInt("month", calendar.get(MONTH)).commit();
+                    prefs.edit().putString("month", String.valueOf(calendar.get(MONTH))).commit();
 
                     valueExpenses = 0;
                     valueIncomes = 0;
@@ -360,7 +361,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (prefs.getString("monthlyOrYearly", "").equals("Yearly")) {
             tvMonthOrYear.setText(String.valueOf(calendar.get(Calendar.YEAR)));
-            prefs.edit().putInt("year",calendar.get(Calendar.YEAR));
+            prefs.edit().putString("year", String.valueOf(calendar.get(Calendar.YEAR)));
             valueExpenses = 0;
             valueIncomes = 0;
             try {
@@ -413,7 +414,7 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         } else {
-            prefs.edit().putInt("month",calendar.get(MONTH));
+            prefs.edit().putString("month", String.valueOf(calendar.get(MONTH)));
 
             valueExpenses = 0;
             valueIncomes = 0;
@@ -485,12 +486,16 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if (prefs.getBoolean("firstrun", true)) {
+            Calendar calendar = Calendar.getInstance();
             // Do first run stuff here then set 'firstrun' as false
             tvCurrency.setText("EUR");
             tvCurrencyExpenses.setText("EUR");
             tvCurrencyIncomes.setText("EUR");
+
             prefs.edit().putString("monthlyOrYearly", "Monthly").commit();
             prefs.edit().putString("currency", "EUR").commit();
+            prefs.edit().putString("month", String.valueOf(calendar.get(MONTH))).commit();
+//            prefs.edit().putString("year", String.valueOf(calendar.get(calendar.get(Calendar.YEAR)))).commit();
 
             // using the following line to edit/commit prefs
             prefs.edit().putBoolean("firstrun", false).commit();
