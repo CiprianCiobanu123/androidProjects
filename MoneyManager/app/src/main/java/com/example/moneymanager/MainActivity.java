@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.database.SQLException;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,6 +29,7 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 
+import static android.graphics.Color.RED;
 import static android.view.View.GONE;
 import static java.util.Calendar.MONTH;
 import static java.util.Calendar.SHORT;
@@ -38,8 +38,11 @@ public class MainActivity extends AppCompatActivity {
 
     public static final int waitForCancel = 1;
 
-    TextView tvAccount, tvCurrency, tvDailyMonthlyYearly, tvMonthOrYear;
-    Button btnSort, btnChangeCurrency;
+    TextView tvAccount, tvCurrency, tvDailyMonthlyYearly, tvMonthOrYear,
+            tvBalanceIncomes, tvBalanceExpense, tvIncomesSum, tvExpenseSum,
+            tvCurrencyIncomes, tvCurrencyExpenses;
+
+    Button btnChangeCurrency, btnAddExepense, btnAddIncome;
     Spinner spinnerCurrency, spinnerMonthly;
     LinearLayout llAccount, hlForBackground;
     ArrayList<Income> incomes = new ArrayList<>();
@@ -47,10 +50,15 @@ public class MainActivity extends AppCompatActivity {
     ArrayList items = new ArrayList();
     SharedPreferences prefs = null;
     ProgressBar pb;
+
+    double valueIncomes, valueExpenses;
     Calendar calendar = Calendar.getInstance();
     int day = calendar.get(Calendar.DAY_OF_MONTH);
     int month = calendar.get(Calendar.MONTH);
     int year = calendar.get(Calendar.YEAR);
+
+    public final int requestCodeActivityAddIncome = 1;
+    public final int requestCodeActivityAddExpense = 2;
 
     private static final String[] paths = {"RON",
             "USD",
@@ -85,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Yearly", Toast.LENGTH_SHORT).show();
                 break;
             case R.id.changeCurrency:
-                Toast.makeText(this, "Curency", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Currency", Toast.LENGTH_SHORT).show();
         }
         return super.onOptionsItemSelected(item);
     }
@@ -97,26 +105,55 @@ public class MainActivity extends AppCompatActivity {
 
         tvAccount = findViewById(R.id.tvAccount);
         tvCurrency = findViewById(R.id.tvCurrency);
+        tvBalanceIncomes = findViewById(R.id.tvBalanceIncomes);
+        tvBalanceExpense = findViewById(R.id.tvBalanceExpense);
+        tvIncomesSum = findViewById(R.id.tvIncomesSum);
+        tvExpenseSum = findViewById(R.id.tvExpenseSum);
+        tvCurrencyIncomes = findViewById(R.id.tvCurrencyIncomes);
+        tvCurrencyExpenses = findViewById(R.id.tvCurrencyExpenses);
         tvDailyMonthlyYearly = findViewById(R.id.tvDailyMonthlyYearly);
-        btnSort = findViewById(R.id.btnSort);
         btnChangeCurrency = findViewById(R.id.btnChangeCurrency);
         spinnerCurrency = findViewById(R.id.spinnerCurrency);
         spinnerMonthly = findViewById(R.id.spinnerMonthly);
         llAccount = findViewById(R.id.llAccount);
         hlForBackground = findViewById(R.id.hlForBackground);
         tvMonthOrYear = findViewById(R.id.tvMonthOrYear);
+        btnAddExepense = findViewById(R.id.btnAddExpense);
+        btnAddIncome = findViewById(R.id.btnAddIncome);
+
         tvMonthOrYear.setText(calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()));
+
         tvMonthOrYear.setTextColor(Color.parseColor("#ef9a9a"));
+        tvIncomesSum.setTextColor(Color.parseColor("#388e3c"));
+        tvExpenseSum.setTextColor(Color.parseColor("#b91400"));
+        tvCurrency.setTextColor((Color.BLACK));
+
         spinnerCurrency.setVisibility(GONE);
         spinnerMonthly.setVisibility(GONE);
 
-
-        tvDailyMonthlyYearly.setTextColor(Color.parseColor("#ef9a9a"));
-        tvCurrency.setTextColor((Color.BLACK));
+        tvDailyMonthlyYearly.setText("Balance");
+        tvBalanceIncomes.setText("Income");
+        tvBalanceExpense.setText("Expense");
 
         prefs = getSharedPreferences("com.mycompany.MoneyManager", 0);
-        tvDailyMonthlyYearly.setText(prefs.getString("monthlyOrYearly", ""));
 
+        btnAddExepense.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this,
+                        AddExpense.class);
+                startActivityForResult(intent, requestCodeActivityAddExpense);
+            }
+        });
+
+        btnAddIncome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this,
+                        AddIncome.class);
+                startActivityForResult(intent, requestCodeActivityAddIncome);
+            }
+        });
 
         final ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this,
                 android.R.layout.simple_spinner_item, paths);
@@ -140,6 +177,8 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
                 prefs.edit().putString("currency", spinnerCurrency.getAdapter().getItem(which).toString()).apply();
                 tvCurrency.setText(spinnerCurrency.getAdapter().getItem(which).toString());
+                tvCurrencyExpenses.setText(spinnerCurrency.getAdapter().getItem(which).toString());
+                tvCurrencyIncomes.setText(spinnerCurrency.getAdapter().getItem(which).toString());
                 dialog.dismiss();
             }
         });
@@ -147,11 +186,12 @@ public class MainActivity extends AppCompatActivity {
         b1.setItems(valuesToShowAccount, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                tvDailyMonthlyYearly.setText(spinnerMonthly.getAdapter().getItem(which).toString().trim());
 
                 if (spinnerMonthly.getAdapter().getItem(which).toString().trim().equals("Yearly")) {
-                    tvDailyMonthlyYearly.setText(spinnerMonthly.getAdapter().getItem(which).toString().trim());
                     tvMonthOrYear.setText(String.valueOf(calendar.get(Calendar.YEAR)));
+                    prefs.edit().putString("monthlyOrYearly", "Yearly").commit();
+                    valueExpenses = 0;
+                    valueIncomes = 0;
                     try {
                         ExpensesDB db = new ExpensesDB(MainActivity.this);
                         db.open();
@@ -163,13 +203,17 @@ public class MainActivity extends AppCompatActivity {
                         items.clear();
                         for (int i = 0; i < incomes.size(); i++) {
                             items.add(incomes.get(i));
+                            valueIncomes = valueIncomes + incomes.get(i).getSum();
                         }
                         for (int i = 0; i < expenses.size(); i++) {
                             items.add(expenses.get(i));
+                            valueExpenses = valueExpenses + expenses.get(i).getSpent();
                         }
 
                         MyApplication app = (MyApplication) MainActivity.this.getApplication();
                         app.setItems(items);
+                        tvIncomesSum.setText(valueIncomes + "");
+                        tvExpenseSum.setText(valueExpenses + "");
 
                         double totalAccount = 0;
 
@@ -178,6 +222,7 @@ public class MainActivity extends AppCompatActivity {
                                 totalAccount = totalAccount + ((Income) items.get(i)).getSum();
                             } else {
                                 totalAccount = totalAccount - ((Expense) items.get(i)).getSpent();
+
                             }
                         }
 
@@ -197,13 +242,14 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 } else {
-                    tvDailyMonthlyYearly.setText(spinnerMonthly.getAdapter().getItem(which).toString().trim());
                     tvMonthOrYear.setText(calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()));
-                    prefs.edit().putString("monthlyOrYearly", "Monthly").apply();
+                    prefs.edit().putString("monthlyOrYearly", "Monthly").commit();
+                    valueExpenses = 0;
+                    valueIncomes = 0;
+
                     try {
                         ExpensesDB db = new ExpensesDB(MainActivity.this);
                         db.open();
-
 
                         incomes = db.getIncomesByMonthAndYear(calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(calendar.get(Calendar.YEAR)));
                         expenses = db.getExpensesByMonthAndYear(calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(calendar.get(Calendar.YEAR)));
@@ -213,21 +259,32 @@ public class MainActivity extends AppCompatActivity {
 
                         for (int i = 0; i < incomes.size(); i++) {
                             items.add(incomes.get(i));
+                            valueIncomes = valueIncomes + incomes.get(i).getSum();
+
                         }
                         for (int i = 0; i < expenses.size(); i++) {
                             items.add(expenses.get(i));
+                            valueExpenses = valueExpenses + expenses.get(i).getSpent();
+
                         }
 
                         MyApplication app = (MyApplication) MainActivity.this.getApplication();
                         app.setItems(items);
+
+                        tvIncomesSum.setText(valueIncomes + "");
+                        tvExpenseSum.setText(valueExpenses + "");
 
                         double totalAccount = 0;
 
                         for (int i = 0; i < items.size(); i++) {
                             if (items.get(i) instanceof Income) {
                                 totalAccount = totalAccount + ((Income) items.get(i)).getSum();
+                                tvIncomesSum.setText(totalAccount + "");
+
                             } else {
                                 totalAccount = totalAccount - ((Expense) items.get(i)).getSpent();
+                                tvExpenseSum.setText(totalAccount + "");
+
                             }
                         }
 
@@ -254,12 +311,10 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 b.show().getWindow().setLayout(1000, 2000);
-
-
             }
         });
 
-        btnSort.setOnClickListener(new View.OnClickListener() {
+        tvMonthOrYear.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 b1.show();
@@ -270,6 +325,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 tvCurrency.setText(adapterView.getItemAtPosition(position).toString().trim());
+                tvCurrencyExpenses.setText(adapterView.getItemAtPosition(position).toString().trim());
+                tvCurrencyIncomes.setText(adapterView.getItemAtPosition(position).toString().trim());
                 prefs.edit().putString("currency", tvCurrency.getText().toString().trim()).apply();
             }
 
@@ -299,9 +356,12 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        if (tvDailyMonthlyYearly.getText().toString().trim().equals("Yearly")) {
+        if (prefs.getString("monthlyOrYearly", "").equals("Yearly")) {
+            tvMonthOrYear.setText(String.valueOf(calendar.get(Calendar.YEAR)));
+            valueExpenses = 0;
+            valueIncomes = 0;
             try {
-                ExpensesDB db = new ExpensesDB(this);
+                ExpensesDB db = new ExpensesDB(MainActivity.this);
                 db.open();
 
                 incomes = db.getAllIncomeValues();
@@ -311,13 +371,17 @@ public class MainActivity extends AppCompatActivity {
                 items.clear();
                 for (int i = 0; i < incomes.size(); i++) {
                     items.add(incomes.get(i));
+                    valueIncomes = valueIncomes + incomes.get(i).getSum();
                 }
                 for (int i = 0; i < expenses.size(); i++) {
                     items.add(expenses.get(i));
+                    valueExpenses = valueExpenses + expenses.get(i).getSpent();
                 }
 
                 MyApplication app = (MyApplication) MainActivity.this.getApplication();
                 app.setItems(items);
+                tvIncomesSum.setText(valueIncomes + "");
+                tvExpenseSum.setText(valueExpenses + "");
 
                 double totalAccount = 0;
 
@@ -326,6 +390,7 @@ public class MainActivity extends AppCompatActivity {
                         totalAccount = totalAccount + ((Income) items.get(i)).getSum();
                     } else {
                         totalAccount = totalAccount - ((Expense) items.get(i)).getSpent();
+
                     }
                 }
 
@@ -345,8 +410,11 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         } else {
+            valueExpenses = 0;
+            valueIncomes = 0;
+
             try {
-                ExpensesDB db = new ExpensesDB(this);
+                ExpensesDB db = new ExpensesDB(MainActivity.this);
                 db.open();
 
                 incomes = db.getIncomesByMonthAndYear(calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(calendar.get(Calendar.YEAR)));
@@ -354,15 +422,23 @@ public class MainActivity extends AppCompatActivity {
 
                 db.close();
                 items.clear();
+
                 for (int i = 0; i < incomes.size(); i++) {
                     items.add(incomes.get(i));
+                    valueIncomes = valueIncomes + incomes.get(i).getSum();
+
                 }
                 for (int i = 0; i < expenses.size(); i++) {
                     items.add(expenses.get(i));
+                    valueExpenses = valueExpenses + expenses.get(i).getSpent();
+
                 }
 
                 MyApplication app = (MyApplication) MainActivity.this.getApplication();
                 app.setItems(items);
+
+                tvIncomesSum.setText(valueIncomes + "");
+                tvExpenseSum.setText(valueExpenses + "");
 
                 double totalAccount = 0;
 
@@ -388,8 +464,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         }
-
-
     }
 
     @Override
@@ -405,21 +479,20 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
         if (prefs.getBoolean("firstrun", true)) {
             // Do first run stuff here then set 'firstrun' as false
-            spinnerCurrency.setVisibility(View.VISIBLE);
-            tvDailyMonthlyYearly.setText("Monthly");
+            tvCurrency.setText("EUR");
+            tvCurrencyExpenses.setText("EUR");
+            tvCurrencyIncomes.setText("EUR");
             prefs.edit().putString("monthlyOrYearly", "Monthly").commit();
+            prefs.edit().putString("currency", "EUR").commit();
 
             // using the following line to edit/commit prefs
-
             prefs.edit().putBoolean("firstrun", false).commit();
         } else {
             tvCurrency.setText(prefs.getString("currency", ""));
-            tvDailyMonthlyYearly.setText(prefs.getString("monthlyOrYearly", ""));
-
-
+            tvCurrencyExpenses.setText(prefs.getString("currency", ""));
+            tvCurrencyIncomes.setText(prefs.getString("currency", ""));
         }
     }
 }

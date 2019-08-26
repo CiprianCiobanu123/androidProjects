@@ -14,6 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal|center_vertical"
+        android:layout_marginTop="10dp"
         android:orientation="vertical">
 
         <LinearLayout
@@ -65,13 +66,13 @@
 
     <ListView
         android:id="@+id/lvItems"
-        android:layout_width="wrap_content"
-        android:layout_height="365dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_gravity="center_horizontal|center_vertical"
         android:layout_marginLeft="5dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="5dp"
-        android:layout_marginBottom="5dp">
+        android:layout_marginBottom="15dp">
 
     </ListView>
 
@@ -81,39 +82,7 @@
         android:layout_gravity="center_horizontal|center_vertical"
         android:orientation="vertical">
 
-        <Button
-            android:id="@+id/btnAddExpense"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/buttontransparent"
-            android:foregroundGravity="center_vertical|center_horizontal"
-            android:gravity="center_horizontal|center_vertical"
-            android:padding="15dp"
-            android:text="@string/expense"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="12sp"
-            android:textStyle="normal" />
 
-        <Button
-            android:id="@+id/btnAddIncome"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:layout_marginLeft="20dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginRight="20dp"
-            android:background="@drawable/rectangularbutton"
-            android:foregroundGravity="center_vertical|center_horizontal"
-            android:gravity="center_horizontal|center_vertical"
-            android:padding="15dp"
-            android:text="@string/income"
-            android:textColor="#ffffff"
-            android:textSize="12sp"
-            android:textStyle="normal" />
     </LinearLayout>
 
 </LinearLayout>

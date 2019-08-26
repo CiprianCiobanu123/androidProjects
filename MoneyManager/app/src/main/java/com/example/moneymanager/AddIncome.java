@@ -40,7 +40,6 @@ public class AddIncome extends AppCompatActivity {
         year = myCalendar.get(Calendar.YEAR);
         month = myCalendar.get(Calendar.MONTH);
 
-
         btnCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -49,7 +48,6 @@ public class AddIncome extends AppCompatActivity {
             }
         });
         btnDate.setText(year + "-" + myCalendar.getDisplayName(MONTH,SHORT, Locale.getDefault()) + "-"  + day );
-
 
         btnDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,12 +88,6 @@ public class AddIncome extends AppCompatActivity {
                     int yearFromButton =  Integer.parseInt(tokens.nextToken());
                     String monthFromButton = tokens.nextToken();
                     int dayFromButton =  Integer.parseInt(tokens.nextToken());
-
-
-                    Intent intent =  new Intent();
-                    intent.putExtra("type", type);
-                    intent.putExtra("sum", sum);
-                    intent.putExtra("date", dateFromInput);
 
                     try{
                         ExpensesDB db = new ExpensesDB(AddIncome.this);
