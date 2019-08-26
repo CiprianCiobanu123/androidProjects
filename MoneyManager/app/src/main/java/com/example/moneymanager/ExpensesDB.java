@@ -179,7 +179,7 @@ public class ExpensesDB {
             String monthIncome = res.getString(res.getColumnIndex(KEY_MONTH_FOR_INCOMES));
             int yearIncome = res.getInt(res.getColumnIndex(KEY_YEAR_FOR_INCOMES));
 
-            Income income = new Income(sum, type, monthIncome, yearIncome, id);
+            Income income = new Income(sum, type,dayIncome, monthIncome, yearIncome, id);
             incomeArray.add(income);
             res.moveToNext();
         }
@@ -200,7 +200,7 @@ public class ExpensesDB {
             String monthIncome = res.getString(res.getColumnIndex(KEY_MONTH_FOR_INCOMES));
             int yearIncome = res.getInt(res.getColumnIndex(KEY_YEAR_FOR_INCOMES));
 
-            Income income = new Income(sum, type, yearIncome, id);
+            Income income = new Income(sum, type,dayIncome ,monthIncome,yearIncome, id);
             incomeArray.add(income);
             res.moveToNext();
         }
@@ -244,7 +244,7 @@ public class ExpensesDB {
             String monthExpense = res.getString(res.getColumnIndex(KEY_MONTH_FOR_EXPENSES));
             int yearExpense = res.getInt(res.getColumnIndex(KEY_YEAR_FOR_EXPENSES));
 
-            Expense expense = new Expense(product, price, cantity, monthExpense, yearExpense, id);
+            Expense expense = new Expense(product, price, cantity,dayExpense, monthExpense, yearExpense, id);
             expenseArray.add(expense);
             res.moveToNext();
         }
@@ -265,7 +265,7 @@ public class ExpensesDB {
             String monthExpense = res.getString(res.getColumnIndex(KEY_MONTH_FOR_EXPENSES));
             int yearExpense = res.getInt(res.getColumnIndex(KEY_YEAR_FOR_EXPENSES));
 
-            Expense expense = new Expense(product, price, cantity, yearExpense, id);
+            Expense expense = new Expense(product, price, cantity,dayExpense,monthExpense, yearExpense, id);
             expenseArray.add(expense);
             res.moveToNext();
         }

@@ -368,8 +368,8 @@ public class MainActivity extends AppCompatActivity {
                 ExpensesDB db = new ExpensesDB(MainActivity.this);
                 db.open();
 
-                incomes = db.getAllIncomeValues();
-                expenses = db.getAllExpenseValues();
+                incomes = db.getIncomesByyear(String.valueOf(calendar.get(Calendar.YEAR)));
+                expenses = db.getExpensesByYear(String.valueOf(calendar.get(Calendar.YEAR)));
 
                 db.close();
                 items.clear();
@@ -410,8 +410,6 @@ public class MainActivity extends AppCompatActivity {
 
             } catch (SQLException e) {
                 Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            } catch (ParseException e) {
-                e.printStackTrace();
             }
         } else {
             prefs.edit().putString("month", String.valueOf(calendar.get(MONTH)));

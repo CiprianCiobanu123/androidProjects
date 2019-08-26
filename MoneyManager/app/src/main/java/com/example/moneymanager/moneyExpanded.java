@@ -71,7 +71,6 @@ public class moneyExpanded extends AppCompatActivity {
 
         if (prefs.getString("monthlyOrYearly", "").equals("Yearly")) {
             tvToday.setText(prefs.getString("year",""));
-            Toast.makeText(app, "lalala", Toast.LENGTH_SHORT).show();
             try {
                 ExpensesDB db = new ExpensesDB(moneyExpanded.this);
                 db.open();
@@ -179,19 +178,12 @@ public class moneyExpanded extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 int yearToModify=0;
-//                if(tvToday.getText().toString().trim().equals(prefs.getString("year",""))){
-//                    yearToModify = Integer.parseInt(prefs.getString("year",""));
-//
-//                }
 
                 StringTokenizer tokens = new StringTokenizer(tvToday.getText().toString().trim(), "-");
                 yearToModify = Integer.parseInt(tokens.nextToken());
                 String monthToModify = tokens.nextToken();
                 int dayToModify = Integer.parseInt(tokens.nextToken());
                 int maxDayFromCurrentMonth = calendar.getActualMaximum(DAY_OF_MONTH);
-
-
-
 
                 dayToModify--;
 
