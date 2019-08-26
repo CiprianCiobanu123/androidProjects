@@ -178,11 +178,20 @@ public class moneyExpanded extends AppCompatActivity {
         btnPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                int yearToModify=0;
+//                if(tvToday.getText().toString().trim().equals(prefs.getString("year",""))){
+//                    yearToModify = Integer.parseInt(prefs.getString("year",""));
+//
+//                }
+
                 StringTokenizer tokens = new StringTokenizer(tvToday.getText().toString().trim(), "-");
-                int yearToModify = Integer.parseInt(tokens.nextToken());
+                yearToModify = Integer.parseInt(tokens.nextToken());
                 String monthToModify = tokens.nextToken();
                 int dayToModify = Integer.parseInt(tokens.nextToken());
                 int maxDayFromCurrentMonth = calendar.getActualMaximum(DAY_OF_MONTH);
+
+
+
 
                 dayToModify--;
 
