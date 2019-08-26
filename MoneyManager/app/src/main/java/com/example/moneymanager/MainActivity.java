@@ -29,7 +29,6 @@ import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 
-import static android.graphics.Color.RED;
 import static android.view.View.GONE;
 import static java.util.Calendar.MONTH;
 import static java.util.Calendar.SHORT;
@@ -135,7 +134,7 @@ public class MainActivity extends AppCompatActivity {
         tvBalanceIncomes.setText("Income");
         tvBalanceExpense.setText("Expense");
 
-        prefs = getSharedPreferences("com.mycompany.MoneyManager", 0);
+        prefs = getSharedPreferences("com.mycompany.MoneyManager", MainActivity.MODE_PRIVATE);
 
         btnAddExepense.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -190,6 +189,7 @@ public class MainActivity extends AppCompatActivity {
                 if (spinnerMonthly.getAdapter().getItem(which).toString().trim().equals("Yearly")) {
                     tvMonthOrYear.setText(String.valueOf(calendar.get(Calendar.YEAR)));
                     prefs.edit().putString("monthlyOrYearly", "Yearly").commit();
+                    prefs.edit().putInt("year",calendar.get(Calendar.YEAR)).commit();
                     valueExpenses = 0;
                     valueIncomes = 0;
                     try {
@@ -244,6 +244,8 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     tvMonthOrYear.setText(calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()));
                     prefs.edit().putString("monthlyOrYearly", "Monthly").commit();
+                    prefs.edit().putInt("month", calendar.get(MONTH)).commit();
+
                     valueExpenses = 0;
                     valueIncomes = 0;
 
@@ -358,6 +360,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (prefs.getString("monthlyOrYearly", "").equals("Yearly")) {
             tvMonthOrYear.setText(String.valueOf(calendar.get(Calendar.YEAR)));
+            prefs.edit().putInt("year",calendar.get(Calendar.YEAR));
             valueExpenses = 0;
             valueIncomes = 0;
             try {
@@ -410,6 +413,8 @@ public class MainActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
         } else {
+            prefs.edit().putInt("month",calendar.get(MONTH));
+
             valueExpenses = 0;
             valueIncomes = 0;
 

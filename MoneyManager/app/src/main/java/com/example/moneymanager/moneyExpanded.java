@@ -8,6 +8,7 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.SQLException;
 import android.os.Build;
 import android.os.Bundle;
@@ -40,6 +41,8 @@ public class moneyExpanded extends AppCompatActivity {
     ArrayList<Income> incomes = new ArrayList<>();
     ArrayList<Expense> expenses = new ArrayList<>();
 
+    SharedPreferences prefs = null;
+
     @SuppressLint("ClickableViewAccessibility")
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -57,9 +60,21 @@ public class moneyExpanded extends AppCompatActivity {
         lvItems = findViewById(R.id.lvItems);
         tvToday = findViewById(R.id.tvToday);
 
+        prefs = getSharedPreferences("com.mycompany.MoneyManager", moneyExpanded.MODE_PRIVATE);
+
+
         nextDay.setBackgroundResource(R.drawable.nexttotomorrow);
         btnPrevious.setBackgroundResource(R.drawable.previoustoyesterday);
         int monthToShow = month + 1;
+
+
+//        if(prefs.getString("monthlyOrYearly","").equals("Yearly")){
+////            calendar.set(YEAR,prefs.getInt("year",0));
+////            tvToday.setText(calendar.get(YEAR));
+//
+//            Toast.makeText(this, prefs.getInt("year",1), Toast.LENGTH_SHORT).show();
+//
+//        }
 
         tvToday.setText(year + "-" + calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()) + "-" + day);
 
@@ -330,5 +345,7 @@ public class moneyExpanded extends AppCompatActivity {
                 DatePickerDialog dpDialog = new DatePickerDialog(moneyExpanded.this, listener, year, month, day);
                 dpDialog.show();
             }
-        });}}
+        });
+    }
+}
 
