@@ -14,8 +14,7 @@ tools:context=".ShowExpense">
     android:layout_marginLeft="5dp"
     android:layout_marginTop="5dp"
     android:layout_marginRight="5dp"
-    android:layout_marginBottom="5dp"
-    android:background="@drawable/multicolor">
+    android:layout_marginBottom="5dp">
 
     <TableRow android:layout_height="match_parent">
 
@@ -60,8 +59,7 @@ tools:context=".ShowExpense">
     android:layout_marginLeft="5dp"
     android:layout_marginTop="5dp"
     android:layout_marginRight="5dp"
-    android:layout_marginBottom="5dp"
-    android:background="@drawable/multicolor">
+    android:layout_marginBottom="5dp">
 
     <TableRow
         android:layout_width="wrap_content"
@@ -108,8 +106,7 @@ tools:context=".ShowExpense">
     android:layout_marginLeft="5dp"
     android:layout_marginTop="5dp"
     android:layout_marginRight="5dp"
-    android:layout_marginBottom="5dp"
-    android:background="@drawable/multicolor">
+    android:layout_marginBottom="5dp">
 
     <TableRow
         android:layout_width="match_parent"

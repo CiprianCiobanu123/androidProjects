@@ -70,7 +70,7 @@ public class moneyExpanded extends AppCompatActivity {
 
 
         if (prefs.getString("monthlyOrYearly", "").equals("Yearly")) {
-            tvToday.setText(prefs.getString("year",""));
+            tvToday.setText(prefs.getString("year", ""));
 
             try {
                 ExpensesDB db = new ExpensesDB(moneyExpanded.this);
@@ -78,8 +78,6 @@ public class moneyExpanded extends AppCompatActivity {
                 incomes = db.getIncomesByyear(String.valueOf(year));
                 expenses = db.getExpensesByYear(String.valueOf(year));
 
-//                incomes = db.getIncomesByyear(String.valueOf(calendar.get(YEAR)));
-//                expenses = db.getExpensesByYear( String.valueOf(calendar.get(YEAR)));
                 db.close();
                 for (int i = 0; i < incomes.size(); i++) {
                     items.add(incomes.get(i));
@@ -93,8 +91,8 @@ public class moneyExpanded extends AppCompatActivity {
             }
 
         } else if (prefs.getString("monthlyOrYearly", "").equals("Monthly")) {
-            calendar.set(MONTH,Integer.valueOf(prefs.getString("month","")));
-            tvToday.setText(calendar.getDisplayName(MONTH, Calendar.LONG, Locale.getDefault()) + " - " +prefs.getString("year",""));
+            calendar.set(MONTH, Integer.valueOf(prefs.getString("month", "")));
+            tvToday.setText(calendar.getDisplayName(MONTH, Calendar.LONG, Locale.getDefault()) + " - " + calendar.get(YEAR));
 
 //            Toast.makeText(this, prefs.getString("month",""), Toast.LENGTH_SHORT).show();
             try {
@@ -103,8 +101,30 @@ public class moneyExpanded extends AppCompatActivity {
                 incomes = db.getIncomesByMonthAndYear(calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(year));
                 expenses = db.getExpensesByMonthAndYear(calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(year));
 
-//                incomes = db.getIncomesByyear(String.valueOf(calendar.get(YEAR)));
-//                expenses = db.getExpensesByYear( String.valueOf(calendar.get(YEAR)));
+                db.close();
+                for (int i = 0; i < incomes.size(); i++) {
+                    items.add(incomes.get(i));
+                }
+                for (int i = 0; i < expenses.size(); i++) {
+                    items.add(expenses.get(i));
+                }
+                app.setItems(items);
+            } catch (SQLException e) {
+                Toast.makeText(moneyExpanded.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        } else if (prefs.getString("monthlyOrYearly", "").equals("Daily")) {
+            calendar.set(MONTH, Integer.valueOf(prefs.getString("month", "")));
+            tvToday.setText(calendar.get(Calendar.DAY_OF_MONTH) + " - " +
+                    calendar.getDisplayName(MONTH, Calendar.LONG, Locale.getDefault())
+                    + " - " + calendar.get(Calendar.YEAR));
+
+            try {
+                ExpensesDB db = new ExpensesDB(moneyExpanded.this);
+                db.open();
+
+                incomes = db.getIncomesByDate(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)), calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(calendar.get(Calendar.YEAR)));
+                expenses = db.getExpensesByDate(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)), calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(calendar.get(Calendar.YEAR)));
+
                 db.close();
                 for (int i = 0; i < incomes.size(); i++) {
                     items.add(incomes.get(i));
@@ -179,7 +199,7 @@ public class moneyExpanded extends AppCompatActivity {
         btnPrevious.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int yearToModify=0;
+                int yearToModify = 0;
 
                 StringTokenizer tokens = new StringTokenizer(tvToday.getText().toString().trim(), "-");
                 yearToModify = Integer.parseInt(tokens.nextToken());

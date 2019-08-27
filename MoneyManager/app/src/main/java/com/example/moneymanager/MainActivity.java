@@ -123,8 +123,6 @@ public class MainActivity extends AppCompatActivity {
         btnAddExepense = findViewById(R.id.btnAddExpense);
         btnAddIncome = findViewById(R.id.btnAddIncome);
 
-        tvMonthOrYear.setText(calendar.getDisplayName(MONTH, Calendar.LONG, Locale.getDefault()));
-
         tvIncomesSum.setTextColor(Color.parseColor("#388e3c"));
         tvExpenseSum.setTextColor(Color.parseColor("#b91400"));
         tvCurrency.setTextColor((Color.BLACK));
@@ -137,6 +135,24 @@ public class MainActivity extends AppCompatActivity {
         tvBalanceExpense.setText("Expense");
 
         prefs = getSharedPreferences("com.mycompany.MoneyManager", MainActivity.MODE_PRIVATE);
+
+        if (prefs.getBoolean("firstrun", true)) {
+            Calendar calendar = Calendar.getInstance();
+            // Do first run stuff here then set 'firstrun' as false
+            tvCurrency.setText("EUR");
+            tvCurrencyExpenses.setText("EUR");
+            tvCurrencyIncomes.setText("EUR");
+
+            prefs.edit().putString("monthlyOrYearly", "Monthly").commit();
+            prefs.edit().putString("currency", "EUR").commit();
+
+            // using the following line to edit/commit prefs
+            prefs.edit().putBoolean("firstrun", false).commit();
+        } else {
+            tvCurrency.setText(prefs.getString("currency", ""));
+            tvCurrencyExpenses.setText(prefs.getString("currency", ""));
+            tvCurrencyIncomes.setText(prefs.getString("currency", ""));
+        }
 
         btnAddExepense.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -172,6 +188,154 @@ public class MainActivity extends AppCompatActivity {
 
         b.setTitle("Change Currency");
         b1.setTitle("Sort");
+
+        if (prefs.getString("monthlyOrYearly", "").equals("Yearly")) {
+            tvMonthOrYear.setText(String.valueOf(calendar.get(Calendar.YEAR)));
+            prefs.edit().putString("year", String.valueOf(calendar.get(Calendar.YEAR)));
+            valueExpenses = 0;
+            valueIncomes = 0;
+            try {
+                ExpensesDB db = new ExpensesDB(MainActivity.this);
+                db.open();
+
+                incomes = db.getIncomesByyear(String.valueOf(calendar.get(Calendar.YEAR)));
+                expenses = db.getExpensesByYear(String.valueOf(calendar.get(Calendar.YEAR)));
+
+                db.close();
+                items.clear();
+
+                for (int i = 0; i < incomes.size(); i++) {
+                    items.add(incomes.get(i));
+                    valueIncomes = valueIncomes + incomes.get(i).getSum();
+                }
+                for (int i = 0; i < expenses.size(); i++) {
+                    items.add(expenses.get(i));
+                    valueExpenses = valueExpenses + expenses.get(i).getSpent();
+                }
+
+                MyApplication app = (MyApplication) MainActivity.this.getApplication();
+                app.setItems(items);
+                tvIncomesSum.setText(valueIncomes + "");
+                tvExpenseSum.setText(valueExpenses + "");
+
+                double amountToSet = valueIncomes - valueExpenses;
+                tvAccount.setText(String.valueOf(amountToSet));
+
+
+                if (amountToSet == 0) {
+                    tvAccount.setText("0");
+                } else if (amountToSet > 0) {
+                    tvAccount.setTextColor(Color.parseColor("#388e3c"));
+                } else {
+                    tvAccount.setTextColor(Color.parseColor("#b91400"));
+                }
+
+            } catch (SQLException e) {
+                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        } else if (prefs.getString("monthlyOrYearly", "").equals("Monthly")) {
+            tvMonthOrYear.setText(calendar.getDisplayName(MONTH, Calendar.LONG, Locale.getDefault()) + " - " + calendar.get(Calendar.YEAR));
+            prefs.edit().putString("monthlyOrYearly", "Monthly").commit();
+            prefs.edit().putString("month", String.valueOf(calendar.get(MONTH))).commit();
+
+            valueExpenses = 0;
+            valueIncomes = 0;
+
+            try {
+                ExpensesDB db = new ExpensesDB(MainActivity.this);
+                db.open();
+
+                incomes = db.getIncomesByMonthAndYear(calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(calendar.get(Calendar.YEAR)));
+                expenses = db.getExpensesByMonthAndYear(calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(calendar.get(Calendar.YEAR)));
+
+                db.close();
+                items.clear();
+
+                for (int i = 0; i < incomes.size(); i++) {
+                    items.add(incomes.get(i));
+                    valueIncomes = valueIncomes + incomes.get(i).getSum();
+
+                }
+                for (int i = 0; i < expenses.size(); i++) {
+                    items.add(expenses.get(i));
+                    valueExpenses = valueExpenses + expenses.get(i).getSpent();
+
+                }
+
+                MyApplication app = (MyApplication) MainActivity.this.getApplication();
+                app.setItems(items);
+
+                tvIncomesSum.setText(valueIncomes + "");
+                tvExpenseSum.setText(valueExpenses + "");
+
+                double amountToSet = valueIncomes - valueExpenses;
+                tvAccount.setText(String.valueOf(amountToSet));
+
+
+                if (amountToSet == 0) {
+                    tvAccount.setText("0");
+                } else if (amountToSet > 0) {
+                    tvAccount.setTextColor(Color.parseColor("#388e3c"));
+                } else {
+                    tvAccount.setTextColor(Color.parseColor("#b91400"));
+                }
+
+
+            } catch (SQLException e) {
+                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        } else if (prefs.getString("monthlyOrYearly", "").equals("Daily")) {
+            calendar.set(Calendar.DAY_OF_MONTH, day);
+            tvMonthOrYear.setText(calendar.get(Calendar.DAY_OF_MONTH) + " - " +
+                    calendar.getDisplayName(MONTH, Calendar.LONG, Locale.getDefault()) + " - " + calendar.get(Calendar.YEAR));
+
+            prefs.edit().putString("monthlyOrYearly", "Daily").apply();
+            prefs.edit().putString("day", String.valueOf(calendar.get(Calendar.DAY_OF_MONTH))).apply();
+
+            valueExpenses = 0;
+            valueIncomes = 0;
+
+            try {
+                ExpensesDB db = new ExpensesDB(MainActivity.this);
+                db.open();
+
+                incomes = db.getIncomesByDate(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)), calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(calendar.get(Calendar.YEAR)));
+                expenses = db.getExpensesByDate(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)), calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(calendar.get(Calendar.YEAR)));
+
+                db.close();
+                items.clear();
+
+                for (int i = 0; i < incomes.size(); i++) {
+                    items.add(incomes.get(i));
+                    valueIncomes = valueIncomes + incomes.get(i).getSum();
+
+                }
+                for (int i = 0; i < expenses.size(); i++) {
+                    items.add(expenses.get(i));
+                    valueExpenses = valueExpenses + expenses.get(i).getSpent();
+
+                }
+
+                MyApplication app = (MyApplication) MainActivity.this.getApplication();
+                app.setItems(items);
+
+                tvIncomesSum.setText(valueIncomes + "");
+                tvExpenseSum.setText(valueExpenses + "");
+                double amountToSet = valueIncomes - valueExpenses;
+                tvAccount.setText(String.valueOf(amountToSet));
+
+                if (amountToSet == 0) {
+                    tvAccount.setText("0");
+                } else if (amountToSet > 0) {
+                    tvAccount.setTextColor(Color.parseColor("#388e3c"));
+                } else {
+                    tvAccount.setTextColor(Color.parseColor("#b91400"));
+                }
+
+            } catch (SQLException e) {
+                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
 
         b.setItems(paths, new DialogInterface.OnClickListener() {
             @Override
@@ -209,7 +373,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         for (int i = 0; i < expenses.size(); i++) {
                             items.add(expenses.get(i));
-                            valueExpenses = valueExpenses - expenses.get(i).getSpent();
+                            valueExpenses = valueExpenses + expenses.get(i).getSpent();
                         }
 
                         MyApplication app = (MyApplication) MainActivity.this.getApplication();
@@ -217,24 +381,13 @@ public class MainActivity extends AppCompatActivity {
                         tvIncomesSum.setText(valueIncomes + "");
                         tvExpenseSum.setText(valueExpenses + "");
 
-                        double totalAccount = 0;
-
-                        for (int i = 0; i < items.size(); i++) {
-                            if (items.get(i) instanceof Income) {
-                                totalAccount = totalAccount + ((Income) items.get(i)).getSum();
-                            } else {
-                                totalAccount = totalAccount - ((Expense) items.get(i)).getSpent();
-
-                            }
-                        }
-
-                        if (totalAccount == 0) {
+                        double amountToSet = valueIncomes - valueExpenses;
+                        tvAccount.setText(String.valueOf(amountToSet));
+                        if (amountToSet == 0) {
                             tvAccount.setText("0");
-                        } else if (totalAccount > 0) {
-                            tvAccount.setText(String.valueOf("+ " + totalAccount));
+                        } else if (amountToSet > 0) {
                             tvAccount.setTextColor(Color.parseColor("#388e3c"));
                         } else {
-                            tvAccount.setText(String.valueOf("" + totalAccount));
                             tvAccount.setTextColor(Color.parseColor("#b91400"));
                         }
 
@@ -266,8 +419,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         for (int i = 0; i < expenses.size(); i++) {
                             items.add(expenses.get(i));
-                            valueExpenses = valueExpenses - expenses.get(i).getSpent();
-
+                            valueExpenses = valueExpenses + expenses.get(i).getSpent();
                         }
 
                         MyApplication app = (MyApplication) MainActivity.this.getApplication();
@@ -275,37 +427,20 @@ public class MainActivity extends AppCompatActivity {
 
                         tvIncomesSum.setText(valueIncomes + "");
                         tvExpenseSum.setText(valueExpenses + "");
-
-                        double totalAccount = 0;
-
-                        for (int i = 0; i < items.size(); i++) {
-                            if (items.get(i) instanceof Income) {
-                                totalAccount = totalAccount + ((Income) items.get(i)).getSum();
-                                tvIncomesSum.setText(totalAccount + "");
-
-                            } else {
-                                totalAccount = totalAccount - ((Expense) items.get(i)).getSpent();
-                                tvExpenseSum.setText(totalAccount + "");
-
-                            }
-                        }
-
-                        if (totalAccount == 0) {
+                        double amountToSet = valueIncomes - valueExpenses;
+                        tvAccount.setText(String.valueOf(amountToSet));
+                        if (amountToSet == 0) {
                             tvAccount.setText("0");
-                        } else if (totalAccount > 0) {
-                            tvAccount.setText(String.valueOf("+ " + totalAccount));
+                        } else if (amountToSet > 0) {
                             tvAccount.setTextColor(Color.parseColor("#388e3c"));
                         } else {
-                            tvAccount.setText(String.valueOf("" + totalAccount));
                             tvAccount.setTextColor(Color.parseColor("#b91400"));
                         }
 
                     } catch (SQLException e) {
                         Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
-                } else {
-                    Toast.makeText(MainActivity.this, prefs.getString("day", ""), Toast.LENGTH_SHORT).show();
-                    calendar.set(Calendar.DAY_OF_MONTH, Integer.valueOf(prefs.getString("day", "")));
+                } else if (spinnerMonthly.getAdapter().getItem(which).toString().trim().equals("Daily")) {
                     tvMonthOrYear.setText(calendar.get(Calendar.DAY_OF_MONTH) + " - " +
                             calendar.getDisplayName(MONTH, Calendar.LONG, Locale.getDefault())
                             + " - " + calendar.get(Calendar.YEAR));
@@ -333,7 +468,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         for (int i = 0; i < expenses.size(); i++) {
                             items.add(expenses.get(i));
-                            valueExpenses = valueExpenses - expenses.get(i).getSpent();
+                            valueExpenses = valueExpenses + expenses.get(i).getSpent();
 
                         }
 
@@ -343,27 +478,13 @@ public class MainActivity extends AppCompatActivity {
                         tvIncomesSum.setText(valueIncomes + "");
                         tvExpenseSum.setText(valueExpenses + "");
 
-                        double totalAccount = 0;
-
-                        for (int i = 0; i < items.size(); i++) {
-                            if (items.get(i) instanceof Income) {
-                                totalAccount = totalAccount + ((Income) items.get(i)).getSum();
-                                tvIncomesSum.setText(totalAccount + "");
-
-                            } else {
-                                totalAccount = totalAccount - ((Expense) items.get(i)).getSpent();
-                                tvExpenseSum.setText(totalAccount + "");
-
-                            }
-                        }
-
-                        if (totalAccount == 0) {
+                        double amountToSet = valueIncomes - valueExpenses;
+                        tvAccount.setText(String.valueOf(amountToSet));
+                        if (amountToSet == 0) {
                             tvAccount.setText("0");
-                        } else if (totalAccount > 0) {
-                            tvAccount.setText(String.valueOf("+ " + totalAccount));
+                        } else if (amountToSet > 0) {
                             tvAccount.setTextColor(Color.parseColor("#388e3c"));
                         } else {
-                            tvAccount.setText(String.valueOf("" + totalAccount));
                             tvAccount.setTextColor(Color.parseColor("#b91400"));
                         }
 
@@ -425,117 +546,6 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, waitForCancel);
             }
         });
-
-        if (prefs.getString("monthlyOrYearly", "").equals("Yearly")) {
-            tvMonthOrYear.setText(String.valueOf(calendar.get(Calendar.YEAR)));
-            prefs.edit().putString("year", String.valueOf(calendar.get(Calendar.YEAR)));
-            valueExpenses = 0;
-            valueIncomes = 0;
-            try {
-                ExpensesDB db = new ExpensesDB(MainActivity.this);
-                db.open();
-
-                incomes = db.getIncomesByyear(String.valueOf(calendar.get(Calendar.YEAR)));
-                expenses = db.getExpensesByYear(String.valueOf(calendar.get(Calendar.YEAR)));
-
-                db.close();
-                items.clear();
-                for (int i = 0; i < incomes.size(); i++) {
-                    items.add(incomes.get(i));
-                    valueIncomes = valueIncomes + incomes.get(i).getSum();
-                }
-                for (int i = 0; i < expenses.size(); i++) {
-                    items.add(expenses.get(i));
-                    valueExpenses = valueExpenses + expenses.get(i).getSpent();
-                }
-
-                MyApplication app = (MyApplication) MainActivity.this.getApplication();
-                app.setItems(items);
-                tvIncomesSum.setText(valueIncomes + "");
-                tvExpenseSum.setText(valueExpenses + "");
-
-                double totalAccount = 0;
-
-                for (int i = 0; i < items.size(); i++) {
-                    if (items.get(i) instanceof Income) {
-                        totalAccount = totalAccount + ((Income) items.get(i)).getSum();
-                    } else {
-                        totalAccount = totalAccount - ((Expense) items.get(i)).getSpent();
-
-                    }
-                }
-
-                if (totalAccount == 0) {
-                    tvAccount.setText("0");
-                } else if (totalAccount > 0) {
-                    tvAccount.setText(String.valueOf("+ " + totalAccount));
-                    tvAccount.setTextColor(Color.parseColor("#388e3c"));
-                } else {
-                    tvAccount.setText(String.valueOf("" + totalAccount));
-                    tvAccount.setTextColor(Color.parseColor("#b91400"));
-                }
-
-            } catch (SQLException e) {
-                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            tvMonthOrYear.setText(calendar.getDisplayName(MONTH, Calendar.LONG, Locale.getDefault()) + " - " + calendar.get(Calendar.YEAR));
-            prefs.edit().putString("month", String.valueOf(calendar.get(MONTH)));
-
-            valueExpenses = 0;
-            valueIncomes = 0;
-
-            try {
-                ExpensesDB db = new ExpensesDB(MainActivity.this);
-                db.open();
-
-                incomes = db.getIncomesByMonthAndYear(calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(calendar.get(Calendar.YEAR)));
-                expenses = db.getExpensesByMonthAndYear(calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(calendar.get(Calendar.YEAR)));
-
-                db.close();
-                items.clear();
-
-                for (int i = 0; i < incomes.size(); i++) {
-                    items.add(incomes.get(i));
-                    valueIncomes = valueIncomes + incomes.get(i).getSum();
-
-                }
-                for (int i = 0; i < expenses.size(); i++) {
-                    items.add(expenses.get(i));
-                    valueExpenses = valueExpenses + expenses.get(i).getSpent();
-
-                }
-
-                MyApplication app = (MyApplication) MainActivity.this.getApplication();
-                app.setItems(items);
-
-                tvIncomesSum.setText(valueIncomes + "");
-                tvExpenseSum.setText(valueExpenses + "");
-
-                double totalAccount = 0;
-
-                for (int i = 0; i < items.size(); i++) {
-                    if (items.get(i) instanceof Income) {
-                        totalAccount = totalAccount + ((Income) items.get(i)).getSum();
-                    } else {
-                        totalAccount = totalAccount - ((Expense) items.get(i)).getSpent();
-                    }
-                }
-
-                if (totalAccount == 0) {
-                    tvAccount.setText("0");
-                } else if (totalAccount > 0) {
-                    tvAccount.setText(String.valueOf("+ " + totalAccount));
-                    tvAccount.setTextColor(Color.parseColor("#388e3c"));
-                } else {
-                    tvAccount.setText(String.valueOf("" + totalAccount));
-                    tvAccount.setTextColor(Color.parseColor("#b91400"));
-                }
-
-            } catch (SQLException e) {
-                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }
     }
 
     @Override
@@ -551,26 +561,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if (prefs.getBoolean("firstrun", true)) {
-            Calendar calendar = Calendar.getInstance();
-            // Do first run stuff here then set 'firstrun' as false
-            tvCurrency.setText("EUR");
-            tvCurrencyExpenses.setText("EUR");
-            tvCurrencyIncomes.setText("EUR");
-
-            prefs.edit().putString("monthlyOrYearly", "Monthly").commit();
-            prefs.edit().putString("currency", "EUR").commit();
-            prefs.edit().putString("month", String.valueOf(calendar.get(MONTH))).commit();
-            prefs.edit().putString("day", String.valueOf(calendar.get(Calendar.DAY_OF_MONTH))).commit();
-//            prefs.edit().putString("year", String.valueOf(calendar.get(calendar.get(Calendar.YEAR)))).commit();
-
-            // using the following line to edit/commit prefs
-            prefs.edit().putBoolean("firstrun", false).commit();
-        } else {
-            tvCurrency.setText(prefs.getString("currency", ""));
-            tvCurrencyExpenses.setText(prefs.getString("currency", ""));
-            tvCurrencyIncomes.setText(prefs.getString("currency", ""));
-        }
     }
 }
 
