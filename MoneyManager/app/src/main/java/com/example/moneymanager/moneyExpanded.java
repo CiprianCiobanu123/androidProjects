@@ -71,6 +71,7 @@ public class moneyExpanded extends AppCompatActivity {
 
         if (prefs.getString("monthlyOrYearly", "").equals("Yearly")) {
             tvToday.setText(prefs.getString("year",""));
+
             try {
                 ExpensesDB db = new ExpensesDB(moneyExpanded.this);
                 db.open();
@@ -93,7 +94,8 @@ public class moneyExpanded extends AppCompatActivity {
 
         } else if (prefs.getString("monthlyOrYearly", "").equals("Monthly")) {
             calendar.set(MONTH,Integer.valueOf(prefs.getString("month","")));
-            tvToday.setText( calendar.getDisplayName(MONTH, LONG, Locale.getDefault()));
+            tvToday.setText(calendar.getDisplayName(MONTH, Calendar.LONG, Locale.getDefault()) + " - " +prefs.getString("year",""));
+
 //            Toast.makeText(this, prefs.getString("month",""), Toast.LENGTH_SHORT).show();
             try {
                 ExpensesDB db = new ExpensesDB(moneyExpanded.this);
