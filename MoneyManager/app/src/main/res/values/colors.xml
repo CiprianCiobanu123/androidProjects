@@ -6,8 +6,8 @@
     <!--<color name="lightPrimaryColor">#629749</color> -->
 
 
-    <color name="colorPrimary">#29251C</color>
-    <color name="colorPrimaryDark">#15130E</color>
-    <color name="colorAccent">#373D37</color>
-    <color name="lightPrimaryColor">#F1E6CF</color>
+    <color name="colorPrimary">#212121</color>
+    <color name="colorPrimaryDark">#000</color>
+    <color name="colorAccent">#519657</color>
+    <color name="lightPrimaryColor">#484848</color>
 </resources>

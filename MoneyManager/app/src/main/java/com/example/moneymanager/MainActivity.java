@@ -125,7 +125,6 @@ public class MainActivity extends AppCompatActivity {
 
         tvMonthOrYear.setText(calendar.getDisplayName(MONTH, Calendar.LONG, Locale.getDefault()));
 
-        tvMonthOrYear.setTextColor(Color.parseColor("#ef9a9a"));
         tvIncomesSum.setTextColor(Color.parseColor("#388e3c"));
         tvExpenseSum.setTextColor(Color.parseColor("#b91400"));
         tvCurrency.setTextColor((Color.BLACK));
@@ -210,7 +209,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         for (int i = 0; i < expenses.size(); i++) {
                             items.add(expenses.get(i));
-                            valueExpenses = valueExpenses + expenses.get(i).getSpent();
+                            valueExpenses = valueExpenses - expenses.get(i).getSpent();
                         }
 
                         MyApplication app = (MyApplication) MainActivity.this.getApplication();
@@ -267,7 +266,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         for (int i = 0; i < expenses.size(); i++) {
                             items.add(expenses.get(i));
-                            valueExpenses = valueExpenses + expenses.get(i).getSpent();
+                            valueExpenses = valueExpenses - expenses.get(i).getSpent();
 
                         }
 

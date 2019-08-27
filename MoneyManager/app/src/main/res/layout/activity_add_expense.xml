@@ -86,8 +86,8 @@
                 android:background="@drawable/roundedbuttonadd"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="@string/cancel"
-                android:textColor="#ef9a9a"
-                android:textColorHint="#0FFFFFFF"
+                android:textColor="@color/colorAccent"
+                android:textColorHint="@color/colorAccent"
                 android:textSize="10sp" />
 
             <Button
@@ -98,11 +98,11 @@
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="30dp"
                 android:layout_marginRight="20dp"
-                android:background="@drawable/roundedbuttonadd"
+                android:background="@drawable/roundedbuttonfilled"
                 android:gravity="center_horizontal|center_vertical"
                 android:text="@string/add"
-                android:textColor="#1c313a"
-                android:textColorHint="#FFFFFF"
+                android:textColor="#ffffff"
+                android:textColorHint="@color/colorAccent"
                 android:textSize="10sp" />
         </LinearLayout>
     </LinearLayout>
