@@ -653,46 +653,7 @@ public class MainActivity extends AppCompatActivity {
                         valueExpenses = 0;
                         valueIncomes = 0;
 
-                        try {
-                            ExpensesDB db = new ExpensesDB(MainActivity.this);
-                            db.open();
-
-                            incomes = db.getIncomesByDate(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)), calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(calendar.get(Calendar.YEAR)));
-                            expenses = db.getExpensesByDate(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)), calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(calendar.get(Calendar.YEAR)));
-
-                            db.close();
-                            items.clear();
-
-                            for (int i = 0; i < incomes.size(); i++) {
-                                items.add(incomes.get(i));
-                                valueIncomes = valueIncomes + incomes.get(i).getSum();
-
-                            }
-                            for (int i = 0; i < expenses.size(); i++) {
-                                items.add(expenses.get(i));
-                                valueExpenses = valueExpenses + expenses.get(i).getSpent();
-
-                            }
-
-                            MyApplication app = (MyApplication) MainActivity.this.getApplication();
-                            app.setItems(items);
-
-                            tvIncomesSum.setText(String.valueOf(valueIncomes));
-                            tvExpenseSum.setText(String.valueOf(valueExpenses));
-
-                            double amountToSet = valueIncomes - valueExpenses;
-                            tvAccount.setText(String.valueOf(amountToSet));
-                            if (amountToSet == 0) {
-                                tvAccount.setText("0");
-                            } else if (amountToSet > 0) {
-                                tvAccount.setTextColor(Color.parseColor("#388e3c"));
-                            } else {
-                                tvAccount.setTextColor(Color.parseColor("#b91400"));
-                            }
-
-                        } catch (SQLException e) {
-                            Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-                        }
+                        
                     }
                 }
             }
