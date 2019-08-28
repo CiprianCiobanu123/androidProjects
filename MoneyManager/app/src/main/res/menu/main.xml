@@ -2,20 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
     <item
         android:id="@+id/changeCurrency"
-        android:icon="@drawable/changecurrency"
         android:orderInCategory="100"
-        android:title=""
+        android:title="Currency"
         app:showAsAction="always" />
-
 
     <item
         android:id="@+id/monthlyYearly"
         android:orderInCategory="100"
         android:title="Yearly"
         app:showAsAction="always" />
-
 
 </menu>

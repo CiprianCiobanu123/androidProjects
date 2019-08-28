@@ -2,6 +2,7 @@ package com.example.moneymanager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -18,18 +19,18 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Locale;
 
 import static android.view.View.GONE;
+import static android.view.View.Y;
+import static java.util.Calendar.DAY_OF_MONTH;
 import static java.util.Calendar.MONTH;
 import static java.util.Calendar.SHORT;
 
@@ -41,14 +42,14 @@ public class MainActivity extends AppCompatActivity {
             tvBalanceIncomes, tvBalanceExpense, tvIncomesSum, tvExpenseSum,
             tvCurrencyIncomes, tvCurrencyExpenses;
 
-    Button btnChangeCurrency, btnAddExepense, btnAddIncome;
+    Button btnChangeCurrency, btnAddExepense, btnAddIncome, btnPreviousDate, btnNextDate;
     Spinner spinnerCurrency, spinnerMonthly;
     LinearLayout llAccount, hlForBackground;
     ArrayList<Income> incomes = new ArrayList<>();
     ArrayList<Expense> expenses = new ArrayList<>();
     ArrayList items = new ArrayList();
     SharedPreferences prefs = null;
-    ProgressBar pb;
+    MenuItem menuItemCurrency, menuitemYearly;
 
     double valueIncomes, valueExpenses;
     Calendar calendar = Calendar.getInstance();
@@ -79,7 +80,10 @@ public class MainActivity extends AppCompatActivity {
 
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main, menu);
-        return true;
+        menuItemCurrency = menu.findItem(R.id.changeCurrency);
+        menuitemYearly = menu.findItem(R.id.monthlyYearly);
+        return super.onCreateOptionsMenu(menu);
+
     }
 
     @Override
@@ -88,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.monthlyYearly:
                 Toast.makeText(this, "Yearly", Toast.LENGTH_SHORT).show();
+
                 break;
             case R.id.changeCurrency:
                 Toast.makeText(this, "Currency", Toast.LENGTH_SHORT).show();
@@ -99,11 +104,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        final int day = calendar.get(Calendar.DAY_OF_MONTH);
-        final int month = calendar.get(Calendar.MONTH);
-        final int year = calendar.get(Calendar.YEAR);
-
 
         tvAccount = findViewById(R.id.tvAccount);
         tvCurrency = findViewById(R.id.tvCurrency);
@@ -122,6 +122,8 @@ public class MainActivity extends AppCompatActivity {
         tvMonthOrYear = findViewById(R.id.tvMonthOrYear);
         btnAddExepense = findViewById(R.id.btnAddExpense);
         btnAddIncome = findViewById(R.id.btnAddIncome);
+        btnPreviousDate = findViewById(R.id.btnPreviousDate);
+        btnNextDate = findViewById(R.id.btnNext);
 
         tvIncomesSum.setTextColor(Color.parseColor("#388e3c"));
         tvExpenseSum.setTextColor(Color.parseColor("#b91400"));
@@ -136,18 +138,26 @@ public class MainActivity extends AppCompatActivity {
 
         prefs = getSharedPreferences("com.mycompany.MoneyManager", MainActivity.MODE_PRIVATE);
 
+        final int day = calendar.get(Calendar.DAY_OF_MONTH);
+        final int month = calendar.get(MONTH);
+        final int year = calendar.get(Calendar.YEAR);
+
         if (prefs.getBoolean("firstrun", true)) {
             Calendar calendar = Calendar.getInstance();
             // Do first run stuff here then set 'firstrun' as false
+            prefs.edit().putString("year", String.valueOf(year)).apply();
+            prefs.edit().putString("month", String.valueOf(month)).apply();
+            prefs.edit().putString("day", String.valueOf(day)).apply();
+
             tvCurrency.setText("EUR");
             tvCurrencyExpenses.setText("EUR");
             tvCurrencyIncomes.setText("EUR");
 
-            prefs.edit().putString("monthlyOrYearly", "Monthly").commit();
-            prefs.edit().putString("currency", "EUR").commit();
+            prefs.edit().putString("monthlyOrYearly", "Monthly").apply();
+            prefs.edit().putString("currency", "EUR").apply();
 
             // using the following line to edit/commit prefs
-            prefs.edit().putBoolean("firstrun", false).commit();
+            prefs.edit().putBoolean("firstrun", false).apply();
         } else {
             tvCurrency.setText(prefs.getString("currency", ""));
             tvCurrencyExpenses.setText(prefs.getString("currency", ""));
@@ -189,9 +199,9 @@ public class MainActivity extends AppCompatActivity {
         b.setTitle("Change Currency");
         b1.setTitle("Sort");
 
+
         if (prefs.getString("monthlyOrYearly", "").equals("Yearly")) {
-            tvMonthOrYear.setText(String.valueOf(calendar.get(Calendar.YEAR)));
-            prefs.edit().putString("year", String.valueOf(calendar.get(Calendar.YEAR)));
+            tvMonthOrYear.setText(prefs.getString("year", ""));
             valueExpenses = 0;
             valueIncomes = 0;
             try {
@@ -215,8 +225,8 @@ public class MainActivity extends AppCompatActivity {
 
                 MyApplication app = (MyApplication) MainActivity.this.getApplication();
                 app.setItems(items);
-                tvIncomesSum.setText(valueIncomes + "");
-                tvExpenseSum.setText(valueExpenses + "");
+                tvIncomesSum.setText(String.valueOf(valueIncomes));
+                tvExpenseSum.setText(String.valueOf(valueExpenses));
 
                 double amountToSet = valueIncomes - valueExpenses;
                 tvAccount.setText(String.valueOf(amountToSet));
@@ -234,9 +244,11 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
             }
         } else if (prefs.getString("monthlyOrYearly", "").equals("Monthly")) {
+            calendar.set(Calendar.YEAR, Integer.parseInt(prefs.getString("year", "")));
+            calendar.set(MONTH, Integer.parseInt(prefs.getString("month", "")));
+
             tvMonthOrYear.setText(calendar.getDisplayName(MONTH, Calendar.LONG, Locale.getDefault()) + " - " + calendar.get(Calendar.YEAR));
-            prefs.edit().putString("monthlyOrYearly", "Monthly").commit();
-            prefs.edit().putString("month", String.valueOf(calendar.get(MONTH))).commit();
+            prefs.edit().putString("month", String.valueOf(calendar.get(MONTH))).apply();
 
             valueExpenses = 0;
             valueIncomes = 0;
@@ -265,8 +277,8 @@ public class MainActivity extends AppCompatActivity {
                 MyApplication app = (MyApplication) MainActivity.this.getApplication();
                 app.setItems(items);
 
-                tvIncomesSum.setText(valueIncomes + "");
-                tvExpenseSum.setText(valueExpenses + "");
+                tvIncomesSum.setText(String.valueOf(valueIncomes));
+                tvExpenseSum.setText(String.valueOf(valueExpenses));
 
                 double amountToSet = valueIncomes - valueExpenses;
                 tvAccount.setText(String.valueOf(amountToSet));
@@ -319,8 +331,8 @@ public class MainActivity extends AppCompatActivity {
                 MyApplication app = (MyApplication) MainActivity.this.getApplication();
                 app.setItems(items);
 
-                tvIncomesSum.setText(valueIncomes + "");
-                tvExpenseSum.setText(valueExpenses + "");
+                tvIncomesSum.setText(String.valueOf(valueIncomes));
+                tvExpenseSum.setText(String.valueOf(valueExpenses));
                 double amountToSet = valueIncomes - valueExpenses;
                 tvAccount.setText(String.valueOf(amountToSet));
 
@@ -353,11 +365,15 @@ public class MainActivity extends AppCompatActivity {
             public void onClick(DialogInterface dialog, int which) {
 
                 if (spinnerMonthly.getAdapter().getItem(which).toString().trim().equals("Yearly")) {
-                    tvMonthOrYear.setText(String.valueOf(calendar.get(Calendar.YEAR)));
+
                     prefs.edit().putString("monthlyOrYearly", "Yearly").apply();
                     prefs.edit().putString("year", String.valueOf(calendar.get(Calendar.YEAR))).apply();
+
+                    tvMonthOrYear.setText(String.valueOf(calendar.get(Calendar.YEAR)));
+
                     valueExpenses = 0;
                     valueIncomes = 0;
+
                     try {
                         ExpensesDB db = new ExpensesDB(MainActivity.this);
                         db.open();
@@ -378,8 +394,8 @@ public class MainActivity extends AppCompatActivity {
 
                         MyApplication app = (MyApplication) MainActivity.this.getApplication();
                         app.setItems(items);
-                        tvIncomesSum.setText(valueIncomes + "");
-                        tvExpenseSum.setText(valueExpenses + "");
+                        tvIncomesSum.setText(String.valueOf(valueIncomes));
+                        tvExpenseSum.setText(String.valueOf(valueExpenses));
 
                         double amountToSet = valueIncomes - valueExpenses;
                         tvAccount.setText(String.valueOf(amountToSet));
@@ -395,9 +411,12 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 } else if (spinnerMonthly.getAdapter().getItem(which).toString().trim().equals("Monthly")) {
+
+                    prefs.edit().putString("monthlyOrYearly", "Monthly").apply();
+                    prefs.edit().putString("year", String.valueOf(calendar.get(Calendar.YEAR))).apply();
+                    prefs.edit().putString("month", String.valueOf(calendar.get(MONTH))).apply();
+
                     tvMonthOrYear.setText(calendar.getDisplayName(MONTH, Calendar.LONG, Locale.getDefault()) + " - " + calendar.get(Calendar.YEAR));
-                    prefs.edit().putString("monthlyOrYearly", "Monthly").commit();
-                    prefs.edit().putString("month", String.valueOf(calendar.get(MONTH))).commit();
 
                     valueExpenses = 0;
                     valueIncomes = 0;
@@ -425,8 +444,8 @@ public class MainActivity extends AppCompatActivity {
                         MyApplication app = (MyApplication) MainActivity.this.getApplication();
                         app.setItems(items);
 
-                        tvIncomesSum.setText(valueIncomes + "");
-                        tvExpenseSum.setText(valueExpenses + "");
+                        tvIncomesSum.setText(String.valueOf(valueIncomes));
+                        tvExpenseSum.setText(String.valueOf(valueExpenses));
                         double amountToSet = valueIncomes - valueExpenses;
                         tvAccount.setText(String.valueOf(amountToSet));
                         if (amountToSet == 0) {
@@ -441,12 +460,15 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 } else if (spinnerMonthly.getAdapter().getItem(which).toString().trim().equals("Daily")) {
+
+                    prefs.edit().putString("monthlyOrYearly", "Daily").apply();
+                    prefs.edit().putString("year", String.valueOf(calendar.get(Calendar.YEAR))).apply();
+                    prefs.edit().putString("month", String.valueOf(calendar.get(MONTH))).apply();
+                    prefs.edit().putString("day", String.valueOf(calendar.get(Calendar.DAY_OF_MONTH))).apply();
+
                     tvMonthOrYear.setText(calendar.get(Calendar.DAY_OF_MONTH) + " - " +
                             calendar.getDisplayName(MONTH, Calendar.LONG, Locale.getDefault())
                             + " - " + calendar.get(Calendar.YEAR));
-
-                    prefs.edit().putString("monthlyOrYearly", "Daily").apply();
-                    prefs.edit().putString("day", String.valueOf(calendar.get(Calendar.DAY_OF_MONTH))).apply();
 
                     valueExpenses = 0;
                     valueIncomes = 0;
@@ -475,8 +497,8 @@ public class MainActivity extends AppCompatActivity {
                         MyApplication app = (MyApplication) MainActivity.this.getApplication();
                         app.setItems(items);
 
-                        tvIncomesSum.setText(valueIncomes + "");
-                        tvExpenseSum.setText(valueExpenses + "");
+                        tvIncomesSum.setText(String.valueOf(valueIncomes));
+                        tvExpenseSum.setText(String.valueOf(valueExpenses));
 
                         double amountToSet = valueIncomes - valueExpenses;
                         tvAccount.setText(String.valueOf(amountToSet));
@@ -497,11 +519,70 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        btnPreviousDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (prefs.getString("monthlyOrYearly", "").equals("Yearly")) {
+                    calendar.set(Calendar.YEAR, Integer.parseInt(prefs.getString("year", "")) - 1);
+                    tvMonthOrYear.setText(calendar.get(Calendar.YEAR) + "");
+                    Toast.makeText(MainActivity.this, calendar.get(Calendar.YEAR) + "", Toast.LENGTH_SHORT).show();
+                    prefs.edit().putString("year", String.valueOf(calendar.get(Calendar.YEAR))).apply();
+                } else if (prefs.getString("monthlyOrYearly", "").equals("Monthly")) {
+
+                    calendar.set(MONTH, Integer.parseInt(prefs.getString("month", "")) - 1);
+                    if (calendar.get(MONTH) < 0) {
+                        calendar.set(Calendar.YEAR, Integer.parseInt(prefs.getString("year", "")) - 1);
+                        calendar.set(MONTH, 11);
+                    }
+                    tvMonthOrYear.setText(calendar.getDisplayName(MONTH, Calendar.LONG, Locale.getDefault()) + " - " + calendar.get(Calendar.YEAR));
+
+                    prefs.edit().putString("year", String.valueOf(calendar.get(Calendar.YEAR))).apply();
+                    prefs.edit().putString("month", String.valueOf(calendar.get(MONTH))).apply();
+
+                } else if (prefs.getString("monthlyOrYearly", "").equals("Daily")) {
+
+
+                    calendar.set(DAY_OF_MONTH, Integer.parseInt(prefs.getString("day", "")));
+                    calendar.set(DAY_OF_MONTH, calendar.get(DAY_OF_MONTH) - 1);
+                    prefs.edit().putString("day", String.valueOf(calendar.get(DAY_OF_MONTH)));
+
+                    if (calendar.get(DAY_OF_MONTH) >= 1) {
+
+                        prefs.edit().putString("day", String.valueOf(calendar.get(DAY_OF_MONTH))).apply();
+                        tvMonthOrYear.setText(calendar.get(Calendar.DAY_OF_MONTH) + " - " +
+                                calendar.getDisplayName(MONTH, Calendar.LONG, Locale.getDefault()) + " - " + calendar.get(Calendar.YEAR));
+
+                    } else {
+
+                        int monthToVerifyForChangingYear = calendar.get(MONTH) - 1;
+                        calendar.set(MONTH, calendar.get(MONTH) - 1);
+                        int maxDayFromMonth = calendar.getActualMaximum(DAY_OF_MONTH);
+
+                        if (monthToVerifyForChangingYear >= 0) {
+                            tvMonthOrYear.setText(calendar.get(Calendar.DAY_OF_MONTH) + " - " +
+                                    calendar.getDisplayName(MONTH, Calendar.LONG, Locale.getDefault()) + " - " + calendar.get(Calendar.YEAR));
+                        } else {
+
+                            calendar.set(MONTH, 11);
+                            calendar.set(DAY_OF_MONTH, maxDayFromMonth);
+                            calendar.set(MONTH, calendar.get(MONTH));
+                            tvMonthOrYear.setText(calendar.get(Calendar.DAY_OF_MONTH) + " - " +
+                                    calendar.getDisplayName(MONTH, Calendar.LONG, Locale.getDefault()) + " - " + calendar.get(Calendar.YEAR));
+
+
+                        }
+                    }
+                }
+            }
+        });
+
 
         btnChangeCurrency.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                b.show().getWindow().setLayout(1000, 2000);
+//                b.show().getWindow().setLayout(1000, 2000);
+                Toast.makeText(MainActivity.this, prefs.getAll() + "", Toast.LENGTH_LONG).show();
+
             }
         });
 
@@ -556,11 +637,6 @@ public class MainActivity extends AppCompatActivity {
             startActivity(refresh);
             this.finish();
         }
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
     }
 }
 
