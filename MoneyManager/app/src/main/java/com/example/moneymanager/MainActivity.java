@@ -97,8 +97,9 @@ public class MainActivity extends AppCompatActivity {
                 if (spinnerMonthly.getAdapter().getItem(which).toString().trim().equals("Yearly")) {
 
                     prefs.edit().putString("monthlyOrYearly", "Yearly").apply();
-                    prefs.edit().putString("year", String.valueOf(calendar.get(Calendar.YEAR))).apply();
+                    prefs.edit().putString("year", prefs.getString("year", "")).apply();
 
+                    calendar.set(Calendar.YEAR, Integer.parseInt(prefs.getString("year", "")));
                     tvMonthOrYear.setText(String.valueOf(calendar.get(Calendar.YEAR)));
 
                     valueExpenses = 0;
@@ -269,6 +270,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
+
         tvAccount = findViewById(R.id.tvAccount);
         tvCurrency = findViewById(R.id.tvCurrency);
         tvBalanceIncomes = findViewById(R.id.tvBalanceIncomes);
@@ -281,7 +283,6 @@ public class MainActivity extends AppCompatActivity {
         spinnerCurrency = findViewById(R.id.spinnerCurrency);
         spinnerMonthly = findViewById(R.id.spinnerMonthly);
         llAccount = findViewById(R.id.llAccount);
-//        hlForBackground = findViewById(R.id.hlForBackground);
         tvMonthOrYear = findViewById(R.id.tvMonthOrYear);
         btnAddExepense = findViewById(R.id.btnAddExpense);
         btnAddIncome = findViewById(R.id.btnAddIncome);
@@ -290,7 +291,6 @@ public class MainActivity extends AppCompatActivity {
 
         tvIncomesSum.setTextColor(Color.parseColor("#388e3c"));
         tvExpenseSum.setTextColor(Color.parseColor("#b91400"));
-        tvCurrency.setTextColor((Color.BLACK));
 
         spinnerCurrency.setVisibility(GONE);
         spinnerMonthly.setVisibility(GONE);
@@ -329,6 +329,9 @@ public class MainActivity extends AppCompatActivity {
             tvCurrencyIncomes.setText(prefs.getString("currency", ""));
         }
 
+        Toast.makeText(this, prefs.getString("year", "") +" - "+
+                prefs.getString("month", "") + " - " + prefs.getString("day", ""), Toast.LENGTH_SHORT).show();
+
         btnAddExepense.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -361,14 +364,20 @@ public class MainActivity extends AppCompatActivity {
 
         if (prefs.getString("monthlyOrYearly", "").equals("Yearly")) {
             tvMonthOrYear.setText(prefs.getString("year", ""));
+            calendar.set(Calendar.YEAR,Integer.parseInt(prefs.getString("year","")));
+
             valueExpenses = 0;
             valueIncomes = 0;
+
+
             try {
                 ExpensesDB db = new ExpensesDB(MainActivity.this);
                 db.open();
 
                 incomes = db.getIncomesByyear(String.valueOf(calendar.get(Calendar.YEAR)));
                 expenses = db.getExpensesByYear(String.valueOf(calendar.get(Calendar.YEAR)));
+
+
 
                 db.close();
                 items.clear();
@@ -520,6 +529,8 @@ public class MainActivity extends AppCompatActivity {
 
                     valueExpenses = 0;
                     valueIncomes = 0;
+
+
                     try {
                         ExpensesDB db = new ExpensesDB(MainActivity.this);
                         db.open();

@@ -67,11 +67,6 @@
         android:gravity="center_horizontal|center_vertical"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="horizontal"/>
-
 
         <TableLayout
             android:layout_width="match_parent"
@@ -86,7 +81,8 @@
                 <TableRow
                     android:layout_marginLeft="5dp"
                     android:layout_marginRight="10dp"
-                    android:layout_weight="0">
+                    android:layout_weight="0"
+                    android:gravity="center_horizontal">
 
                     <TextView
                         android:id="@+id/tvBalanceIncomes"
@@ -94,7 +90,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:text="TextView"
-                        android:textColor="@android:color/black"
+                        android:textColor="@android:color/white"
                         android:textSize="18sp"
                         android:textStyle="bold|italic" />
 
@@ -103,7 +99,9 @@
 
                 <TableRow
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal">
 
 
                     <TextView
@@ -121,7 +119,9 @@
 
                 <TableRow
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0"
+                    android:gravity="center_horizontal">
 
                     <TextView
                         android:id="@+id/tvCurrencyIncomes"
@@ -131,7 +131,7 @@
                         android:layout_marginRight="5dp"
                         android:layout_weight="0"
                         android:text="Currency"
-                        android:textColor="@android:color/black"
+                        android:textColor="@android:color/white"
                         android:textSize="18sp"
                         android:textStyle="bold|italic" />
 
@@ -153,7 +153,8 @@
 
                 <TableRow
                     android:layout_marginLeft="5dp"
-                    android:layout_marginRight="10dp">
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="0">
 
                     <TextView
                         android:id="@+id/tvBalanceExpense"
@@ -161,7 +162,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:text="TextView"
-                        android:textColor="@android:color/black"
+                        android:textColor="@android:color/white"
                         android:textSize="18sp"
                         android:textStyle="bold|italic" />
 
@@ -170,17 +171,19 @@
 
                 <TableRow
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
 
 
                     <TextView
                         android:id="@+id/tvExpenseSum"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal|center_vertical"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="0dp"
                         android:layout_marginRight="10dp"
+                        android:layout_weight="1"
+                        android:gravity="center_horizontal"
                         android:text="BalanceValue"
                         android:textSize="18sp" />
 
@@ -189,7 +192,8 @@
 
                 <TableRow
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0">
 
                     <TextView
                         android:id="@+id/tvCurrencyExpenses"
@@ -197,8 +201,9 @@
                         android:layout_height="match_parent"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="5dp"
+                        android:layout_weight="0"
                         android:text="Currency"
-                        android:textColor="@android:color/black"
+                        android:textColor="@android:color/white"
                         android:textSize="18sp"
                         android:textStyle="bold|italic" />
 
@@ -221,7 +226,8 @@
 
                 <TableRow
                     android:layout_marginLeft="5dp"
-                    android:layout_marginRight="10dp">
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="0">
 
                     <TextView
                         android:id="@+id/tvDailyMonthlyYearly"
@@ -229,7 +235,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="0"
                         android:text="TextView"
-                        android:textColor="@android:color/black"
+                        android:textColor="@android:color/white"
                         android:textSize="18sp"
                         android:textStyle="bold|italic" />
 
@@ -238,7 +244,9 @@
 
                 <TableRow
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal">
 
 
                     <TextView
@@ -258,7 +266,8 @@
 
                 <TableRow
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="0">
 
                     <TextView
                         android:id="@+id/tvCurrency"
@@ -267,7 +276,7 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="5dp"
                         android:text="Currency"
-                        android:textColor="@android:color/black"
+                        android:textColor="@android:color/white"
                         android:textSize="18sp"
                         android:textStyle="bold|italic" />
 
@@ -295,9 +304,6 @@
         android:id="@+id/spinnerCurrency"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="30dp"
-        android:layout_marginRight="20dp"
         android:gravity="center_horizontal|center_vertical" />
 
     <Spinner
@@ -313,14 +319,15 @@
 
 
         <Button
-            android:id="@+id/btnAddExpense"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/btnAddIncome"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal|center_vertical"
             android:background="@drawable/buttontransparent"
-            android:text="@string/expense"
+            android:foregroundGravity="center_vertical|center_horizontal"
+            android:gravity="center_horizontal|center_vertical"
+            android:text="@string/income"
             android:textColor="@color/colorAccent"
-            android:textColorHighlight="@color/colorAccent"
-            android:textColorHint="@color/colorAccent"
             android:textSize="12sp"
             android:textStyle="normal" />
 
@@ -334,15 +341,14 @@
 
 
         <Button
-            android:id="@+id/btnAddIncome"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_horizontal|center_vertical"
+            android:id="@+id/btnAddExpense"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:background="@drawable/rectangularbuttonforincome"
-            android:foregroundGravity="center_vertical|center_horizontal"
-            android:gravity="center_horizontal|center_vertical"
-            android:text="@string/income"
-            android:textColor="#ffffff"
+            android:text="@string/expense"
+            android:textColor="@android:color/black"
+            android:textColorHighlight="@color/colorAccent"
+            android:textColorHint="@color/colorAccent"
             android:textSize="12sp"
             android:textStyle="normal" />
 
