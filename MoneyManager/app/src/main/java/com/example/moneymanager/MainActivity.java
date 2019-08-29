@@ -29,7 +29,6 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import static android.view.View.GONE;
-import static android.view.View.Y;
 import static java.util.Calendar.DAY_OF_MONTH;
 import static java.util.Calendar.MONTH;
 import static java.util.Calendar.SHORT;
@@ -42,7 +41,7 @@ public class MainActivity extends AppCompatActivity {
             tvBalanceIncomes, tvBalanceExpense, tvIncomesSum, tvExpenseSum,
             tvCurrencyIncomes, tvCurrencyExpenses;
 
-    Button btnChangeCurrency, btnAddExepense, btnAddIncome, btnPreviousDate, btnNextDate;
+    Button btnAddExepense, btnAddIncome, btnPreviousDate, btnNextDate;
     Spinner spinnerCurrency, spinnerMonthly;
     LinearLayout llAccount, hlForBackground;
     ArrayList<Income> incomes = new ArrayList<>();
@@ -74,266 +73,11 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-        switch (item.getItemId()) {
-            case R.id.monthlyYearly:
-                Toast.makeText(this, "Yearly", Toast.LENGTH_SHORT).show();
-
-                break;
-            case R.id.changeCurrency:
-                Toast.makeText(this, "Currency", Toast.LENGTH_SHORT).show();
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-        tvAccount = findViewById(R.id.tvAccount);
-        tvCurrency = findViewById(R.id.tvCurrency);
-        tvBalanceIncomes = findViewById(R.id.tvBalanceIncomes);
-        tvBalanceExpense = findViewById(R.id.tvBalanceExpense);
-        tvIncomesSum = findViewById(R.id.tvIncomesSum);
-        tvExpenseSum = findViewById(R.id.tvExpenseSum);
-        tvCurrencyIncomes = findViewById(R.id.tvCurrencyIncomes);
-        tvCurrencyExpenses = findViewById(R.id.tvCurrencyExpenses);
-        tvDailyMonthlyYearly = findViewById(R.id.tvDailyMonthlyYearly);
-        btnChangeCurrency = findViewById(R.id.btnChangeCurrency);
-        spinnerCurrency = findViewById(R.id.spinnerCurrency);
-        spinnerMonthly = findViewById(R.id.spinnerMonthly);
-        llAccount = findViewById(R.id.llAccount);
-        hlForBackground = findViewById(R.id.hlForBackground);
-        tvMonthOrYear = findViewById(R.id.tvMonthOrYear);
-        btnAddExepense = findViewById(R.id.btnAddExpense);
-        btnAddIncome = findViewById(R.id.btnAddIncome);
-        btnPreviousDate = findViewById(R.id.btnPreviousDate);
-        btnNextDate = findViewById(R.id.btnNextDate);
-
-        tvIncomesSum.setTextColor(Color.parseColor("#388e3c"));
-        tvExpenseSum.setTextColor(Color.parseColor("#b91400"));
-        tvCurrency.setTextColor((Color.BLACK));
-
-        spinnerCurrency.setVisibility(GONE);
-        spinnerMonthly.setVisibility(GONE);
-
-        tvDailyMonthlyYearly.setText("Balance");
-        tvBalanceIncomes.setText("Income");
-        tvBalanceExpense.setText("Expense");
-
-        prefs = getSharedPreferences("com.mycompany.MoneyManager", MainActivity.MODE_PRIVATE);
-
-        final int day = calendar.get(Calendar.DAY_OF_MONTH);
-        final int month = calendar.get(MONTH);
-        final int year = calendar.get(Calendar.YEAR);
-
-        if (prefs.getBoolean("firstrun", true)) {
-            Calendar calendar = Calendar.getInstance();
-            // Do first run stuff here then set 'firstrun' as false
-            prefs.edit().putString("year", String.valueOf(year)).apply();
-            prefs.edit().putString("month", String.valueOf(month)).apply();
-            prefs.edit().putString("day", String.valueOf(day)).apply();
-
-            tvCurrency.setText("EUR");
-            tvCurrencyExpenses.setText("EUR");
-            tvCurrencyIncomes.setText("EUR");
-
-            prefs.edit().putString("monthlyOrYearly", "Monthly").apply();
-            prefs.edit().putString("currency", "EUR").apply();
-
-            // using the following line to edit/commit prefs
-            prefs.edit().putBoolean("firstrun", false).apply();
-        } else {
-            tvCurrency.setText(prefs.getString("currency", ""));
-            tvCurrencyExpenses.setText(prefs.getString("currency", ""));
-            tvCurrencyIncomes.setText(prefs.getString("currency", ""));
-        }
-
-        btnAddExepense.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,
-                        AddExpense.class);
-                startActivityForResult(intent, requestCodeActivityAddExpense);
-            }
-        });
-
-        btnAddIncome.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this,
-                        AddIncome.class);
-                startActivityForResult(intent, requestCodeActivityAddIncome);
-            }
-        });
-
-        final ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this,
-                android.R.layout.simple_spinner_item, paths);
-
-        final ArrayAdapter<String> adapterMonthly = new ArrayAdapter<>(MainActivity.this,
-                android.R.layout.simple_spinner_item, valuesToShowAccount);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinnerCurrency.setAdapter(adapter);
-        spinnerMonthly.setAdapter(adapterMonthly);
-        Arrays.sort(paths);
-
         final AlertDialog.Builder b = new AlertDialog.Builder(this);
         final AlertDialog.Builder b1 = new AlertDialog.Builder(this);
 
         b.setTitle("Change Currency");
         b1.setTitle("Sort");
-
-
-        if (prefs.getString("monthlyOrYearly", "").equals("Yearly")) {
-            tvMonthOrYear.setText(prefs.getString("year", ""));
-            valueExpenses = 0;
-            valueIncomes = 0;
-            try {
-                ExpensesDB db = new ExpensesDB(MainActivity.this);
-                db.open();
-
-                incomes = db.getIncomesByyear(String.valueOf(calendar.get(Calendar.YEAR)));
-                expenses = db.getExpensesByYear(String.valueOf(calendar.get(Calendar.YEAR)));
-
-                db.close();
-                items.clear();
-
-                for (int i = 0; i < incomes.size(); i++) {
-                    items.add(incomes.get(i));
-                    valueIncomes = valueIncomes + incomes.get(i).getSum();
-                }
-                for (int i = 0; i < expenses.size(); i++) {
-                    items.add(expenses.get(i));
-                    valueExpenses = valueExpenses + expenses.get(i).getSpent();
-                }
-
-                MyApplication app = (MyApplication) MainActivity.this.getApplication();
-                app.setItems(items);
-                tvIncomesSum.setText(String.valueOf(valueIncomes));
-                tvExpenseSum.setText(String.valueOf(valueExpenses));
-
-                double amountToSet = valueIncomes - valueExpenses;
-                tvAccount.setText(String.valueOf(amountToSet));
-
-
-                if (amountToSet == 0) {
-                    tvAccount.setText("0");
-                } else if (amountToSet > 0) {
-                    tvAccount.setTextColor(Color.parseColor("#388e3c"));
-                } else {
-                    tvAccount.setTextColor(Color.parseColor("#b91400"));
-                }
-
-            } catch (SQLException e) {
-                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        } else if (prefs.getString("monthlyOrYearly", "").equals("Monthly")) {
-            calendar.set(Calendar.YEAR, Integer.parseInt(prefs.getString("year", "")));
-            calendar.set(MONTH, Integer.parseInt(prefs.getString("month", "")));
-
-            tvMonthOrYear.setText(calendar.getDisplayName(MONTH, Calendar.LONG, Locale.getDefault()) + " - " + calendar.get(Calendar.YEAR));
-            prefs.edit().putString("month", String.valueOf(calendar.get(MONTH))).apply();
-
-            valueExpenses = 0;
-            valueIncomes = 0;
-
-            try {
-                ExpensesDB db = new ExpensesDB(MainActivity.this);
-                db.open();
-
-                incomes = db.getIncomesByMonthAndYear(calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(calendar.get(Calendar.YEAR)));
-                expenses = db.getExpensesByMonthAndYear(calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(calendar.get(Calendar.YEAR)));
-
-                db.close();
-                items.clear();
-
-                for (int i = 0; i < incomes.size(); i++) {
-                    items.add(incomes.get(i));
-                    valueIncomes = valueIncomes + incomes.get(i).getSum();
-
-                }
-                for (int i = 0; i < expenses.size(); i++) {
-                    items.add(expenses.get(i));
-                    valueExpenses = valueExpenses + expenses.get(i).getSpent();
-
-                }
-
-                MyApplication app = (MyApplication) MainActivity.this.getApplication();
-                app.setItems(items);
-
-                tvIncomesSum.setText(String.valueOf(valueIncomes));
-                tvExpenseSum.setText(String.valueOf(valueExpenses));
-
-                double amountToSet = valueIncomes - valueExpenses;
-                tvAccount.setText(String.valueOf(amountToSet));
-
-
-                if (amountToSet == 0) {
-                    tvAccount.setText("0");
-                } else if (amountToSet > 0) {
-                    tvAccount.setTextColor(Color.parseColor("#388e3c"));
-                } else {
-                    tvAccount.setTextColor(Color.parseColor("#b91400"));
-                }
-
-
-            } catch (SQLException e) {
-                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        } else if (prefs.getString("monthlyOrYearly", "").equals("Daily")) {
-            calendar.set(Calendar.DAY_OF_MONTH, day);
-            tvMonthOrYear.setText(calendar.get(Calendar.DAY_OF_MONTH) + " - " +
-                    calendar.getDisplayName(MONTH, Calendar.LONG, Locale.getDefault()) + " - " + calendar.get(Calendar.YEAR));
-
-            prefs.edit().putString("monthlyOrYearly", "Daily").apply();
-            prefs.edit().putString("day", String.valueOf(calendar.get(Calendar.DAY_OF_MONTH))).apply();
-
-            valueExpenses = 0;
-            valueIncomes = 0;
-
-            try {
-                ExpensesDB db = new ExpensesDB(MainActivity.this);
-                db.open();
-
-                incomes = db.getIncomesByDate(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)), calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(calendar.get(Calendar.YEAR)));
-                expenses = db.getExpensesByDate(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)), calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(calendar.get(Calendar.YEAR)));
-
-                db.close();
-                items.clear();
-
-                for (int i = 0; i < incomes.size(); i++) {
-                    items.add(incomes.get(i));
-                    valueIncomes = valueIncomes + incomes.get(i).getSum();
-
-                }
-                for (int i = 0; i < expenses.size(); i++) {
-                    items.add(expenses.get(i));
-                    valueExpenses = valueExpenses + expenses.get(i).getSpent();
-
-                }
-
-                MyApplication app = (MyApplication) MainActivity.this.getApplication();
-                app.setItems(items);
-
-                tvIncomesSum.setText(String.valueOf(valueIncomes));
-                tvExpenseSum.setText(String.valueOf(valueExpenses));
-                double amountToSet = valueIncomes - valueExpenses;
-                tvAccount.setText(String.valueOf(amountToSet));
-
-                if (amountToSet == 0) {
-                    tvAccount.setText("0");
-                } else if (amountToSet > 0) {
-                    tvAccount.setTextColor(Color.parseColor("#388e3c"));
-                } else {
-                    tvAccount.setTextColor(Color.parseColor("#b91400"));
-                }
-
-            } catch (SQLException e) {
-                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
-            }
-        }
 
         b.setItems(paths, new DialogInterface.OnClickListener() {
             @Override
@@ -504,6 +248,266 @@ public class MainActivity extends AppCompatActivity {
                 dialog.dismiss();
             }
         });
+
+        switch (item.getItemId()) {
+
+            case R.id.monthlyYearly:
+                b1.show();
+                break;
+
+            case R.id.changeCurrency:
+                b.show().getWindow().setLayout(1000, 1400);
+
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+
+        tvAccount = findViewById(R.id.tvAccount);
+        tvCurrency = findViewById(R.id.tvCurrency);
+        tvBalanceIncomes = findViewById(R.id.tvBalanceIncomes);
+        tvBalanceExpense = findViewById(R.id.tvBalanceExpense);
+        tvIncomesSum = findViewById(R.id.tvIncomesSum);
+        tvExpenseSum = findViewById(R.id.tvExpenseSum);
+        tvCurrencyIncomes = findViewById(R.id.tvCurrencyIncomes);
+        tvCurrencyExpenses = findViewById(R.id.tvCurrencyExpenses);
+        tvDailyMonthlyYearly = findViewById(R.id.tvDailyMonthlyYearly);
+        spinnerCurrency = findViewById(R.id.spinnerCurrency);
+        spinnerMonthly = findViewById(R.id.spinnerMonthly);
+        llAccount = findViewById(R.id.llAccount);
+//        hlForBackground = findViewById(R.id.hlForBackground);
+        tvMonthOrYear = findViewById(R.id.tvMonthOrYear);
+        btnAddExepense = findViewById(R.id.btnAddExpense);
+        btnAddIncome = findViewById(R.id.btnAddIncome);
+        btnPreviousDate = findViewById(R.id.btnPreviousDate);
+        btnNextDate = findViewById(R.id.btnNextDate);
+
+        tvIncomesSum.setTextColor(Color.parseColor("#388e3c"));
+        tvExpenseSum.setTextColor(Color.parseColor("#b91400"));
+        tvCurrency.setTextColor((Color.BLACK));
+
+        spinnerCurrency.setVisibility(GONE);
+        spinnerMonthly.setVisibility(GONE);
+
+        tvDailyMonthlyYearly.setText("Balance");
+        tvBalanceIncomes.setText("Income");
+        tvBalanceExpense.setText("Expense");
+
+        btnNextDate.setBackgroundResource(R.drawable.nexttotomorrow);
+
+        prefs = getSharedPreferences("com.mycompany.MoneyManager", MainActivity.MODE_PRIVATE);
+
+        final int day = calendar.get(Calendar.DAY_OF_MONTH);
+        final int month = calendar.get(MONTH);
+        final int year = calendar.get(Calendar.YEAR);
+
+        if (prefs.getBoolean("firstrun", true)) {
+            Calendar calendar = Calendar.getInstance();
+            // Do first run stuff here then set 'firstrun' as false
+            prefs.edit().putString("year", String.valueOf(year)).apply();
+            prefs.edit().putString("month", String.valueOf(month)).apply();
+            prefs.edit().putString("day", String.valueOf(day)).apply();
+
+            tvCurrency.setText("EUR");
+            tvCurrencyExpenses.setText("EUR");
+            tvCurrencyIncomes.setText("EUR");
+
+            prefs.edit().putString("monthlyOrYearly", "Monthly").apply();
+            prefs.edit().putString("currency", "EUR").apply();
+
+            // using the following line to edit/commit prefs
+            prefs.edit().putBoolean("firstrun", false).apply();
+        } else {
+            tvCurrency.setText(prefs.getString("currency", ""));
+            tvCurrencyExpenses.setText(prefs.getString("currency", ""));
+            tvCurrencyIncomes.setText(prefs.getString("currency", ""));
+        }
+
+        btnAddExepense.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this,
+                        AddExpense.class);
+                startActivityForResult(intent, requestCodeActivityAddExpense);
+            }
+        });
+
+        btnAddIncome.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this,
+                        AddIncome.class);
+                startActivityForResult(intent, requestCodeActivityAddIncome);
+            }
+        });
+
+        final ArrayAdapter<String> adapter = new ArrayAdapter<>(MainActivity.this,
+                android.R.layout.simple_spinner_item, paths);
+
+        final ArrayAdapter<String> adapterMonthly = new ArrayAdapter<>(MainActivity.this,
+                android.R.layout.simple_spinner_item, valuesToShowAccount);
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerCurrency.setAdapter(adapter);
+        spinnerMonthly.setAdapter(adapterMonthly);
+        Arrays.sort(paths);
+
+
+        if (prefs.getString("monthlyOrYearly", "").equals("Yearly")) {
+            tvMonthOrYear.setText(prefs.getString("year", ""));
+            valueExpenses = 0;
+            valueIncomes = 0;
+            try {
+                ExpensesDB db = new ExpensesDB(MainActivity.this);
+                db.open();
+
+                incomes = db.getIncomesByyear(String.valueOf(calendar.get(Calendar.YEAR)));
+                expenses = db.getExpensesByYear(String.valueOf(calendar.get(Calendar.YEAR)));
+
+                db.close();
+                items.clear();
+
+                for (int i = 0; i < incomes.size(); i++) {
+                    items.add(incomes.get(i));
+                    valueIncomes = valueIncomes + incomes.get(i).getSum();
+                }
+                for (int i = 0; i < expenses.size(); i++) {
+                    items.add(expenses.get(i));
+                    valueExpenses = valueExpenses + expenses.get(i).getSpent();
+                }
+
+                MyApplication app = (MyApplication) MainActivity.this.getApplication();
+                app.setItems(items);
+                tvIncomesSum.setText(String.valueOf(valueIncomes));
+                tvExpenseSum.setText(String.valueOf(valueExpenses));
+
+                double amountToSet = valueIncomes - valueExpenses;
+                tvAccount.setText(String.valueOf(amountToSet));
+
+
+                if (amountToSet == 0) {
+                    tvAccount.setText("0");
+                } else if (amountToSet > 0) {
+                    tvAccount.setTextColor(Color.parseColor("#388e3c"));
+                } else {
+                    tvAccount.setTextColor(Color.parseColor("#b91400"));
+                }
+
+            } catch (SQLException e) {
+                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        } else if (prefs.getString("monthlyOrYearly", "").equals("Monthly")) {
+            calendar.set(Calendar.YEAR, Integer.parseInt(prefs.getString("year", "")));
+            calendar.set(MONTH, Integer.parseInt(prefs.getString("month", "")));
+
+            tvMonthOrYear.setText(calendar.getDisplayName(MONTH, Calendar.LONG, Locale.getDefault()) + " - " + calendar.get(Calendar.YEAR));
+            prefs.edit().putString("month", String.valueOf(calendar.get(MONTH))).apply();
+
+            valueExpenses = 0;
+            valueIncomes = 0;
+
+            try {
+                ExpensesDB db = new ExpensesDB(MainActivity.this);
+                db.open();
+
+                incomes = db.getIncomesByMonthAndYear(calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(calendar.get(Calendar.YEAR)));
+                expenses = db.getExpensesByMonthAndYear(calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(calendar.get(Calendar.YEAR)));
+
+                db.close();
+                items.clear();
+
+                for (int i = 0; i < incomes.size(); i++) {
+                    items.add(incomes.get(i));
+                    valueIncomes = valueIncomes + incomes.get(i).getSum();
+
+                }
+                for (int i = 0; i < expenses.size(); i++) {
+                    items.add(expenses.get(i));
+                    valueExpenses = valueExpenses + expenses.get(i).getSpent();
+
+                }
+
+                MyApplication app = (MyApplication) MainActivity.this.getApplication();
+                app.setItems(items);
+
+                tvIncomesSum.setText(String.valueOf(valueIncomes));
+                tvExpenseSum.setText(String.valueOf(valueExpenses));
+
+                double amountToSet = valueIncomes - valueExpenses;
+                tvAccount.setText(String.valueOf(amountToSet));
+
+
+                if (amountToSet == 0) {
+                    tvAccount.setText("0");
+                } else if (amountToSet > 0) {
+                    tvAccount.setTextColor(Color.parseColor("#388e3c"));
+                } else {
+                    tvAccount.setTextColor(Color.parseColor("#b91400"));
+                }
+
+
+            } catch (SQLException e) {
+                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        } else if (prefs.getString("monthlyOrYearly", "").equals("Daily")) {
+            calendar.set(Calendar.DAY_OF_MONTH, day);
+            tvMonthOrYear.setText(calendar.get(Calendar.DAY_OF_MONTH) + " - " +
+                    calendar.getDisplayName(MONTH, Calendar.LONG, Locale.getDefault()) + " - " + calendar.get(Calendar.YEAR));
+
+            prefs.edit().putString("monthlyOrYearly", "Daily").apply();
+            prefs.edit().putString("day", String.valueOf(calendar.get(Calendar.DAY_OF_MONTH))).apply();
+
+            valueExpenses = 0;
+            valueIncomes = 0;
+
+            try {
+                ExpensesDB db = new ExpensesDB(MainActivity.this);
+                db.open();
+
+                incomes = db.getIncomesByDate(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)), calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(calendar.get(Calendar.YEAR)));
+                expenses = db.getExpensesByDate(String.valueOf(calendar.get(Calendar.DAY_OF_MONTH)), calendar.getDisplayName(MONTH, SHORT, Locale.getDefault()), String.valueOf(calendar.get(Calendar.YEAR)));
+
+                db.close();
+                items.clear();
+
+                for (int i = 0; i < incomes.size(); i++) {
+                    items.add(incomes.get(i));
+                    valueIncomes = valueIncomes + incomes.get(i).getSum();
+
+                }
+                for (int i = 0; i < expenses.size(); i++) {
+                    items.add(expenses.get(i));
+                    valueExpenses = valueExpenses + expenses.get(i).getSpent();
+
+                }
+
+                MyApplication app = (MyApplication) MainActivity.this.getApplication();
+                app.setItems(items);
+
+                tvIncomesSum.setText(String.valueOf(valueIncomes));
+                tvExpenseSum.setText(String.valueOf(valueExpenses));
+                double amountToSet = valueIncomes - valueExpenses;
+                tvAccount.setText(String.valueOf(amountToSet));
+
+                if (amountToSet == 0) {
+                    tvAccount.setText("0");
+                } else if (amountToSet > 0) {
+                    tvAccount.setTextColor(Color.parseColor("#388e3c"));
+                } else {
+                    tvAccount.setTextColor(Color.parseColor("#b91400"));
+                }
+
+            } catch (SQLException e) {
+                Toast.makeText(MainActivity.this, e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
+
 
         btnPreviousDate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -804,21 +808,6 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-
-        btnChangeCurrency.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                b.show().getWindow().setLayout(1000, 2000);
-            }
-        });
-
-        tvMonthOrYear.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                b1.show();
-            }
-        });
-
         spinnerCurrency.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
@@ -859,9 +848,9 @@ public class MainActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == RESULT_CANCELED) {
-            Intent refresh = new Intent(this, MainActivity.class);
-            startActivity(refresh);
+            Intent refresh = getIntent();
             this.finish();
+            startActivity(refresh);
         }
     }
 }

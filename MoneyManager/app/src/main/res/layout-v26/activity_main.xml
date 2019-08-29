@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#212121"
     android:orientation="vertical"
     tools:context=".MainActivity">
 
@@ -18,32 +19,40 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="10dp"
             android:layout_weight="1"
+            android:gravity="center_horizontal"
             android:orientation="horizontal">
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
             <Button
-                android:id="@+id/btnChangeCurrency"
-                android:layout_width="33dp"
+                android:id="@+id/btnPreviousDate"
+                android:layout_width="30dp"
                 android:layout_height="30dp"
+                android:layout_marginLeft="20dp"
                 android:layout_weight="0"
-                android:background="@drawable/changecurrency"
-                android:textColor="@color/colorAccent"
-                android:textColorHint="@color/colorAccent" />
+                android:background="@drawable/previoustoyesterday"
+                android:textSize="8sp" />
+
 
             <TextView
                 android:id="@+id/tvMonthOrYear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="10dp"
-                android:layout_weight="0"
+                android:layout_gravity="center_horizontal"
+                android:layout_weight="1"
+                android:gravity="center_horizontal|center_vertical"
                 android:text="TextView"
                 android:textColor="@color/colorAccent"
                 android:textSize="18sp" />
+
+            <Button
+                android:id="@+id/btnNextDate"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:layout_marginRight="20dp"
+                android:layout_weight="0"
+                android:background="@drawable/nexttotomorrow"
+                android:textSize="8sp" />
 
         </LinearLayout>
 
@@ -53,43 +62,26 @@
         android:id="@+id/llAccount"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal|center_vertical"
         android:layout_marginTop="150dp"
-        android:background="@drawable/multicolorforaccountinmainactivity"
-        android:gravity="center_vertical"
-
+        android:background="@drawable/borderforaccount"
+        android:gravity="center_horizontal|center_vertical"
         android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:id="@+id/imageView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="5dp"
-                android:layout_marginTop="10dp"
-                android:layout_weight="0"
-                app:srcCompat="@drawable/papermoney" />
-
-
-        </LinearLayout>
+            android:orientation="horizontal"/>
 
 
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:gravity="center_horizontal|center_vertical"
             android:orientation="horizontal">
 
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal|center_vertical">
+                android:layout_height="match_parent">
 
                 <TableRow
                     android:layout_marginLeft="5dp"
@@ -118,11 +110,9 @@
                         android:id="@+id/tvIncomesSum"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_horizontal|center_vertical"
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="0dp"
                         android:layout_marginRight="10dp"
-                        android:gravity="center_horizontal|center_vertical"
                         android:text="BalanceValue"
                         android:textSize="18sp" />
 
@@ -137,7 +127,6 @@
                         android:id="@+id/tvCurrencyIncomes"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="5dp"
                         android:layout_weight="0"
@@ -155,15 +144,12 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:gravity="center_horizontal|center_vertical"
             android:orientation="horizontal">
 
 
             <TableRow
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center_horizontal|center_vertical">
+                android:layout_height="wrap_content">
 
                 <TableRow
                     android:layout_marginLeft="5dp"
@@ -195,7 +181,6 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="0dp"
                         android:layout_marginRight="10dp"
-                        android:gravity="center_horizontal|center_vertical"
                         android:text="BalanceValue"
                         android:textSize="18sp" />
 
@@ -210,7 +195,6 @@
                         android:id="@+id/tvCurrencyExpenses"
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
-                        android:layout_gravity="right"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="5dp"
                         android:text="Currency"
@@ -228,15 +212,12 @@
         <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal|center_vertical"
-            android:gravity="center_horizontal|center_vertical"
             android:orientation="horizontal">
 
 
             <TableRow
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:gravity="center_horizontal|center_vertical">
+                android:layout_height="match_parent">
 
                 <TableRow
                     android:layout_marginLeft="5dp"
@@ -268,11 +249,9 @@
                         android:layout_marginLeft="10dp"
                         android:layout_marginTop="0dp"
                         android:layout_marginRight="10dp"
-                        android:gravity="center_horizontal|center_vertical"
                         android:text="BalanceValue"
 
                         android:textSize="18sp" />
-
 
 
                 </TableRow>
@@ -285,7 +264,6 @@
                         android:id="@+id/tvCurrency"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="right"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="5dp"
                         android:text="Currency"
@@ -299,16 +277,16 @@
 
         </TableLayout>
 
-        <LinearLayout
-            android:id="@+id/hlForBackground"
-            android:layout_width="match_parent"
-            android:layout_height="30dp"
-            android:layout_gravity="bottom"
-            android:layout_marginTop="20dp"
-            android:layout_weight="1"
-            android:background="@drawable/corners"
-            android:foregroundGravity="bottom|center_vertical"
-            android:orientation="horizontal" />
+        <!--<LinearLayout-->
+        <!--android:id="@+id/hlForBackground"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_gravity="bottom"-->
+        <!--android:layout_marginTop="20dp"-->
+        <!--android:layout_weight="1"-->
+        <!--android:background="@drawable/corners"-->
+        <!--android:foregroundGravity="bottom|center_vertical"-->
+        <!--android:orientation="horizontal" />-->
 
 
     </LinearLayout>
@@ -340,7 +318,7 @@
             android:layout_height="wrap_content"
             android:background="@drawable/buttontransparent"
             android:text="@string/expense"
-            android:textColor="@color/colorPrimaryDark"
+            android:textColor="@color/colorAccent"
             android:textColorHighlight="@color/colorAccent"
             android:textColorHint="@color/colorAccent"
             android:textSize="12sp"
@@ -360,7 +338,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center_horizontal|center_vertical"
-            android:background="@drawable/rectangularbutton"
+            android:background="@drawable/rectangularbuttonforincome"
             android:foregroundGravity="center_vertical|center_horizontal"
             android:gravity="center_horizontal|center_vertical"
             android:text="@string/income"
@@ -370,20 +348,6 @@
 
 
     </TableLayout>
-
-    <Button
-        android:id="@+id/btnPreviousDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="-"
-        android:textSize="24sp" />
-
-    <Button
-        android:id="@+id/btnNextDate"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="+"
-        android:textSize="24sp" />
 
 
 </LinearLayout>

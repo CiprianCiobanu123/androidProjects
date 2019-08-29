@@ -6,12 +6,12 @@
         android:id="@+id/changeCurrency"
         android:orderInCategory="100"
         android:title="Currency"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/monthlyYearly"
         android:orderInCategory="100"
-        android:title="Yearly"
-        app:showAsAction="always" />
+        android:title="Period"
+        app:showAsAction="ifRoom" />
 
 </menu>
